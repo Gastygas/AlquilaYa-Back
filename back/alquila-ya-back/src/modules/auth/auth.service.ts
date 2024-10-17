@@ -61,6 +61,7 @@ export class AuthService{
     }
 
     async SignIn(userCredentials: SignInDto){
-
+        const userFind = users.find((user) => user.email === userCredentials.email)
+        if(!userFind) throw new BadRequestException('Email or Password Incorrect')
     }
 };
