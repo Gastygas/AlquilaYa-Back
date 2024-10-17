@@ -8,4 +8,3 @@ import {UsersController} from "./users.controller";
 export class UsersModule{
 
 }
-console.log()
