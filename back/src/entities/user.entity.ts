@@ -34,9 +34,9 @@ export class User {
   @Column({ nullable: false, type: 'varchar', length: 30 })
   phone: string;
 
-  @OneToMany(() => Notification, notification => notification.user)
-  notifications: Notification[]
-
   @Column({nullable: true})
   favorite_properties:string[]
+  
+  @OneToMany(() => Notification, notification => notification.user)
+  notifications: Notification[]
 }
