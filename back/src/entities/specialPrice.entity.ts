@@ -9,13 +9,13 @@ export class SpecialPrice{
     @PrimaryGeneratedColumn('uuid')
     id:string = uuid
 
-    @Column()
+    @Column({nullable:false})
     dateStart:Date
 
-    @Column()
+    @Column({nullable:false})
     dateEnd:Date
 
-    @Column()
+    @Column({type:'int',nullable:false})
     specialPrice: number
 
     @ManyToOne(() => Property, property => property.specialprice)
