@@ -3,7 +3,7 @@ import {v4 as uuid} from 'uuid';
 
 @Entity("property")
 export class Property{
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn("uuid")
     id:string = uuid();
 
     @Column({nullable: false})
