@@ -16,7 +16,7 @@ export class SignUpDto{
     @IsNotEmpty()
     @IsNumber()
     @MaxLength(9)
-    dni:number
+    dni:string
     
     @IsNotEmpty()
     @IsString()
