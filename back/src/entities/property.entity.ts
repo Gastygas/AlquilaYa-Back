@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import {v4 as uuid} from 'uuid';
+import { SpecialPrice } from "./specialPrice.entity";
 
 @Entity("property")
 export class Property{
@@ -62,5 +63,8 @@ export class Property{
 
     @Column({type: 'varchar'})
     propertyStatus:string;
+
+    @OneToMany(() => SpecialPrice, specialPrice => specialPrice.property)
+    specialprice: SpecialPrice[];
 
 }
