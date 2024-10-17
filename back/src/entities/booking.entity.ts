@@ -1,7 +1,8 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { v4 as uuid } from 'uuid';
 import { User } from './user.entity';
 import { Property } from './property.entity';
+import { Payment } from './payment.entity';
 
 @Entity('booking')
 export class Booking {
@@ -23,6 +24,6 @@ export class Booking {
   @ManyToOne(() => Property, property => property.bookings)
   property: Property
   
-
-
+  @OneToOne(() => Payment, payment => payment.booking)
+  payment: Payment
 }

@@ -2,6 +2,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { v4 as uuid } from 'uuid';
 import { Notification } from './notification.entity';
 import { Reviews } from './reviews.entity';
+import { Booking } from './booking.entity';
 
 @Entity('users')
 export class User {
@@ -35,12 +36,15 @@ export class User {
   @Column({ nullable: false, type: 'varchar', length: 30 })
   phone: string;
 
-  @Column({nullable: true})
-  favorite_properties:string[]
+  @Column({ nullable: true })
+  favorite_properties: string[];
 
-  @OneToMany(() => Notification, notification => notification.user)
-  notifications: Notification[]
+  @OneToMany(() => Notification, (notification) => notification.user)
+  notifications: Notification[];
 
-  @OneToMany(() => Reviews, reviews => reviews.user)
-  reviews: Reviews[]
+  @OneToMany(() => Reviews, (reviews) => reviews.user)
+  reviews: Reviews[];
+
+  @OneToMany(() => Booking, (booking) => booking.user)
+  bookings: Booking[];
 }

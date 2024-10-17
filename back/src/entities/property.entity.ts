@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import {v4 as uuid} from 'uuid';
+import { Booking } from "./booking.entity";
 
 @Entity("property")
 export class Property{
@@ -63,4 +64,6 @@ export class Property{
     @Column({type: 'varchar'})
     propertyStatus:string;
 
+    @OneToMany(() => Booking, booking => booking.property)
+    bookings: Booking[]
 }
