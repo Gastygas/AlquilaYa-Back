@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { v4 as uuid } from 'uuid';
 import { Booking } from './booking.entity';
-@Entity('users')
+@Entity('payments')
 export class Payment {
 
   @PrimaryGeneratedColumn('uuid')
@@ -13,7 +13,7 @@ export class Payment {
   @Column({nullable: false , type: 'date'})
   date : Date
 
-  @Column({nullable: false , type : "number"})
+  @Column({nullable: false , type : "float"})
   amount : number
 
   @Column({nullable: false })

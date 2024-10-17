@@ -7,8 +7,8 @@ export class Notification {
 @PrimaryGeneratedColumn("uuid")
 id: string = uuid();
 
-@Column({ nullable: false, type: 'date', length: 50 })
-date_time: Date;
+@Column({ nullable: false, type: 'date'})
+dateTime: Date;
 
 @Column({ nullable: false, type: 'varchar', length: 200 })
 message: string;

@@ -36,8 +36,8 @@ export class User {
   @Column({ nullable: false, type: 'varchar', length: 30 })
   phone: string;
 
-  @Column({ nullable: true })
-  favorite_properties: string[];
+//  PREGUNTAR A GUSTAVO @Column({ nullable: true })
+//   favorite_properties: string[];
 
   @OneToMany(() => Notification, (notification) => notification.user)
   notifications: Notification[];
