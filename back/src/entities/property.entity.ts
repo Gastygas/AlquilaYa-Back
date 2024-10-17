@@ -1,6 +1,10 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import {v4 as uuid} from 'uuid';
+<<<<<<< HEAD
 import { Booking } from "./booking.entity";
+=======
+import { SpecialPrice } from "./specialPrice.entity";
+>>>>>>> 2167a022c36d8f590d71b85cbe2aa7a5ef144054
 
 @Entity("property")
 export class Property{
@@ -64,6 +68,12 @@ export class Property{
     @Column({type: 'varchar'})
     propertyStatus:string;
 
+<<<<<<< HEAD
     @OneToMany(() => Booking, booking => booking.property)
     bookings: Booking[]
+=======
+    @OneToMany(() => SpecialPrice, specialPrice => specialPrice.property)
+    specialprice: SpecialPrice[];
+
+>>>>>>> 2167a022c36d8f590d71b85cbe2aa7a5ef144054
 }
