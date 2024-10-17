@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { v4 as uuid } from 'uuid';
+import { Notification } from './notification.entity';
 
 @Entity('users')
 export class User {
@@ -32,6 +33,9 @@ export class User {
 
   @Column({ nullable: false, type: 'varchar', length: 30 })
   phone: string;
+
+  @OneToMany(() => Notification, notification => notification.user)
+  notifications: Notification[]
 
   @Column({nullable: true})
   favorite_properties:string[]
