@@ -1,14 +1,49 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { SignUpDto } from "./dto/signUp.dto";
 import { SignInDto } from "./dto/signIn.dto";
+import { IUser } from "./interface/IUserInterface";
 
-const users = [
+const users:IUser[]= [
     {
+        id:1,
         name:'gaston',
-        email:"gaston@gmail.com"
-    },{}
+        email:"gaston@gmail.com",
+        surname:'gonzalez',
+        dni:45232333,
+        phone:"+54936012934",
+        isAdmin:false,
+        password:'Strongpass123!',
+        country:'Argentina',
+        adress:'Hola 123'
+    },
+    {
+        id:2,
+        name:'gaston',
+        email:"gaston2@gmail.com",
+        surname:'gonzalez',
+        dni:45232333,
+        phone:"+54936012934",
+        isAdmin:false,
+        password:'Strongpass123!',
+        country:'Argentina',
+        adress:'Hola 123'
+    },
+    
+    {
+        id:3,
+        name:'gaston',
+        email:"gaston3@gmail.com",
+        surname:'gonzalez',
+        dni:45232333,
+        phone:"+54936012934",
+        isAdmin:false,
+        password:'Strongpass123!',
+        country:'Argentina',
+        adress:'Hola 123'
+    },
+    
 ]
-
+let id = users.length
 @Injectable()
 export class AuthService{
 
@@ -18,10 +53,15 @@ export class AuthService{
 
         if(createUser.password !== createUser.confirmPassword) throw new BadRequestException('Confirm Password is not the same')
 
+        const {confirmPassword,...restUser} = createUser
+        id++
+        await users.push({id,...restUser})
         
+        return {succes: 'User registered!'}
     }
 
     async SignIn(userCredentials: SignInDto){
-
+        const userFind = users.find((user) => user.email === userCredentials.email)
+        if(!userFind) throw new BadRequestException('Email or Password Incorrect')
     }
 };

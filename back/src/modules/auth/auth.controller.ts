@@ -9,6 +9,7 @@ export class AuthController{
 
     @Post("register")
     async SignUp(@Body() createUser: SignUpDto){
+        createUser.email.toLowerCase()
         return await this.authService.SignUp(createUser)
     }
 
