@@ -5,13 +5,15 @@ import { User } from "src/entities/user.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import * as bcrypt from 'bcrypt'
+import { JwtService } from "@nestjs/jwt";
 
 
 @Injectable()
 export class AuthService{
 
     constructor(
-        @InjectRepository(User) private userRepository: Repository<User>
+        @InjectRepository(User) private userRepository: Repository<User>,
+        private readonly jwtService: JwtService,
     ){}
 
     async SignUp(createUser: SignUpDto):Promise<Object>{
@@ -30,8 +32,22 @@ export class AuthService{
         return {succes: 'User registered!'}
     }
 
-    async SignIn(userCredentials: SignInDto){
-        const userFind:User = await this.userRepository.findOne({where: {email: userCredentials.email}})
-        if(!userFind) throw new BadRequestException('Email or Password Incorrect')
+    async SignIn(userCredentials: SignInDto):Promise<Object>{
+        const userDb:User = await this.userRepository.findOne({where: {email: userCredentials.email}})
+
+        if(!userDb) throw new BadRequestException('Email or Password Incorrect')
+        if(userDb.email !== userCredentials.email) throw new BadRequestException('Email or Password Incorrect')
+        
+        const isPasswordValid = await bcrypt.compare(userCredentials.password,userDb.password)
+        if(!isPasswordValid) throw new BadRequestException('Email or Password Incorrect')
+
+        const userPayload = {
+            id: userDb.id,
+            email: userDb.email,
+            isAdmin: userDb.isAdmin
+        }
+
+        const token = await this.jwtService.sign(userPayload)
+        return {succes: "User has been logged in succesfully", token }
     }
 };

@@ -9,12 +9,13 @@ export class AuthController{
 
     @Post("register")
     async SignUp(@Body() createUser: SignUpDto){
-        createUser.email.toLowerCase()
+        createUser.email.toLowerCase() // crear un interceptor
         return await this.authService.SignUp(createUser)
     }
 
     @Post("login")
     async SignIn(@Body() userCredentials: SignInDto){
+        userCredentials.email.toLowerCase() // crear un interceptor
         return await this.authService.SignIn(userCredentials)
     }
 
