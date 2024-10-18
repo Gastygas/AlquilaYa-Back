@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PropertyModule } from './modules/property/property.module';
+import { SpecialPriceModule } from './modules/special-price/special-price.module';
 import typeormConfig from './config/typeorm';
 
 @Module({
@@ -13,6 +14,7 @@ import typeormConfig from './config/typeorm';
         configService.get('typeorm'),
     }),
     PropertyModule,
+    SpecialPriceModule,
   ],
 
   controllers: [],
