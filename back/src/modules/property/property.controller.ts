@@ -8,7 +8,9 @@ import {
   Delete,
 } from '@nestjs/common';
 import { PropertyService } from './property.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('property')
 @Controller('property')
 export class PropertyController {
   constructor(private readonly propertyService: PropertyService) {}
