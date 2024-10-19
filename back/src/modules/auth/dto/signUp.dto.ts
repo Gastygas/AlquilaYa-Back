@@ -14,7 +14,7 @@ export class SignUpDto{
     surname:string;
 
     @IsNotEmpty()
-    @IsNumber()
+    @IsString()
     @MaxLength(9)
     dni:string
     
