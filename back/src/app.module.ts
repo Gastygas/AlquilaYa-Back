@@ -3,7 +3,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import typeormConfig from './config/typeorm';
 import { AuthModule } from './modules/auth/auth.module';
-import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
