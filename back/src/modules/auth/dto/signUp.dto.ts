@@ -47,4 +47,3 @@ export class SignUpDto{
     @IsNotEmpty()
     confirmPassword:string
 }
-console.log();
