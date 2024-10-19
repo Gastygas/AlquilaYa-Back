@@ -6,7 +6,7 @@ dotenvConfig({ path: '.env' });
 const config = {
   type: 'postgres',
   host: process.env.DB_HOST,
-  port: Number(process.env.DB_PORT),
+  port: process.env.DB_PORT as unknown as number,
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
@@ -14,7 +14,7 @@ const config = {
   migrationsTableName: 'migrations',
   autoloadEntities: true,
   entities: ['dist/**/*.entity{.ts,.js}'],
-  logging: ['error'],
+  logging: true,
   migrationsRun: true,
   synchronize: true,
   //dropSchema: true,

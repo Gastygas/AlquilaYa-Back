@@ -7,15 +7,15 @@ import { SignInDto } from "./dto/signIn.dto";
 export class AuthController{
     constructor(private readonly authService:AuthService){}
 
-    @Post("register")
+    @Post("signup")
     async SignUp(@Body() createUser: SignUpDto){
-        createUser.email.toLowerCase() // crear un interceptor
+        // createUser.email.toLowerCase() // crear un interceptor
         return await this.authService.SignUp(createUser)
     }
 
-    @Post("login")
+    @Post("signin")
     async SignIn(@Body() userCredentials: SignInDto){
-        userCredentials.email.toLowerCase() // crear un interceptor
+        // userCredentials.email.toLowerCase() // crear un interceptor
         return await this.authService.SignIn(userCredentials)
     }
 
