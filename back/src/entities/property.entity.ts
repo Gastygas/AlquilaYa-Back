@@ -8,11 +8,17 @@ export class Property {
   @PrimaryGeneratedColumn('uuid')
   id: string = uuid();
 
-//  PREGUNTAR A GUSTAVO  @Column({ nullable: false })
-//   photos: string;
+  @Column('varchar', { array: true })
+  photos: string[];
 
-// PREGUNTAR A GUSTAVO  @Column()
-//   disableDays: Date[];
+  @Column({
+    type: 'date',
+    array: true,
+  })
+  disableDays: Date[];
+
+  @Column({ type: 'varchar', nullable: false })
+  propertyName: string;
 
   @Column({ type: 'varchar', nullable: false })
   adress: string;
