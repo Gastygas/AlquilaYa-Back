@@ -6,7 +6,6 @@ import { SpecialPriceModule } from './modules/special-price/special-price.module
 import typeormConfig from './config/typeorm';
 import { AuthModule } from './modules/auth/auth.module';
 
-
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, load: [typeormConfig] }),
