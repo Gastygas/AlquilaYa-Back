@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import typeormConfig from './config/typeorm';
+import { AuthModule } from './modules/auth/auth.module';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -12,6 +14,7 @@ import typeormConfig from './config/typeorm';
       configService.get('typeorm'),
     
   }),
+  AuthModule,
 ],
   
   controllers: [],
