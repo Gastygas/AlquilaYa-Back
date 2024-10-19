@@ -12,6 +12,7 @@ export declare class User {
     country: string;
     adress: string;
     phone: string;
+    favorite_properties: string[];
     notifications: Notification[];
     reviews: Reviews[];
     bookings: Booking[];

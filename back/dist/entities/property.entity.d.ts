@@ -2,6 +2,9 @@ import { Booking } from './booking.entity';
 import { SpecialPrice } from './specialPrice.entity';
 export declare class Property {
     id: string;
+    photos: string[];
+    disableDays: Date[];
+    propertyName: string;
     adress: string;
     adressUrl: string;
     bill: string;

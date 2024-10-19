@@ -19,6 +19,7 @@ const config = {
     logging: true,
     migrationsRun: true,
     synchronize: true,
+    dropSchema: true,
 };
 exports.default = (0, config_1.registerAs)('typeorm', () => config);
 const connectDataSource = () => new typeorm_1.DataSource(config);

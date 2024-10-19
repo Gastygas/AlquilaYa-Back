@@ -24,11 +24,17 @@ __decorate([
     __metadata("design:type", String)
 ], SpecialPrice.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: false }),
+    (0, typeorm_1.Column)({
+        default: new Date(),
+        type: 'date',
+    }),
     __metadata("design:type", Date)
 ], SpecialPrice.prototype, "dateStart", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: false }),
+    (0, typeorm_1.Column)({
+        default: new Date(),
+        type: 'date',
+    }),
     __metadata("design:type", Date)
 ], SpecialPrice.prototype, "dateEnd", void 0);
 __decorate([
@@ -36,10 +42,10 @@ __decorate([
     __metadata("design:type", Number)
 ], SpecialPrice.prototype, "specialPrice", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => property_entity_1.Property, property => property.specialprice),
+    (0, typeorm_1.ManyToOne)(() => property_entity_1.Property, (property) => property.specialprice),
     __metadata("design:type", property_entity_1.Property)
 ], SpecialPrice.prototype, "property", void 0);
 exports.SpecialPrice = SpecialPrice = __decorate([
-    (0, typeorm_1.Entity)("specialprice")
+    (0, typeorm_1.Entity)('specialprice')
 ], SpecialPrice);
 //# sourceMappingURL=specialPrice.entity.js.map

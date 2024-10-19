@@ -22,32 +22,31 @@ let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
     }
-    async SignUp(createUser) {
-        return await this.authService.SignUp(createUser);
+    async signUp(newUser) {
+        return await this.authService.SignUp(newUser);
     }
-    async SignIn(userCredentials) {
-        return await this.authService.SignIn(userCredentials);
+    async signIn(credentialsUser) {
+        return await this.authService.SignIn(credentialsUser);
     }
 };
 exports.AuthController = AuthController;
 __decorate([
-    (0, common_1.Post)("signup"),
+    (0, common_1.Post)('signup'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [signUp_dto_1.SignUpDto]),
     __metadata("design:returntype", Promise)
-], AuthController.prototype, "SignUp", null);
+], AuthController.prototype, "signUp", null);
 __decorate([
-    (0, common_1.Post)("signin"),
+    (0, common_1.Post)('signin'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [signIn_dto_1.SignInDto]),
     __metadata("design:returntype", Promise)
-], AuthController.prototype, "SignIn", null);
+], AuthController.prototype, "signIn", null);
 exports.AuthController = AuthController = __decorate([
     (0, swagger_1.ApiTags)('auth'),
-    (0, common_1.Controller)("auth"),
+    (0, common_1.Controller)('auth'),
     __metadata("design:paramtypes", [auth_service_1.AuthService])
 ], AuthController);
-;
 //# sourceMappingURL=auth.controller.js.map

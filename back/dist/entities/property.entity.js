@@ -25,6 +25,21 @@ __decorate([
     __metadata("design:type", String)
 ], Property.prototype, "id", void 0);
 __decorate([
+    (0, typeorm_1.Column)('varchar', { array: true }),
+    __metadata("design:type", Array)
+], Property.prototype, "photos", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
+        type: 'date',
+        array: true,
+    }),
+    __metadata("design:type", Array)
+], Property.prototype, "disableDays", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', nullable: false }),
+    __metadata("design:type", String)
+], Property.prototype, "propertyName", void 0);
+__decorate([
     (0, typeorm_1.Column)({ type: 'varchar', nullable: false }),
     __metadata("design:type", String)
 ], Property.prototype, "adress", void 0);

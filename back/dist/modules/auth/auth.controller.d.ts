@@ -4,6 +4,6 @@ import { SignInDto } from "./dto/signIn.dto";
 export declare class AuthController {
     private readonly authService;
     constructor(authService: AuthService);
-    SignUp(createUser: SignUpDto): Promise<Object>;
-    SignIn(userCredentials: SignInDto): Promise<Object>;
+    signUp(newUser: SignUpDto): Promise<Object>;
+    signIn(credentialsUser: SignInDto): Promise<Object>;
 }

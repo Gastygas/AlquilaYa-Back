@@ -62,6 +62,10 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "phone", void 0);
 __decorate([
+    (0, typeorm_1.Column)('varchar', { array: true }),
+    __metadata("design:type", Array)
+], User.prototype, "favorite_properties", void 0);
+__decorate([
     (0, typeorm_1.OneToMany)(() => notification_entity_1.Notification, (notification) => notification.user),
     __metadata("design:type", Array)
 ], User.prototype, "notifications", void 0);

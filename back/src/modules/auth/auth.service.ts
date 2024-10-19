@@ -16,20 +16,19 @@ export class AuthService{
         private readonly jwtService: JwtService,
     ){}
 
-    async SignUp(createUser: SignUpDto):Promise<Object>{
-        console.log(createUser);
+    async SignUp(newUser: SignUpDto):Promise<Object>{
         
-        const userDb: User = await this.userRepository.findOne({where:{email: createUser.email}})
+        const userDb: User = await this.userRepository.findOne({where:{email: newUser.email}})
         if(userDb) throw new BadRequestException('Email Already Used');
 
-        if(createUser.password !== createUser.confirmPassword) throw new BadRequestException('Confirm Password is not the same')
+        if(newUser.password !== newUser.confirmPassword) throw new BadRequestException('Confirm Password is not the same')
 
-        const hashedPassword = await bcrypt.hash(createUser.password,10)
+        const hashedPassword = await bcrypt.hash(newUser.password,10)
         if(!hashedPassword) throw new BadRequestException('Password could not be created')
 
-        const {confirmPassword,...restUser} = createUser
-        const newUser:User = await this.userRepository.create({...restUser,password:hashedPassword})
-        await this.userRepository.save(newUser)
+        const {confirmPassword,...restUser} = newUser
+        const newUserDb = await this.userRepository.create({...restUser,password:hashedPassword})
+        await this.userRepository.save(newUserDb)
         
         return {succes: 'User registered!'}
     }
