@@ -1,23 +1,27 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { v4 as uuid } from 'uuid';
-import { Property } from "./property.entity";
+import { Property } from './property.entity';
 
+@Entity('specialprice')
+export class SpecialPrice {
+  @PrimaryGeneratedColumn('uuid')
+  id: string = uuid;
 
-@Entity("specialprice")
-export class SpecialPrice{
+  @Column({
+    default: new Date(),
+    type: 'date',
+  })
+  dateStart: Date;
 
-    @PrimaryGeneratedColumn('uuid')
-    id:string = uuid
+  @Column({
+    default: new Date(),
+    type: 'date',
+  })
+  dateEnd: Date;
 
-    @Column({nullable:false})
-    dateStart:Date
+  @Column({ type: 'int', nullable: false })
+  specialPrice: number;
 
-    @Column({nullable:false})
-    dateEnd:Date
-
-    @Column({type:'int',nullable:false})
-    specialPrice: number
-
-    @ManyToOne(() => Property, property => property.specialprice)
-    property: Property
+  @ManyToOne(() => Property, (property) => property.specialprice)
+  property: Property;
 }
