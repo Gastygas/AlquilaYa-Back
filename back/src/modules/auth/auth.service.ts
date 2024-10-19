@@ -17,6 +17,8 @@ export class AuthService{
     ){}
 
     async SignUp(createUser: SignUpDto):Promise<Object>{
+        console.log(createUser);
+        
         const userDb: User = await this.userRepository.findOne({where:{email: createUser.email}})
         if(userDb) throw new BadRequestException('Email Already Used');
 
