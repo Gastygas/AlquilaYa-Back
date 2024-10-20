@@ -20,6 +20,17 @@ export class PropertyController {
     return this.propertyService.create(createPropertyDto);
   }
 
+  //-----------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------
+
+  @Post('seeder')
+  addPropertiesController() {
+    return this.propertyService.addPropertiesService();
+  }
+
+  //-----------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------
+
   @Get()
   findAll() {
     return this.propertyService.findAll();

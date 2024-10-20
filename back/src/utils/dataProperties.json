@@ -1,0 +1,14 @@
+[
+  {
+    "name": "userAdmin",
+    "surname": "admin",
+    "dni": "30123987",
+    "phone": "+542644526986",
+    "country": "Argentina",
+    "adress": "Falsa 123",
+    "email": "mailadmin@gmail.com",
+    "password": "Pas$1234",
+    "confirmPassword": "Pas$1234"
+  },
+  {}
+]

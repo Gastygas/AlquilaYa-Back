@@ -1,10 +1,21 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
+import { User } from 'src/entities/user.entity';
 
 @Injectable()
-export class UsersRepository{
-    constructor(){}
+export class UsersRepository {
+  constructor() {}
 
-    async getUsers(){
-        return await []
-    }
+  //-----------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------
+  addUsersRepository() {
+    const uniqueUsers = new Set<User>();
+    throw new Error('Method not implemented.');
+  }
+
+  //-----------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------
+
+  async getUsers() {
+    return await [];
+  }
 }
