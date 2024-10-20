@@ -64,7 +64,6 @@ export class AuthService {
   //-----------------------------------------------------------------------------------------
 
   addUsersService() {
-    const users = [];
     //console.log('dataUsers: ', dataUsers);
     dataUsers.forEach((user) => this.SignUp(user));
     return 'Usuarios agregados';
