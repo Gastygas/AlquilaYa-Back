@@ -2,23 +2,25 @@
   {
     "name": "userAdmin",
     "surname": "admin",
+    "email": "mailadmin@gmail.com",
     "dni": "30123987",
-    "phone": "+542644526986",
     "country": "Argentina",
     "adress": "Falsa 123",
-    "email": "mailadmin@gmail.com",
+    "phone": "+542644526986",
     "password": "Pas$1234",
-    "confirmPassword": "Pas$1234"
+    "confirmPassword": "Pas$1234",
+    "isAdmin": true
   },
   {
     "name": "userCommon",
     "surname": "common",
+    "email": "mailcommon@gmail.com",
     "dni": "41546987",
-    "phone": "+572644516986",
     "country": "Colombia",
     "adress": "Bogotá 456",
-    "email": "mailcommon@gmail.com",
+    "phone": "+572644516986",
     "password": "Pas$1234",
-    "confirmPassword": "Pas$1234"
+    "confirmPassword": "Pas$1234",
+    "isAdmin": false
   }
 ]

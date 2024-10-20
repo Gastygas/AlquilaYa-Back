@@ -17,28 +17,17 @@ import { ApiTags } from '@nestjs/swagger';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get('/')
-  getUsers() {
-    return this.usersService.getUsers;
+  @Get()
+  geAllUsersController() {
+    return this.usersService.getAllUsersService();
   }
 
-  @Get(':id')
-  getUserById(@Param() id: string) {}
+  // @Get(':id')
+  // getUserById(@Param() id: string) {}
 
-  @Put('/')
-  changeUser(@Req() id: string, @Body() newUser) {}
+  // @Put('/')
+  // changeUser(@Req() id: string, @Body() newUser) {}
 
-  @Delete('/')
-  deleteUser(@Query() id: string) {}
-
-  //-----------------------------------------------------------------------------------------
-  //-----------------------------------------------------------------------------------------
-
-  @Post('seeder')
-  addUsersController() {
-    return this.usersService.addUsersService();
-  }
-
-  //-----------------------------------------------------------------------------------------
-  //-----------------------------------------------------------------------------------------
+  // @Delete('/')
+  // deleteUser(@Query() id: string) {}
 }
