@@ -5,6 +5,7 @@ import { PropertyModule } from './modules/property/property.module';
 import { SpecialPriceModule } from './modules/special-price/special-price.module';
 import typeormConfig from './config/typeorm';
 import { AuthModule } from './modules/auth/auth.module';
+import { FileUploadModule } from './modules/file-upload/file-upload.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { AuthModule } from './modules/auth/auth.module';
     AuthModule,
     PropertyModule,
     SpecialPriceModule,
+    FileUploadModule,
   ],
   controllers: [],
   providers: [],
