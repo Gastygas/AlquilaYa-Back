@@ -7,11 +7,12 @@ export class UserLowerCaseInterceptor implements NestInterceptor {
 
         const request = context.switchToHttp().getRequest();
          const data = request.body;
-         data.email = data.email.toLowerCase();
-         data.address = data.address.toLocaleLowerCase();
-         data.country = data.country.toLocaleLowerCase(); 
-         data.name = data.name.toLowerCase();
-         data.surname = data.surname.toLowerCase();
+         
+         data.email ? data.email.toLowerCase() : '' // SignIn
+         data.address ? data.address.toLowerCase() : ''
+         data.country ? data.country.toLowerCase() : '' 
+         data.name ? data.name.toLowerCase() : ''
+         data.surname ? data.surname.toLowerCase() : ''
 
          return next.handle();
     }   
