@@ -39,7 +39,7 @@ export class SignUpDto {
 
   @IsNotEmpty()
   @IsString()
-  adress: string;
+  address: string;
 
   @IsEmpty()
   isAdmin: boolean;
