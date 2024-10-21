@@ -18,11 +18,6 @@ export class AuthService {
   //-----------------------------------------------------------------------------------------
 
   async SignUp(newUser: SignUpDto): Promise<Object> {
-    newUser.email.toLowerCase()
-    newUser.address.toLocaleLowerCase()
-    newUser.country.toLocaleLowerCase()   //Buscar una mejor manera
-    newUser.name.toLowerCase()
-    newUser.surname.toLowerCase()
     
     const userDb = await this.usersRepository.getUserByEmail(newUser.email);
     if (userDb) throw new BadRequestException('Email Already Used');
