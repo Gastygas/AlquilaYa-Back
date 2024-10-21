@@ -1,7 +1,14 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { v4 as uuid } from 'uuid';
 import { Booking } from './booking.entity';
 import { SpecialPrice } from './specialPrice.entity';
+import { User } from './user.entity';
 
 @Entity('property')
 export class Property {
@@ -13,6 +20,7 @@ export class Property {
 
   @Column({
     type: 'date',
+    nullable: true,
     array: true,
   })
   disableDays: Date[];
@@ -76,4 +84,7 @@ export class Property {
 
   @OneToMany(() => SpecialPrice, (specialPrice) => specialPrice.property)
   specialprice: SpecialPrice[];
+
+  @ManyToOne(() => User, (user) => user.properties)
+  user: User;
 }

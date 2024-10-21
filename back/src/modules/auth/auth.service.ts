@@ -1,55 +1,75 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
-import { SignUpDto } from "./dto/signUp.dto";
-import { SignInDto } from "./dto/signIn.dto";
-import { User } from "src/entities/user.entity";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import * as bcrypt from 'bcrypt'
-import { JwtService } from "@nestjs/jwt";
-
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { SignUpDto } from './dto/signUp.dto';
+import { SignInDto } from './dto/signIn.dto';
+import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
+import { UsersRepository } from '../users/users.repository';
+import { default as dataUsers } from '../../utils/dataUsers.json';
 
 @Injectable()
-export class AuthService{
+export class AuthService {
+  constructor(
+    private readonly usersRepository: UsersRepository,
+    private readonly jwtService: JwtService,
+  ) {}
 
-    constructor(
-        @InjectRepository(User) private userRepository: Repository<User>,
-        private readonly jwtService: JwtService,
-    ){}
+  //-----------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------
 
-    async SignUp(createUser: SignUpDto):Promise<Object>{
-        console.log(createUser);
-        
-        const userDb: User = await this.userRepository.findOne({where:{email: createUser.email}})
-        if(userDb) throw new BadRequestException('Email Already Used');
+  async SignUp(newUser: SignUpDto): Promise<Object> {
+    const userDb = await this.usersRepository.getUserByEmail(newUser.email);
+    if (userDb) throw new BadRequestException('Email Already Used');
 
-        if(createUser.password !== createUser.confirmPassword) throw new BadRequestException('Confirm Password is not the same')
+    const hashedPassword = await bcrypt.hash(newUser.password, 10);
+    if (!hashedPassword)
+      throw new BadRequestException('Password could not be created');
 
-        const hashedPassword = await bcrypt.hash(createUser.password,10)
-        if(!hashedPassword) throw new BadRequestException('Password could not be created')
+    const newUserBD = await this.usersRepository.createUser({
+      ...newUser,
+      password: hashedPassword,
+    });
+    return { succes: 'User registered!' };
+  }
 
-        const {confirmPassword,...restUser} = createUser
-        const newUser:User = await this.userRepository.create({...restUser,password:hashedPassword})
-        await this.userRepository.save(newUser)
-        
-        return {succes: 'User registered!'}
-    }
+  //-----------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------
 
-    async SignIn(userCredentials: SignInDto):Promise<Object>{
-        const userDb:User = await this.userRepository.findOne({where: {email: userCredentials.email}})
+  async SignIn(userCredentials: SignInDto): Promise<Object> {
+    const userDb = await this.usersRepository.getUserByEmail(
+      userCredentials.email,
+    );
 
-        if(!userDb) throw new BadRequestException('Email or Password Incorrect')
-        if(userDb.email !== userCredentials.email) throw new BadRequestException('Email or Password Incorrect')
-        
-        const isPasswordValid = await bcrypt.compare(userCredentials.password,userDb.password)
-        if(!isPasswordValid) throw new BadRequestException('Email or Password Incorrect')
+    if (!userDb) throw new BadRequestException('Email or Password Incorrect');
 
-        const userPayload = {
-            id: userDb.id,
-            email: userDb.email,
-            isAdmin: userDb.isAdmin
-        }
+    const isPasswordValid = await bcrypt.compare(
+      userCredentials.password,
+      userDb.password,
+    );
+    if (!isPasswordValid)
+      throw new BadRequestException('Email or Password Incorrect');
 
-        const token = await this.jwtService.sign(userPayload)
-        return {succes: "User has been logged in succesfully", token }
-    }
-};
+    const userPayload = {
+      id: userDb.id,
+      email: userDb.email,
+      isAdmin: userDb.isAdmin,
+    };
+    const token = await this.jwtService.sign(userPayload);
+    return {
+      succes: 'User has been logged in succesfully',
+      user: userDb,
+      token: token,
+    };
+  }
+
+  //-----------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------
+
+  addUsersService() {
+    //console.log('dataUsers: ', dataUsers);
+    dataUsers.forEach((user) => this.SignUp(user));
+    return 'Usuarios agregados';
+  }
+
+  //-----------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------
+}
