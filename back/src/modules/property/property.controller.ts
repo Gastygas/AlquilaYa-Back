@@ -15,39 +15,39 @@ import { ApiTags } from '@nestjs/swagger';
 export class PropertyController {
   constructor(private readonly propertyService: PropertyService) {}
 
-  @Post()
-  create(@Body() createPropertyDto) {
-    return this.propertyService.create(createPropertyDto);
-  }
+  // @Post()
+  // create(@Body() createPropertyDto) {
+  //   return this.propertyService.create(createPropertyDto);
+  // }
 
-  //-----------------------------------------------------------------------------------------
-  //-----------------------------------------------------------------------------------------
+  // //-----------------------------------------------------------------------------------------
+  // //-----------------------------------------------------------------------------------------
 
-  @Post('seeder')
-  addPropertiesController() {
-    return this.propertyService.addPropertiesService();
-  }
+  // @Post('seeder')
+  // addPropertiesController() {
+  //   return this.propertyService.addPropertiesService();
+  // }
 
-  //-----------------------------------------------------------------------------------------
-  //-----------------------------------------------------------------------------------------
+  // //-----------------------------------------------------------------------------------------
+  // //-----------------------------------------------------------------------------------------
 
-  @Get()
-  findAll() {
-    return this.propertyService.findAll();
-  }
+  // @Get()
+  // findAll() {
+  //   return this.propertyService.findAll();
+  // }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.propertyService.findOne(+id);
-  }
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.propertyService.findOne(+id);
+  // }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePropertyDto) {
-    return this.propertyService.update(+id, updatePropertyDto);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updatePropertyDto) {
+  //   return this.propertyService.update(+id, updatePropertyDto);
+  // }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.propertyService.remove(+id);
-  }
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.propertyService.remove(+id);
+  // }
 }

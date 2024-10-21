@@ -17,31 +17,31 @@ import { ApiTags } from '@nestjs/swagger';
 export class SpecialPriceController {
   constructor(private readonly specialPriceService: SpecialPriceService) {}
 
-  @Post()
-  create(@Body() createSpecialPriceDto: CreateSpecialPriceDto) {
-    return this.specialPriceService.create(createSpecialPriceDto);
-  }
+  // @Post()
+  // create(@Body() createSpecialPriceDto: CreateSpecialPriceDto) {
+  //   return this.specialPriceService.create(createSpecialPriceDto);
+  // }
 
-  @Get()
-  findAll() {
-    return this.specialPriceService.findAll();
-  }
+  // @Get()
+  // findAll() {
+  //   return this.specialPriceService.findAll();
+  // }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.specialPriceService.findOne(+id);
-  }
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.specialPriceService.findOne(+id);
+  // }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateSpecialPriceDto: UpdateSpecialPriceDto,
-  ) {
-    return this.specialPriceService.update(+id, updateSpecialPriceDto);
-  }
+  // @Patch(':id')
+  // update(
+  //   @Param('id') id: string,
+  //   @Body() updateSpecialPriceDto: UpdateSpecialPriceDto,
+  // ) {
+  //   return this.specialPriceService.update(+id, updateSpecialPriceDto);
+  // }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.specialPriceService.remove(+id);
-  }
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.specialPriceService.remove(+id);
+  // }
 }

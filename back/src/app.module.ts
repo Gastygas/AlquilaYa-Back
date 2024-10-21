@@ -7,6 +7,7 @@ import typeormConfig from './config/typeorm';
 import { AuthModule } from './modules/auth/auth.module';
 import { FileUploadModule } from './modules/file-upload/file-upload.module';
 import { UsersModule } from './modules/users/users.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -16,6 +17,12 @@ import { UsersModule } from './modules/users/users.module';
       useFactory: (configService: ConfigService) =>
         configService.get('typeorm'),
     }),
+    JwtModule.register({
+      global: true,
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '60m' },
+    }),
+
     AuthModule,
     PropertyModule,
     SpecialPriceModule,

@@ -40,8 +40,6 @@ export class AuthService {
     );
 
     if (!userDb) throw new BadRequestException('Email or Password Incorrect');
-    if (userDb.email !== userCredentials.email)
-      throw new BadRequestException('Email or Password Incorrect');
 
     const isPasswordValid = await bcrypt.compare(
       userCredentials.password,
@@ -55,9 +53,12 @@ export class AuthService {
       email: userDb.email,
       isAdmin: userDb.isAdmin,
     };
-
     const token = await this.jwtService.sign(userPayload);
-    return { succes: 'User has been logged in succesfully', token };
+    return {
+      succes: 'User has been logged in succesfully',
+      user: userDb,
+      token: token,
+    };
   }
 
   //-----------------------------------------------------------------------------------------

@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEmail,
   IsEmpty,
@@ -46,11 +47,19 @@ export class SignUpDto {
   @IsNotEmpty()
   @IsString()
   @IsEmail()
+  @ApiProperty({
+    description: 'Debe ser un correo electrónico válido',
+    example: 'mailadmin@gmail.com',
+  })
   email: string;
 
   @IsNotEmpty()
   @IsString()
   @IsStrongPassword()
+  @ApiProperty({
+    description: 'Debe ser una contraseña segura',
+    example: 'Pas$1234',
+  })
   password: string;
 
   @IsNotEmpty()
