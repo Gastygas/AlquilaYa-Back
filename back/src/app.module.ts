@@ -5,6 +5,9 @@ import { PropertyModule } from './modules/property/property.module';
 import { SpecialPriceModule } from './modules/special-price/special-price.module';
 import typeormConfig from './config/typeorm';
 import { AuthModule } from './modules/auth/auth.module';
+import { FileUploadModule } from './modules/file-upload/file-upload.module';
+import { UsersModule } from './modules/users/users.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -14,9 +17,17 @@ import { AuthModule } from './modules/auth/auth.module';
       useFactory: (configService: ConfigService) =>
         configService.get('typeorm'),
     }),
+    JwtModule.register({
+      global: true,
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '60m' },
+    }),
+
     AuthModule,
     PropertyModule,
     SpecialPriceModule,
+    FileUploadModule,
+    UsersModule,
   ],
   controllers: [],
   providers: [],
