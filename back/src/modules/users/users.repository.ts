@@ -29,9 +29,13 @@ export class UsersRepository {
   //-----------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------
   async getUserByEmail(email: string) {
-    const user = await this.usersRepository.findOne({where:{email}})
-    if(!user) throw new BadRequestException('user not found')
-    return user
+    try {
+      console.log('mail: ', email);
+      const user = await this.usersRepository.findOneBy({ email });
+      return user;
+    } catch (err) {
+      throw new Error('En getUserByEmail: ' + err.message);
+    }
   }
 
   //-----------------------------------------------------------------------------------------
