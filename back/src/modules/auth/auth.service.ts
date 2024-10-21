@@ -5,6 +5,7 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { UsersRepository } from '../users/users.repository';
 import { default as dataUsers } from '../../utils/dataUsers.json';
+import { User } from 'src/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -17,6 +18,12 @@ export class AuthService {
   //-----------------------------------------------------------------------------------------
 
   async SignUp(newUser: SignUpDto): Promise<Object> {
+    newUser.email.toLowerCase()
+    newUser.address.toLocaleLowerCase()
+    newUser.country.toLocaleLowerCase()   //Buscar una mejor manera
+    newUser.name.toLowerCase()
+    newUser.surname.toLowerCase()
+    
     const userDb = await this.usersRepository.getUserByEmail(newUser.email);
     if (userDb) throw new BadRequestException('Email Already Used');
 
@@ -24,7 +31,7 @@ export class AuthService {
     if (!hashedPassword)
       throw new BadRequestException('Password could not be created');
 
-    const newUserBD = await this.usersRepository.createUser({
+    const newUserBD:Partial<User> = await this.usersRepository.createUser({
       ...newUser,
       password: hashedPassword,
     });
