@@ -54,9 +54,10 @@ export class AuthService {
       isAdmin: userDb.isAdmin,
     };
     const token = await this.jwtService.sign(userPayload);
+    const {password,...userWithOutPassword} = userDb
     return {
       succes: 'User has been logged in succesfully',
-      user: userDb,
+      user: userWithOutPassword,
       token: token,
     };
   }
