@@ -4,27 +4,33 @@ import {
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
+  Post,
   Put,
   Query,
   Req,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('user')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get('/')
-  getUsers() {
-    return this.usersService.getUsers;
+  @Get()
+  geAllUsersController() {
+    return this.usersService.getAllUsersService();
   }
 
   @Get(':id')
-  getUserById(@Param() id: string) {}
+  getUserById(@Param("id",ParseUUIDPipe) id: string) {
+    return this.usersService.getUserById(id)
+  }
 
-  @Put('/')
-  changeUser(@Req() id: string, @Body() newUser) {}
+  // @Put('/')
+  // changeUser(@Req() id: string, @Body() newUser) {}
 
-  @Delete('/')
-  deleteUser(@Query() id: string) {}
+  // @Delete('/')
+  // deleteUser(@Query() id: string) {}
 }

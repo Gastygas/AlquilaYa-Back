@@ -3,6 +3,7 @@ import { v4 as uuid } from 'uuid';
 import { Notification } from './notification.entity';
 import { Reviews } from './reviews.entity';
 import { Booking } from './booking.entity';
+import { Property } from './property.entity';
 
 @Entity('users')
 export class User {
@@ -36,7 +37,7 @@ export class User {
   @Column({ nullable: false, type: 'varchar', length: 30 })
   phone: string;
 
-  @Column('varchar', { array: true })
+  @Column('varchar', { array: true, nullable: true })
   favorite_properties: string[];
 
   @OneToMany(() => Notification, (notification) => notification.user)
@@ -47,4 +48,7 @@ export class User {
 
   @OneToMany(() => Booking, (booking) => booking.user)
   bookings: Booking[];
+
+  @OneToMany(() => Property, (property) => property.user)
+  properties: Property[];
 }
