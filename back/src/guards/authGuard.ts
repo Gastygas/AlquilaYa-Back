@@ -1,7 +1,8 @@
-import { BadRequestException, CanActivate, ExecutionContext } from "@nestjs/common";
+import { BadRequestException, CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { Observable } from "rxjs";
 
+@Injectable()
 export class AuthGuard implements CanActivate{
 
     constructor(private readonly jwtService: JwtService){}
@@ -16,6 +17,7 @@ export class AuthGuard implements CanActivate{
             const secret = process.env.JWT_SECRET
             
             const payload = this.jwtService.verify(token,{secret})
+            
             payload.iat = new Date(payload.iat * 5000)
             payload.exp = new Date(payload.exp * 5000)
 
