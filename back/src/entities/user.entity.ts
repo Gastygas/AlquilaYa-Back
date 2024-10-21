@@ -32,7 +32,7 @@ export class User {
   country: string;
 
   @Column({ nullable: false, type: 'varchar', length: 50 })
-  adress: string;
+  address: string;
 
   @Column({ nullable: false, type: 'varchar', length: 30 })
   phone: string;
