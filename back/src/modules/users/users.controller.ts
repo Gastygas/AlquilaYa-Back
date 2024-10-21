@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
   Query,
@@ -22,8 +23,10 @@ export class UsersController {
     return this.usersService.getAllUsersService();
   }
 
-  // @Get(':id')
-  // getUserById(@Param() id: string) {}
+  @Get(':id')
+  getUserById(@Param("id",ParseUUIDPipe) id: string) {
+    return this.usersService.getUserById(id)
+  }
 
   // @Put('/')
   // changeUser(@Req() id: string, @Body() newUser) {}

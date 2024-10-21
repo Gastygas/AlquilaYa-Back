@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -47,6 +47,16 @@ export class UsersRepository {
       take: limit,
     });
     return users.map(({ password, ...userSinPassword }) => userSinPassword);
+  }
+
+  //-----------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------
+  
+  async getUserById(id: string):Promise<Omit<User,'password'>> {
+    const user = await this.usersRepository.findOne({where:{id}})
+    if(!user) throw new BadRequestException('user not found')
+    const {password,...userWithOutPassword} = user
+    return userWithOutPassword
   }
 
   //-----------------------------------------------------------------------------------------
