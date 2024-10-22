@@ -1,19 +1,29 @@
 import { Injectable } from '@nestjs/common';
+import { PropertyRepository } from './property.repository';
+import { CreatePropertyDto } from './dto/create-property.dto';
 
 @Injectable()
 export class PropertyService {
+  constructor(private readonly propertyRepository: PropertyRepository){}
+
+
+  getAllPropertiesService(){
+    return this.propertyRepository.getAllPropertiesRepository()
+  }
   //-----------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------
   addPropertiesService() {
-    throw new Error('Method not implemented.');
+    return this.propertyRepository.addPropertiesRepository();
   }
 
   //-----------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------
 
-  create(createPropertyDto) {
-    return 'This action adds a new property';
+  createProperty(newProperty:CreatePropertyDto,id:string) {
+    return this.propertyRepository.createProperty(newProperty,id);
   }
+
+
 
   findAll() {
     return `This action returns all property`;

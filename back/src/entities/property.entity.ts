@@ -16,7 +16,7 @@ export class Property {
   id: string = uuid();
 
   @Column('varchar', { array: true })
-  photos: string[];
+  photos: string[] | string;
 
   @Column({
     type: 'date',
@@ -29,10 +29,10 @@ export class Property {
   propertyName: string;
 
   @Column({ type: 'varchar', nullable: false })
-  adress: string;
+  address: string;
 
   @Column({ type: 'varchar', nullable: false })
-  adressUrl: string;
+  addressUrl: string;
 
   @Column({ type: 'varchar', nullable: false })
   bill: string;
