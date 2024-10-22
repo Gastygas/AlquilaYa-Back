@@ -12,7 +12,7 @@ export class AuthController {
 
   @Post('signup')
   @UseInterceptors(UserLowerCaseInterceptor)
-  async signUp(@Body() newUser: SignUpDto) {
+  async signUp(@Body() newUser: SignUpDto) {    
     return await this.authService.SignUp(newUser);
   }
 
