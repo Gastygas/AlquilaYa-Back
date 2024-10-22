@@ -6,27 +6,37 @@ import {
   Patch,
   Param,
   Delete,
+  Req,
 } from '@nestjs/common';
 import { PropertyService } from './property.service';
 import { ApiTags } from '@nestjs/swagger';
+import { CreatePropertyDto } from './dto/create-property.dto';
 
 @ApiTags('property')
 @Controller('property')
 export class PropertyController {
   constructor(private readonly propertyService: PropertyService) {}
 
-  // @Post()
-  // create(@Body() createPropertyDto) {
-  //   return this.propertyService.create(createPropertyDto);
-  // }
+  @Get()
+  getAllPropertiesController(){
+    return this.propertyService.getAllPropertiesService()
+  }
+
+
+  @Post()
+  createPropertyController(
+    @Body() newProperty:CreatePropertyDto,
+    @Req() id: string) {
+      return this.propertyService.createProperty(newProperty,id);
+  }
 
   // //-----------------------------------------------------------------------------------------
   // //-----------------------------------------------------------------------------------------
 
-  // @Post('seeder')
-  // addPropertiesController() {
-  //   return this.propertyService.addPropertiesService();
-  // }
+  @Post('seeder')
+  addPropertiesController() {
+    return this.propertyService.addPropertiesService();
+  }
 
   // //-----------------------------------------------------------------------------------------
   // //-----------------------------------------------------------------------------------------
