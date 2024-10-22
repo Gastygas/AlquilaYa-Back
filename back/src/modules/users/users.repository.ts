@@ -45,6 +45,10 @@ export class UsersRepository {
     const users = await this.usersRepository.find({
       skip: (page - 1) * limit,
       take: limit,
+      relations:{
+        properties:true,
+        bookings:true,
+      }
     });
     return users.map(({ password, ...userSinPassword }) => userSinPassword);
   }
