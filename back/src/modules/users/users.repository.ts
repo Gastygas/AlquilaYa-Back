@@ -40,7 +40,7 @@ export class UsersRepository {
   async getUserByEmail(email: string) {
     try {
       console.log('mail: ', email);
-      const user = await this.usersRepository.findOneBy({ email });
+      const user = await this.usersRepository.findOne({where:{email}});
       return user;
     } catch (err) {
       throw new Error('En getUserByEmail: ' + err.message);
@@ -66,10 +66,12 @@ export class UsersRepository {
   //-----------------------------------------------------------------------------------------
   
   async getUserById(id: string):Promise<Omit<User,'password'>> {
-    const user = await this.usersRepository.findOne({where:{id}})
+    const user = await this.usersRepository.findOne({where:{id},relations:{
+      properties:true
+    }})
     if(!user) throw new BadRequestException('user not found')
-    const {password,...userWithOutPassword} = user
-    return userWithOutPassword
+    // const {password,...userWithOutPassword} = user
+    return user
   }
 
   //-----------------------------------------------------------------------------------------

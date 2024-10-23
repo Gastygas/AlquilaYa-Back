@@ -16,7 +16,7 @@ export class PropertyRepository{
         private readonly userRepository:UsersRepository
     ){}
 
-    async getAllPropertiesRepository(page = 1, limit = 5){        
+    async getAllPropertiesRepository(page = 1, limit = 50){        
         const properties = await this.propertyRepository.find({
             skip: (page - 1) * limit,
             take: limit,
@@ -29,7 +29,7 @@ export class PropertyRepository{
         return properties
     }
 
-    async createProperty(newProperty: CreatePropertyDto,id:string = "21a8229c-4a52-4359-ae74-442663cbc097") {
+    async createProperty(newProperty: CreatePropertyDto,id:string) {
         const propertyExits:Property = await this.propertyRepository.findOne({where:{address: newProperty.address}})
         if(propertyExits) throw new BadRequestException('Address already used')
 
@@ -40,13 +40,6 @@ export class PropertyRepository{
         const savedProperty = await this.propertyRepository.save(createProperty)
 
         const property:Property = await this.propertyRepository.findOne({where:{id:savedProperty.id},relations:{user:true}})
-
-        // const userResponse = {
-        //     id: property.user.id,
-        //     name: property.user.name,
-        //     email: property.user.email,
-        //     // añadir otros campos que queramos mostrar
-        // };
 
         return {success: "Property has been added",
                 property,
