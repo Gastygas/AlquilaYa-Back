@@ -26,6 +26,15 @@ export class UsersRepository {
     }
   }
 
+  async create (user: Partial<User>) {
+    try {
+      const newUser = await this.usersRepository.save(user);
+      return newUser;
+    } catch (err) {
+      throw new Error('Error al crear el usuario');
+    }
+  }
+
   //-----------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------
   async getUserByEmail(email: string) {
