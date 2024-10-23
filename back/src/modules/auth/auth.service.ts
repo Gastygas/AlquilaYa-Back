@@ -90,6 +90,7 @@ export class AuthService {
         const newUser = {
           name: name || '',
           email: email,
+          surname : '',
           password: '',
           address: '',
           phone: '',
