@@ -24,7 +24,7 @@ export class PropertyRepository{
         return properties
     }
 
-    async createProperty(newProperty: CreatePropertyDto,id?:string) {
+    async createProperty(newProperty: CreatePropertyDto) {
         const propertyExits = await this.propertyRepository.findOne({where:{address: newProperty.address}})
         if(propertyExits) throw new BadRequestException('Address already used')
 
@@ -33,6 +33,8 @@ export class PropertyRepository{
 
         const createProperty = await this.propertyRepository.create(newProperty)
         await this.propertyRepository.save(createProperty)
+
+
 
         return {success: "Property has been added"}
     }

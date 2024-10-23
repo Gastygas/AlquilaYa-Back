@@ -24,10 +24,10 @@ export class PropertyController {
 
 
   @Post()
+
   createPropertyController(
-    @Body() newProperty:CreatePropertyDto,
-    @Req() id: string) {
-      return this.propertyService.createProperty(newProperty,id);
+    @Body() newProperty:CreatePropertyDto) {
+      return this.propertyService.createProperty(newProperty);
   }
 
   // //-----------------------------------------------------------------------------------------

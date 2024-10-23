@@ -1,10 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PropertyRepository } from './property.repository';
 import { CreatePropertyDto } from './dto/create-property.dto';
+import { FileUploadRespository } from '../file-upload/file-upload.repository';
+import { Repository } from 'typeorm';
+import { Property } from 'src/entities/property.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class PropertyService {
-  constructor(private readonly propertyRepository: PropertyRepository){}
+  constructor(@InjectRepository(Property) private propertyRep: Repository<Property>,
+    private readonly propertyRepository: PropertyRepository,  
+    private readonly fileUploadRepository: FileUploadRespository
+  ){}
 
 
   getAllPropertiesService(){
@@ -19,8 +26,26 @@ export class PropertyService {
   //-----------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------
 
-  createProperty(newProperty:CreatePropertyDto,id:string) {
-    return this.propertyRepository.createProperty(newProperty,id);
+  async createProperty(newProperty: CreatePropertyDto, file?: Express.Multer.File) {
+    const propertyExists = await this.propertyRep.findOne({ where: { address: newProperty.address } });
+    if (propertyExists) throw new BadRequestException('Address already used');
+
+    const createdProperty = this.propertyRep.create(newProperty);
+    await this.propertyRep.save(createdProperty);
+
+    // Si hay un archivo, lo subimos a Cloudinary
+    if (file) {
+      const response = await this.fileUploadRepository.uploadImage(file);
+      if (!response.secure_url) {
+        throw new NotFoundException('Error uploading image to Cloudinary');
+      }
+
+      // Actualizamos la propiedad con la URL de la imagen subida
+      createdProperty.photos = [response.secure_url]; // O actualiza si ya tiene fotos
+      await this.propertyRep.save(createdProperty);
+    }
+
+    return { success: 'Property has been added', property: createdProperty };
   }
 
 
