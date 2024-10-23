@@ -29,7 +29,7 @@ export class PropertyRepository{
         return properties
     }
 
-    async createProperty(newProperty: CreatePropertyDto,id:string = "5790fc20-775c-4f25-a1c5-c2ea311b2509") {
+    async createProperty(newProperty: CreatePropertyDto,id:string = "21a8229c-4a52-4359-ae74-442663cbc097") {
         const propertyExits:Property = await this.propertyRepository.findOne({where:{address: newProperty.address}})
         if(propertyExits) throw new BadRequestException('Address already used')
 
@@ -54,7 +54,7 @@ export class PropertyRepository{
     }
     
     async addPropertiesRepository(){
-        data.forEach(async(property) => await this.createProperty(property,"3e3b86f8-4e84-4651-b64b-94314243609a"))
+        data.forEach(async(property) => await this.createProperty(property,"21a8229c-4a52-4359-ae74-442663cbc097"))
         return {success:"properties has been added"}
     }
 
