@@ -7,10 +7,12 @@ import {
   Param,
   Delete,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import { PropertyService } from './property.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreatePropertyDto } from './dto/create-property.dto';
+import { AuthGuard } from 'src/guards/authGuard';
 
 @ApiTags('property')
 @Controller('property')
@@ -23,7 +25,9 @@ export class PropertyController {
   }
 
 
+  @ApiBearerAuth()
   @Post()
+  // @UseGuards(AuthGuard)
   createPropertyController(
     @Body() newProperty:CreatePropertyDto,
     @Req() id: string) {

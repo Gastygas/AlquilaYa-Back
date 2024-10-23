@@ -26,6 +26,15 @@ export class UsersRepository {
     }
   }
 
+  async create (user: Partial<User>) {
+    try {
+      const newUser = await this.usersRepository.save(user);
+      return newUser;
+    } catch (err) {
+      throw new Error('Error al crear el usuario');
+    }
+  }
+
   //-----------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------
   async getUserByEmail(email: string) {
@@ -45,6 +54,10 @@ export class UsersRepository {
     const users = await this.usersRepository.find({
       skip: (page - 1) * limit,
       take: limit,
+      relations:{
+        properties:true,
+        bookings:true,
+      }
     });
     return users.map(({ password, ...userSinPassword }) => userSinPassword);
   }
