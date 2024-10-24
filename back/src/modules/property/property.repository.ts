@@ -20,12 +20,20 @@ export class PropertyRepository {
       skip: (page - 1) * limit,
       take: limit,
       relations: {
-        user: true,
         specialprice: true,
+        user: true
       },
     });
 
-    return properties;
+    const propertiesWithUserId = properties.map(property => {
+      const { user, ...restProperty } = property;
+      return {
+        ...restProperty,
+        user: { id: user.id }, 
+      };
+    });
+    
+    return propertiesWithUserId
   }
 
   async createProperty(newProperty: CreatePropertyDto, id: string) {
@@ -46,10 +54,9 @@ export class PropertyRepository {
 
     const property: Property = await this.propertyRepository.findOne({
       where: { id: savedProperty.id },
-      relations: { user: true },
     });
 
-    return { success: 'Property has been added', property };
+    return { success: 'Property has been added', property:{property,userId: userDb.id} };
   }
 
   async addPropertiesRepository() {
