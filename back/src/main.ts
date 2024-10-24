@@ -37,7 +37,12 @@ async function bootstrap() {
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   }
-  app.enableCors(corsOptions);
+  
+  app.enableCors({
+    origin: '*', // Permite cualquier origen
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Métodos permitidos
+    credentials: true, // Permite envío de cookies si es necesario
+  });
 
 
   await app.listen(3001);
