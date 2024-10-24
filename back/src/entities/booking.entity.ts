@@ -9,14 +9,14 @@ export class Booking {
   @PrimaryGeneratedColumn('uuid')
   id: string = uuid();
 
-  @Column({type : "date" , nullable :   false})
+  @Column({type:"date" , nullable:false})
   dateStart : Date;
 
-  @Column({type : "date" , nullable :   false})
+  @Column({type:"date" , nullable:false})
   dateEnd : Date;
 
-  @Column()
-  bookingStatus : boolean;
+  @Column({default: true})
+  bookingStatus: boolean;
 
   @ManyToOne(() => User, property => property.bookings)
   user: User

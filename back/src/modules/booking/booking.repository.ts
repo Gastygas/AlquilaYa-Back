@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Booking } from "src/entities/booking.entity";
 import { Repository } from "typeorm";
+import { CreateBookingDto } from "./dto/create-booking.dto";
 
 @Injectable()
 export class BookingRepository{
@@ -30,5 +31,11 @@ export class BookingRepository{
         })
 
         return bookings;
+    }
+
+    async createBooking(newBoking:CreateBookingDto,userId:string){
+    
+
+
     }
 }

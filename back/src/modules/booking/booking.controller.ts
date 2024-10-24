@@ -9,20 +9,22 @@ import { ApiTags } from '@nestjs/swagger';
 export class BookingController {
   constructor(private readonly bookingService: BookingService) {}
 
-  @Post()
-  create(@Body() createBookingDto: CreateBookingDto) {
-    return this.bookingService.create(createBookingDto);
-  }
-
+  
   @Get()
-  findAll() {
-    return this.bookingService.findAll();
+  getBookingsController() {
+    return this.bookingService.getBookingsService();
   }
-
+  
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.bookingService.findOne(+id);
   }
+  
+  @Post()
+  create(@Body() createBookingDto: CreateBookingDto) {
+    return this.bookingService.create(createBookingDto);
+  }
+  
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateBookingDto: UpdateBookingDto) {
