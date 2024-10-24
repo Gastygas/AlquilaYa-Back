@@ -3,27 +3,26 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
 import * as dataUsers from '../../utils/dataUsers.json';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class UsersRepository {
   constructor(
-    @InjectRepository(User) private usersRepository: Repository<User>,
+    private readonly emailService: EmailService,
+    @InjectRepository(User) 
+    private usersRepository: Repository<User>,
   ) {}
 
   //-----------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------
 
   async createUser(user: Partial<User>) {
-    //console.log('user: ', user);
-    try {
+
       const newUser = await this.usersRepository.save(user);
-      console.log('newUser: ', newUser);
       const dbUser = await this.usersRepository.findOneBy({ id: newUser.id });
-      const { password, ...userSinPassword } = dbUser;
-      return userSinPassword;
-    } catch (err) {
-      throw new Error('Error al crear el usuario');
-    }
+      if(!dbUser) throw new BadRequestException("User could not be created")
+      await this.emailService.sendEmailRegisterSuccessfully(dbUser.email,dbUser.name)
+      return dbUser;
   }
 
   async create (user: Partial<User>) {

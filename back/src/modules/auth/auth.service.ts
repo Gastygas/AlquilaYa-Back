@@ -34,21 +34,19 @@ export class AuthService {
     if (!hashedPassword)
       throw new BadRequestException('Password could not be created');
 
-    const newUserBD: Partial<User> = await this.usersRepository.createUser({
+    const newUserDb: Partial<User> = await this.usersRepository.createUser({
       ...newUser,
       password: hashedPassword,
     });
-    return { succes: 'User registered!' };
+    return { succes: 'User registered!, Please check your email',
+             user: newUserDb
+     };
   }
 
   //-----------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------
 
   async SignIn(userCredentials: SignInDto): Promise<Object> {
-    // const userEmail = await this.usersRepository.getUserByEmail(
-    //   userCredentials.email,
-    // );
-    // if (!userEmail) throw new BadRequestException('Email or Password Incorrect');
 
     const userDb = await this.userEntity.findOne({
       where: { email: userCredentials.email },
