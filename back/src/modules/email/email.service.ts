@@ -20,4 +20,6 @@ export class EmailService{
         .catch((err) => {console.log('error al mandar el mail',err.message)}
         )
     }
+
+    
 }
