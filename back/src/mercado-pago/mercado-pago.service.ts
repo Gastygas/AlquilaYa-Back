@@ -1,26 +1,41 @@
 import { Injectable } from '@nestjs/common';
 import { CreateMercadoPagoDto } from './dto/create-mercado-pago.dto';
 import { UpdateMercadoPagoDto } from './dto/update-mercado-pago.dto';
+import * as mercadopago from 'mercadopago';
 
 @Injectable()
 export class MercadoPagoService {
-  create(createMercadoPagoDto: CreateMercadoPagoDto) {
-    return 'This action adds a new mercadoPago';
+  constructor() {
+    // Inicializa Mercado Pago con tu token de acceso
+    mercadopago.configurations.setAccessToken('YOUR_ACCESS_TOKEN'); // Usa tu token de acceso
   }
 
-  findAll() {
-    return `This action returns all mercadoPago`;
+  async createPayment(preferenceData: any) {
+    try {
+      const response = await mercadopago.preferences.create(preferenceData);
+      return response.body;
+    } catch (error) {
+      throw new Error(`Error creating payment: ${error.message}`);
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} mercadoPago`;
-  }
+  // create(createMercadoPagoDto: CreateMercadoPagoDto) {
+  //   return 'This action adds a new mercadoPago';
+  // }
 
-  update(id: number, updateMercadoPagoDto: UpdateMercadoPagoDto) {
-    return `This action updates a #${id} mercadoPago`;
-  }
+  // findAll() {
+  //   return `This action returns all mercadoPago`;
+  // }
 
-  remove(id: number) {
-    return `This action removes a #${id} mercadoPago`;
-  }
+  // findOne(id: number) {
+  //   return `This action returns a #${id} mercadoPago`;
+  // }
+
+  // update(id: number, updateMercadoPagoDto: UpdateMercadoPagoDto) {
+  //   return `This action updates a #${id} mercadoPago`;
+  // }
+
+  // remove(id: number) {
+  //   return `This action removes a #${id} mercadoPago`;
+  // }
 }
