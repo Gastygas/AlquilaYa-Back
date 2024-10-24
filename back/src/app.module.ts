@@ -9,6 +9,7 @@ import { FileUploadModule } from './modules/file-upload/file-upload.module';
 import { UsersModule } from './modules/users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { EmailModule } from './modules/email/email.module';
+import { BookingModule } from './modules/booking/booking.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { EmailModule } from './modules/email/email.module';
     SpecialPriceModule,
     FileUploadModule,
     UsersModule,
+    BookingModule,
   ],
   controllers: [],
   providers: [],
