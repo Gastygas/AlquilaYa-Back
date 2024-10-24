@@ -12,27 +12,21 @@ export class PropertyService {
   }
   //-----------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------
-  addPropertiesService() {
-    return this.propertyRepository.addPropertiesRepository();
+ 
+  getPropertyById(id:string){
+    return this.propertyRepository.getPropertyById(id)
   }
-
-  //-----------------------------------------------------------------------------------------
-  //-----------------------------------------------------------------------------------------
 
   createProperty(newProperty:CreatePropertyDto,id:string) {
     return this.propertyRepository.createProperty(newProperty,id);
   }
 
+  //-----------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------
 
-
-  findAll() {
-    return `This action returns all property`;
+  addPropertiesService() {
+    return this.propertyRepository.addPropertiesRepository();
   }
-
-  findOne(id: number) {
-    return `This action returns a #${id} property`;
-  }
-
   update(id: number, updatePropertyDto) {
     return `This action updates a #${id} property`;
   }
