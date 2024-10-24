@@ -11,19 +11,19 @@ export class BookingService {
     return this.bookingRepository.getBookings()
   }
   
-  create(createBookingDto: CreateBookingDto) {
- 
+  createBookingService(createBookingDto: CreateBookingDto,userId) {
+    return this.bookingRepository.createBooking(createBookingDto,userId)
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} booking`;
-  }
+  // findOne(id: number) {
+  //   return `This action returns a #${id} booking`;
+  // }
 
-  update(id: number, updateBookingDto: UpdateBookingDto) {
-    return `This action updates a #${id} booking`;
-  }
+  // update(id: number, updateBookingDto: UpdateBookingDto) {
+  //   return `This action updates a #${id} booking`;
+  // }
 
-  remove(id: number) {
-    return `This action removes a #${id} booking`;
-  }
+  // remove(id: number) {
+  //   return `This action removes a #${id} booking`;
+  // }
 }
