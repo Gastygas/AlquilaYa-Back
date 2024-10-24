@@ -18,8 +18,8 @@ export class MercadoPagoService {
         })),
 
         back_urls: {
-            success: "https://localhost:3000/mercadopago/succes",
-            failure: "https://localhost:3000/mercadopago/failure",
+            success: "https://localhost:3000/mercadopago/success",
+            failure: "https://loalhost:3000/mercadopago/failure",
           },
       auto_return: 'approved',
     };
