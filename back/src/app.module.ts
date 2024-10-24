@@ -8,7 +8,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { FileUploadModule } from './modules/file-upload/file-upload.module';
 import { UsersModule } from './modules/users/users.module';
 import { JwtModule } from '@nestjs/jwt';
-import { MercadoPagoModule } from './mercado-pago/mercado-pago.module';
+import { MercadoPagoModule } from './modules/mercado-pago/mercado-pago.module';
 
 @Module({
   imports: [

@@ -16,12 +16,32 @@ export class MercadoPagoService {
     // });
   }
 
-  async createPayment(preferenceData: any) {
+  async createPayment(createPaymentDto: CreateMercadoPagoDto) {
+    const { amount, description, externalReference } = createPaymentDto;
+
+    const paymentData = {
+      transaction_amount: amount,
+      description,
+      external_reference: externalReference,
+      payment_method_id: 'visa', // Ejemplo: Puedes configurar la tarjeta
+      installments: 1, // Número de cuotas
+      payer: {
+        email: 'customer@example.com',
+      },
+      auto_return: 'approved',
+      back_urls: {
+        success: 'http://your-domain.com/success', // URL de éxito
+        failure: 'http://your-domain.com/failure', // URL de fallo
+      },
+      notification_url: 'http://your-domain.com/webhook', // URL de webhook (opcional)
+    };
+
     try {
-      const response = await MercadoPago.preferences.create(preferenceData);
-      return response.body;
+      const payment = await this.mercadopago.payment.create(paymentData);
+      return payment.body;
     } catch (error) {
-      throw new Error(`Error creating payment: ${error.message}`);
+      console.error('Error al crear el pago:', error);
+      throw error;
     }
   }
 
