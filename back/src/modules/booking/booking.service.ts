@@ -10,8 +10,12 @@ export class BookingService {
   getBookingsService(){
     return this.bookingRepository.getBookings()
   }
+
+  getBookingById(id:string){
+    return this.bookingRepository.getBookingById(id)
+  }
   
-  createBookingService(createBookingDto: CreateBookingDto,userId) {
+  createBookingService(createBookingDto: CreateBookingDto,userId:string) {
     return this.bookingRepository.createBooking(createBookingDto,userId)
   }
 

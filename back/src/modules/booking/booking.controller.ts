@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Request, UseGuards, ParseUUIDPipe } from '@nestjs/common';
 import { BookingService } from './booking.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ICustomRequest } from '../property/interface/customRequest';
+import { AuthGuard } from 'src/guards/authGuard';
 
 @ApiTags('booking')
 @Controller('booking')
@@ -16,17 +17,22 @@ export class BookingController {
     return this.bookingService.getBookingsService();
   }
   
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.bookingService.findOne(+id);
-  // }
+  @Get(':id')
+  getBookgById(@Param('id',ParseUUIDPipe) id: string) {
+    return this.bookingService.getBookingById(id);
+  }
   
+  @ApiBearerAuth()
   @Post()
-  create(
+  @UseGuards(AuthGuard)
+  createBookController(
+    @Body() newBooking: CreateBookingDto,
     @Request() req: ICustomRequest,
-    @Body() createBookingDto: CreateBookingDto) {
+  ) {
     const userId = req.user.id
-    return this.bookingService.createBookingService(createBookingDto,userId);
+    console.log(userId);
+    
+    return this.bookingService.createBookingService(newBooking,userId);
   }
   
 
