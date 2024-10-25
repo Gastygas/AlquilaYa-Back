@@ -3,7 +3,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { FileUploadService } from './file-upload.service';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { PropertyService } from '../property/property.service';
-import { CustomRequest } from '../property/interface/customRequest';
+import { ICustomRequest } from '../property/interface/customRequest';
 
 @ApiTags('file-upload')
 @Controller('files')
@@ -25,7 +25,7 @@ export class FileUploadController {
     },
   })
   async uploadImageToProperty(
-    @Request() req: CustomRequest,
+    @Request() req: ICustomRequest,
     @UploadedFile(new ParseFilePipe({
       validators: [
         new MaxFileSizeValidator({ maxSize: 200000 }),  
