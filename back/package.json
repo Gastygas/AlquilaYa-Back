@@ -40,6 +40,7 @@
     "pg": "^8.13.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
+    "sendgrid": "^5.2.3",
     "typeorm": "^0.3.20",
     "uuid": "^10.0.0"
   },

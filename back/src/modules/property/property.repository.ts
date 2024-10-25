@@ -81,6 +81,8 @@ export class PropertyRepository {
       j++;
     }
 
+
     return { success: 'properties has been added' };
   }
 }
+

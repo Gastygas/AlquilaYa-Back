@@ -3,7 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PropertyModule } from './modules/property/property.module';
 import { SpecialPriceModule } from './modules/special-price/special-price.module';
-import typeormConfig from './config/typeorm';
+import typeormConfig from './config/typeOrm';
 import { AuthModule } from './modules/auth/auth.module';
 import { FileUploadModule } from './modules/file-upload/file-upload.module';
 import { UsersModule } from './modules/users/users.module';
