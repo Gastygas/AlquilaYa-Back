@@ -13,12 +13,14 @@ import { default as dataUsers } from '../../utils/dataUsers.json';
 import { User } from 'src/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersRepository: UsersRepository,
     private readonly jwtService: JwtService,
+    private readonly emailService: EmailService,
     @InjectRepository(User)
     private readonly userEntity: Repository<User>,
   ) {}
@@ -38,6 +40,7 @@ export class AuthService {
       ...newUser,
       password: hashedPassword,
     });
+    await this.emailService.sendEmailRegisterSuccessfully(newUserDb.email,newUserDb.name)
     return { succes: 'User registered!, Please check your email',
              user: newUserDb
      };
