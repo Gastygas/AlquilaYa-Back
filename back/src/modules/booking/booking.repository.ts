@@ -49,11 +49,25 @@ export class BookingRepository{
     }
 
 
-    async createBooking(newBoking:CreateBookingDto,userId:string){
-        const propertyFind:IPropertyWithUserId = await this.propertyRepository.getPropertyById(newBoking.propertyId)
+    async createBooking(newBooking:CreateBookingDto,userId:string){
+        const propertyFind:IPropertyWithUserId = await this.propertyRepository.getPropertyById(newBooking.propertyId)
         if(!propertyFind) throw new BadRequestException("Property id not found")
 
-        
+          // Verifica disponibilidad de fechas
+        const isDateAvailable = (date: string): boolean => {
+            return !propertyFind.disableDays.some(disableDate => {
+                const disableDay = new Date(disableDate).getTime();
+                const bookingDay = new Date(date).getTime();
+
+            return disableDay === bookingDay;
+        });
+        };
+
+        // Si alguna de las fechas no está disponible, retorna un error
+        if (!isDateAvailable(newBooking.dateStart) || !isDateAvailable(newBooking.dateEnd)) {
+            throw new BadRequestException("The selected dates are not available.");
+        }
+
 
         const userDb:Omit<User,'password'> = await this.userRepository.getUserById(userId) 
         if(!userDb) throw new BadRequestException("User Id not found")
@@ -65,8 +79,10 @@ export class BookingRepository{
         // } 
         //si el payment status es completed seguimos asi
 
-        const createBooking = await this.bookingRepository.create({...newBoking,user:userDb,property:propertyFind})
+        const createBooking = await this.bookingRepository.create({...newBooking,user:userDb,property:propertyFind})
         const savedBooking= await this.bookingRepository.save(createBooking)
+
+        // await this.propertyRepository  Necesito que llame a una funcion que agregue los dias reservados a disable days
 
         const booking:Booking = await this.bookingRepository.findOne({where:{id:savedBooking.id},relations:{user:true,property:true,payment:true}})
         if(!booking) throw new BadRequestException("Booking no se pudo completar")

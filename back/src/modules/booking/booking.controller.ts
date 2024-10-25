@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Request, UseGuards, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Request, UseGuards, ParseUUIDPipe, UseInterceptors } from '@nestjs/common';
 import { BookingService } from './booking.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
@@ -25,13 +25,12 @@ export class BookingController {
   @ApiBearerAuth()
   @Post("create")
   @UseGuards(AuthGuard)
+  @UseInterceptors()
   createBookController(
     @Body() newBooking: CreateBookingDto,
     @Request() req: ICustomRequest,
   ) {
-    const userId = req.user.id
-    console.log(userId);
-    
+    const userId = req.user.id    
     return this.bookingService.createBookingService(newBooking,userId);
   }
   
