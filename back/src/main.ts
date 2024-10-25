@@ -44,6 +44,18 @@ async function bootstrap() {
     credentials: true, // Permite envío de cookies si es necesario
   });
 
+  
+  async function bootstrap() {
+      const app = await NestFactory.create(AppModule);
+      app.useGlobalPipes(new ValidationPipe());
+      app.enableCors(); // Permite CORS si es necesario
+      await app.listen(3000);
+  }
+  bootstrap();
+
+  app.enableCors({
+    origin: '*', // Permite todas las solicitudes de origen
+});
 
   await app.listen(3001);
 }

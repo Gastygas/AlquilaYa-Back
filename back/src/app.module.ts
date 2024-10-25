@@ -10,6 +10,7 @@ import { UsersModule } from './modules/users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { EmailModule } from './modules/email/email.module';
 import { MercadopagoModule } from './modules/mercadopago/mercadoPago.module';
+import { PaymentsModule } from './modules/payments/payments.module';
 
 @Module({
   imports: [
@@ -30,7 +31,8 @@ import { MercadopagoModule } from './modules/mercadopago/mercadoPago.module';
     SpecialPriceModule,
     FileUploadModule,
     UsersModule,
-    MercadopagoModule
+    MercadopagoModule,
+    PaymentsModule
   ],
   controllers: [],
   providers: [],
