@@ -28,7 +28,6 @@ export class PropertyController {
 
   @ApiBearerAuth()
   @Post()
-
   @UseGuards(AuthGuard)
   createPropertyController(
     @Body() newProperty:CreatePropertyDto,
@@ -36,7 +35,6 @@ export class PropertyController {
   ) {
       const id = req.user.id
       return this.propertyService.createProperty(newProperty,id);
-
   }
 
   // //-----------------------------------------------------------------------------------------
