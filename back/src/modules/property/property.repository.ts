@@ -6,6 +6,7 @@ import { CreatePropertyDto } from './dto/create-property.dto';
 import { default as data } from '../../../src/utils/dataProperty.json';
 import { UsersRepository } from '../users/users.repository';
 import { User } from 'src/entities/user.entity';
+import { IPropertyWithUserId } from './interface/propertyWithUserId';
 
 @Injectable()
 export class PropertyRepository {
@@ -15,20 +16,38 @@ export class PropertyRepository {
     private readonly userRepository: UsersRepository,
   ) {}
 
-  async getAllPropertiesRepository(page = 1, limit = 50) {
+  async getAllPropertiesRepository(page = 1, limit = 50):Promise<IPropertyWithUserId[]>{
     const properties = await this.propertyRepository.find({
       skip: (page - 1) * limit,
       take: limit,
       relations: {
-        user: true,
         specialprice: true,
+        user: true
       },
     });
 
-    return properties;
+    const propertiesWithUserId = properties.map(property => {
+      const { user, ...restProperty } = property;
+      return {
+        ...restProperty,
+        user: { id: user.id }, 
+      };
+    });
+    
+    return propertiesWithUserId
   }
 
-  async createProperty(newProperty: CreatePropertyDto, id: string) {
+  async getPropertyById(id:string):Promise<IPropertyWithUserId>{
+    const property = await this.propertyRepository.findOne({where:{id},relations:{user:true}}) 
+    if(!property) throw new BadRequestException("Property Id not found")
+    const {user,...restProperty} = property
+    return{
+      ...restProperty,
+      user:{id: user.id}
+    }
+  }
+
+  async createProperty(newProperty: CreatePropertyDto, id: string){
     const propertyExits: Property = await this.propertyRepository.findOne({
       where: { address: newProperty.address },
     });
@@ -46,10 +65,9 @@ export class PropertyRepository {
 
     const property: Property = await this.propertyRepository.findOne({
       where: { id: savedProperty.id },
-      relations: { user: true },
     });
 
-    return { success: 'Property has been added', property };
+    return { success: 'Property has been added', property:{property,userId: userDb.id} };
   }
 
   async addPropertiesRepository() {
