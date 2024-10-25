@@ -7,6 +7,8 @@ import { default as data } from '../../../src/utils/dataProperty.json';
 import { UsersRepository } from '../users/users.repository';
 import { User } from 'src/entities/user.entity';
 import { IPropertyWithUserId } from './interface/propertyWithUserId';
+import { format, addDays, isBefore, parse } from 'date-fns';
+import { disableDayDto } from './dto/disableday.dto';
 
 @Injectable()
 export class PropertyRepository {
@@ -83,6 +85,44 @@ export class PropertyRepository {
 
 
     return { success: 'properties has been added' };
+  }
+
+  async addDisablesDayRepository(propertyId: string,dates:disableDayDto) {
+    const property: Property = await this.propertyRepository.findOne({ where: { id: propertyId } });
+    if (!property) throw new BadRequestException("Property not found");
+
+    const { dateStart, dateEnd } = dates;
+    const startDate = parse(dateStart, "dd/MM/yyyy", new Date());
+    const endDate = parse(dateEnd, "dd/MM/yyyy", new Date());
+
+    const today = new Date();
+
+    // Validar si dateStart es una fecha anterior a hoy
+    if (isBefore(startDate, today) || isBefore(endDate, startDate)) throw new BadRequestException("Invalid dates");
+
+
+    let current = startDate;
+    const disableDaysArray: string[] = [];
+
+
+    // Generar fechas en el rango y verificar si ya están reservadas
+    while (isBefore(current, endDate) || current.getTime() === endDate.getTime()) {
+        const formattedDate = format(current, "dd/MM/yyyy");
+
+        if (property.disableDays.includes(formattedDate)) {
+            throw new BadRequestException("Dates are reserved, please take other ones");
+        }
+
+        disableDaysArray.push(formattedDate);
+        current = addDays(current, 1);
+    }
+
+    // Actualizar disableDays
+    property.disableDays = [...property.disableDays, ...disableDaysArray];
+    await this.propertyRepository.save(property);
+
+    return {success:"The days are reserved now"}
+
   }
 }
 

@@ -8,6 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UsersRepository } from '../users/users.repository';
 import { User } from 'src/entities/user.entity';
 import { FileUploadService } from '../file-upload/file-upload.service';
+import { disableDayDto } from './dto/disableday.dto';
 
 @Injectable()
 export class PropertyService {
@@ -93,6 +94,10 @@ export class PropertyService {
     }  
     property.photos.push(fileUrl);  
     return this.propertyEntity.save(property);
+  }
+
+  addDisablesDayService(propertyId: string,dates:disableDayDto) {
+    return this.propertyRepository.addDisablesDayRepository(propertyId,dates)
   }
 
 
