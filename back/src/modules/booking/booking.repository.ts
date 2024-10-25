@@ -53,8 +53,11 @@ export class BookingRepository{
         const propertyFind:IPropertyWithUserId = await this.propertyRepository.getPropertyById(newBoking.propertyId)
         if(!propertyFind) throw new BadRequestException("Property id not found")
 
+        
+
         const userDb:Omit<User,'password'> = await this.userRepository.getUserById(userId) 
         if(!userDb) throw new BadRequestException("User Id not found")
+
         // const paymentStatus = llamar a una funcion payment que retorne el estado del pago
         // if(!paymentStatus === "completed"){
         // return { err: "el estado del pago es el siguiente"
@@ -72,10 +75,24 @@ export class BookingRepository{
 
         return {
             success:"Property has been booked successfully",
-            ...restBooking,
-            user:{id:user.id},
-            property:{id:property.id}
+            book:{
+                ...restBooking,
+                user:{id:user.id},
+                property:{id:property.id}
+            }
         }
+    }
+
+    async cancelBook(id: string) {
+        const book = await this.bookingRepository.findOne({where:{id}})
+        if(!book) throw new BadRequestException("Book not found")
+        
+        await this.bookingRepository.update(book,{
+            ...book,
+            bookingStatus: false
+        })
+
+        return {success:"Book has been canceled"}
     }
 
 }

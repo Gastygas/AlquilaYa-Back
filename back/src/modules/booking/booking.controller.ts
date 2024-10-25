@@ -23,7 +23,7 @@ export class BookingController {
   }
   
   @ApiBearerAuth()
-  @Post()
+  @Post("create")
   @UseGuards(AuthGuard)
   createBookController(
     @Body() newBooking: CreateBookingDto,
@@ -36,6 +36,12 @@ export class BookingController {
   }
   
 
+  @Patch('cancel/:id')
+  cancelBookController(
+    @Param("id",ParseUUIDPipe) id: string
+  ){
+    return this.bookingService.cancelBookService(id)
+  }
   // @Patch(':id')
   // update(@Param('id') id: string, @Body() updateBookingDto: UpdateBookingDto) {
   //   return this.bookingService.update(+id, updateBookingDto);
