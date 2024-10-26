@@ -37,8 +37,25 @@ async function bootstrap() {
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   }
-  app.enableCors(corsOptions);
+  
+  app.enableCors({
+    origin: '*', // Permite cualquier origen
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Métodos permitidos
+    credentials: true, // Permite envío de cookies si es necesario
+  });
 
+  
+  async function bootstrap() {
+      const app = await NestFactory.create(AppModule);
+      app.useGlobalPipes(new ValidationPipe());
+      app.enableCors(); // Permite CORS si es necesario
+      await app.listen(3000);
+  }
+  bootstrap();
+
+  app.enableCors({
+    origin: '*', // Permite todas las solicitudes de origen
+});
 
   await app.listen(3001);
 }

@@ -9,6 +9,8 @@ import { FileUploadModule } from './modules/file-upload/file-upload.module';
 import { UsersModule } from './modules/users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { EmailModule } from './modules/email/email.module';
+import { MercadopagoModule } from './modules/mercadopago/mercadoPago.module';
+import { PaymentsModule } from './modules/payments/payments.module';
 import { BookingModule } from './modules/booking/booking.module';
 import { GatewayModule } from './modules/websockets/websocket.module';
 
@@ -32,6 +34,8 @@ import { GatewayModule } from './modules/websockets/websocket.module';
     SpecialPriceModule,
     FileUploadModule,
     UsersModule,
+    MercadopagoModule,
+    PaymentsModule
     BookingModule,
   ],
   controllers: [],
