@@ -134,5 +134,28 @@ export class PropertyRepository {
     return {success:"The days are reserved now"}
 
   }
+
+  async cancelDisableDays(propertyId,dates:disableDayDto){
+    const property = await this.propertyRepository.findOne({where:{id:propertyId},relations:{user:true,bookings:true,}})
+    if(!property) throw new BadRequestException("Property Id not found")
+
+    const { dateStart, dateEnd } = dates;
+    const startDate = parse(dateStart, "dd/MM/yyyy", new Date());
+    const endDate = parse(dateEnd, "dd/MM/yyyy", new Date());
+
+    let current = startDate
+    let cancelDaysArr:string[] = []
+
+    while (isBefore(current, endDate) || current.getTime() === endDate.getTime()) {
+      const formattedDate = format(current, "dd/MM/yyyy");
+      cancelDaysArr.push(formattedDate);
+      current = addDays(current, 1);
+    }
+
+    property.disableDays = property.disableDays.filter(disableDate => !cancelDaysArr.includes(disableDate))
+    await this.propertyRepository.save(property);
+
+    return { success: "The days are free now" };
+  }
 }
 
