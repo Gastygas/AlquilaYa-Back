@@ -7,6 +7,8 @@ import { PropertyRepository } from "../property/property.repository";
 import { UsersRepository } from "../users/users.repository";
 import { User } from "src/entities/user.entity";
 import { IPropertyWithUserId } from "../property/interface/propertyWithUserId";
+import { format, parse } from "date-fns";
+import { isDateAvailable } from "./utils/isDateAvailable";
 
 @Injectable()
 export class BookingRepository{
@@ -32,7 +34,7 @@ export class BookingRepository{
             return {
                 ...restBooking,
                 property: {id: property.id},
-                user: {id: user.id}
+                user: {id: user.id},
             }
         })
         return bookings;
@@ -40,11 +42,11 @@ export class BookingRepository{
 
     async getBookingById(id:string){
         const book = await this.bookingRepository.findOne({where:{id},relations:{user:true,payment:true,property:true}})
-        const {user,property} = book
+        const {user,property,...restBook} = book
         return {
-            ...book,
+            ...restBook,
             user:{id: user.id},
-            property:{id: property.id}
+            property:{id: property.id},
         }
     }
 
@@ -53,18 +55,8 @@ export class BookingRepository{
         const propertyFind:IPropertyWithUserId = await this.propertyRepository.getPropertyById(newBooking.propertyId)
         if(!propertyFind) throw new BadRequestException("Property id not found")
 
-          // Verifica disponibilidad de fechas
-        const isDateAvailable = (date: string): boolean => {
-            return !propertyFind.disableDays.some(disableDate => {
-                const disableDay = new Date(disableDate).getTime();
-                const bookingDay = new Date(date).getTime();
-
-            return disableDay === bookingDay;
-        });
-        };
-
         // Si alguna de las fechas no está disponible, retorna un error
-        if (!isDateAvailable(newBooking.dateStart) || !isDateAvailable(newBooking.dateEnd)) {
+        if (!isDateAvailable(propertyFind,newBooking.dateStart) || !isDateAvailable(propertyFind,newBooking.dateEnd)) {
             throw new BadRequestException("The selected dates are not available.");
         }
 
@@ -83,6 +75,7 @@ export class BookingRepository{
         const savedBooking= await this.bookingRepository.save(createBooking)
 
         // await this.propertyRepository  Necesito que llame a una funcion que agregue los dias reservados a disable days
+        await this.propertyRepository.addDisablesDayRepository(propertyFind.id,{dateEnd: newBooking.dateEnd,dateStart: newBooking.dateStart})
 
         const booking:Booking = await this.bookingRepository.findOne({where:{id:savedBooking.id},relations:{user:true,property:true,payment:true}})
         if(!booking) throw new BadRequestException("Booking no se pudo completar")
@@ -99,10 +92,16 @@ export class BookingRepository{
         }
     }
 
-    async cancelBook(id: string) {
+    async cancelBook(id: string,userId:string) {
+        const user:Omit<User,'password'> = await this.userRepository.getUserById(userId)
+
         const book = await this.bookingRepository.findOne({where:{id}})
         if(!book) throw new BadRequestException("Book not found")
+        if (!(book.user.id === user.id)) throw new BadRequestException("User id is not the same who paid de book")
+        if(book.bookingStatus === false) throw new BadRequestException("your book is cancelled")
         
+        //await this.
+
         await this.bookingRepository.update(book,{
             ...book,
             bookingStatus: false

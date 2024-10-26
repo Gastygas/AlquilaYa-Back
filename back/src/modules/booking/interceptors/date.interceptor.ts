@@ -6,26 +6,20 @@ import {
     BadRequestException,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+
 
 @Injectable()
-export class DateTransformInterceptor implements NestInterceptor {
+export class Dateinterceptor implements NestInterceptor {
     intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
         const request = context.switchToHttp().getRequest();
-        const body = request.body;
-
-        const dateFields = ['dateStart', 'dateEnd'];
-
-        dateFields.forEach(field => {
-            if (body[field]) {
-                const date = new Date(body[field]);
-                if (isNaN(date.getTime())) {
-                    throw new BadRequestException(`Invalid date format for ${field}`);
-                }
-                body[field] = date;
-            }
-        });
-
+        const { dateStart, dateEnd } = request.body;
+    
+        const datePattern = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
+    
+        if (!datePattern.test(dateStart) || !datePattern.test(dateEnd)) {
+          throw new BadRequestException("Invalid dates. tip: the format of dates has to be dd/MM/yyyy");
+        }
+    
         return next.handle();
-    }
+      }
 }

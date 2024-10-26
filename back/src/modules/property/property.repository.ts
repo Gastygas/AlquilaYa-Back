@@ -96,29 +96,39 @@ export class PropertyRepository {
     const endDate = parse(dateEnd, "dd/MM/yyyy", new Date());
 
     const today = new Date();
+    today.setHours(0, 0, 0, 0); // Asegurarse de eliminar la hora para comparar solo la fecha
 
     // Validar si dateStart es una fecha anterior a hoy
-    if (isBefore(startDate, today) || isBefore(endDate, startDate)) throw new BadRequestException("Invalid dates");
-
+    if (isBefore(startDate, today) || isBefore(endDate, startDate)) {
+        throw new BadRequestException("Invalid dates");
+    }
 
     let current = startDate;
     const disableDaysArray: string[] = [];
 
+    // Convertir fechas en disableDays a formato "dd/MM/yyyy"
+    const formattedDisableDays = property.disableDays.map(date => {
+        const parsedDate = new Date(date);
+        return format(parsedDate, "dd/MM/yyyy");
+    });
 
     // Generar fechas en el rango y verificar si ya están reservadas
     while (isBefore(current, endDate) || current.getTime() === endDate.getTime()) {
         const formattedDate = format(current, "dd/MM/yyyy");
-
-        if (property.disableDays.includes(formattedDate)) {
-            throw new BadRequestException("Dates are reserved, please take other ones");
-        }
+        if (formattedDisableDays.includes(formattedDate)) throw new BadRequestException("Dates are reserved, please take other ones");
 
         disableDaysArray.push(formattedDate);
         current = addDays(current, 1);
     }
+    // Actualizar disableDays con las nuevas fechas en formato ISO
+    const newDisableDays = disableDaysArray.map(date => {
+        const [day, month, year] = date.split('/');
+        return new Date(parseInt(year), parseInt(month) - 1, parseInt(day)).toISOString();
+    });
+
 
     // Actualizar disableDays
-    property.disableDays = [...property.disableDays, ...disableDaysArray];
+    property.disableDays = [...property.disableDays, ...newDisableDays];
     await this.propertyRepository.save(property);
 
     return {success:"The days are reserved now"}

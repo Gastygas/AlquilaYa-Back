@@ -5,6 +5,7 @@ import { UpdateBookingDto } from './dto/update-booking.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ICustomRequest } from '../property/interface/customRequest';
 import { AuthGuard } from 'src/guards/authGuard';
+import { Dateinterceptor } from './interceptors/date.interceptor';
 
 @ApiTags('booking')
 @Controller('booking')
@@ -25,7 +26,7 @@ export class BookingController {
   @ApiBearerAuth()
   @Post("create")
   @UseGuards(AuthGuard)
-  @UseInterceptors()
+  @UseInterceptors(Dateinterceptor)
   createBookController(
     @Body() newBooking: CreateBookingDto,
     @Request() req: ICustomRequest,
@@ -35,11 +36,15 @@ export class BookingController {
   }
   
 
+  @ApiBearerAuth()
   @Patch('cancel/:id')
+  @UseGuards(AuthGuard)
   cancelBookController(
-    @Param("id",ParseUUIDPipe) id: string
+    @Param("id",ParseUUIDPipe) id: string,
+    @Request() req: ICustomRequest
   ){
-    return this.bookingService.cancelBookService(id)
+    const userId = req.user.id
+    return this.bookingService.cancelBookService(id,userId)
   }
   // @Patch(':id')
   // update(@Param('id') id: string, @Body() updateBookingDto: UpdateBookingDto) {

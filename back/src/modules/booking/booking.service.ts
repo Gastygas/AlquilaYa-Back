@@ -19,8 +19,8 @@ export class BookingService {
     return this.bookingRepository.createBooking(createBookingDto,userId)
   }
 
-  cancelBookService(id: string) {
-    return this.bookingRepository.cancelBook(id);
+  cancelBookService(id: string,userId:string) {
+    return this.bookingRepository.cancelBook(id,userId);
   }
 
   // findOne(id: number) {

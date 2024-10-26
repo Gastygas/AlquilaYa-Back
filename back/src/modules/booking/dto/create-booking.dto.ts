@@ -7,11 +7,11 @@ export class CreateBookingDto {
     propertyId: string;
 
     @IsNotEmpty()
-    @ApiProperty({example:"10/24/2024"})
+    @ApiProperty({example:"20/10/2024"})
     dateStart: string;
 
     @IsNotEmpty()
-    @ApiProperty({example:"15/24/2024"})
+    @ApiProperty({example:"25/10/2024"})
     dateEnd: string;
 
 }
