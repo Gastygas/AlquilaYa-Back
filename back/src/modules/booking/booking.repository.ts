@@ -95,12 +95,12 @@ export class BookingRepository{
     async cancelBook(id: string,userId:string) {
         const user:Omit<User,'password'> = await this.userRepository.getUserById(userId)
 
-        const book = await this.bookingRepository.findOne({where:{id}})
+        const book = await this.bookingRepository.findOne({where:{id},relations:{property:true,user:true}})
         if(!book) throw new BadRequestException("Book not found")
         if (!(book.user.id === user.id)) throw new BadRequestException("User id is not the same who paid de book")
         if(book.bookingStatus === false) throw new BadRequestException("your book is cancelled")
         
-        //await this.
+        await this.propertyRepository.cancelDisableDays(book.property.id,{dateStart:book.dateStart,dateEnd:book.dateEnd})
 
         await this.bookingRepository.update(book,{
             ...book,

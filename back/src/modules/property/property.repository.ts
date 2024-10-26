@@ -135,7 +135,9 @@ export class PropertyRepository {
 
   }
 
-  async cancelDisableDays(propertyId,dates:disableDayDto){
+  async cancelDisableDays(propertyId:string,dates:disableDayDto){
+    console.log(dates);
+    
     const property = await this.propertyRepository.findOne({where:{id:propertyId},relations:{user:true,bookings:true,}})
     if(!property) throw new BadRequestException("Property Id not found")
 
@@ -152,7 +154,12 @@ export class PropertyRepository {
       current = addDays(current, 1);
     }
 
-    property.disableDays = property.disableDays.filter(disableDate => !cancelDaysArr.includes(disableDate))
+    // Convertir las fechas en disableDays al formato "dd/MM/yyyy" antes de comparar
+    property.disableDays = property.disableDays.filter(disableDate => {
+      const formattedDisableDate = format(new Date(disableDate), "dd/MM/yyyy");
+      return !cancelDaysArr.includes(formattedDisableDate);
+  })
+
     await this.propertyRepository.save(property);
 
     return { success: "The days are free now" };
