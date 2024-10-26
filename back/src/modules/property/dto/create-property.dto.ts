@@ -13,7 +13,7 @@ export class CreatePropertyDto {
   @ApiProperty({ example: ["24/10/12"]})
   @IsArray()
   @IsOptional()
-  disableDays?: Date[];
+  disableDays?: string[];
 
   @IsString()
   @IsNotEmpty()
