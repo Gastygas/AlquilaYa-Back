@@ -21,6 +21,8 @@ export class MercadoPagoService {
     return response.json();
   }
 
+  
+
   async createPreference(body: any) {
     
     
@@ -37,7 +39,7 @@ export class MercadoPagoService {
             failure: "https://loalhost:3000/mercadopago/failure",
           },
       auto_return: 'approved',
-      notification_url: 'https://4763-45-189-218-73.ngrok-free.app/payments/webhook',
+      notification_url: 'https://4195-45-189-218-73.ngrok-free.app/payments/webhook',
     };
 
     try {

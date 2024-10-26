@@ -10,14 +10,14 @@ export class Payment {
   @Column({nullable: false})
   method : string
 
-  @Column({nullable: false , type: 'date'})
-  date : Date
+  @Column({nullable: false , type: 'varchar'})
+  date : string
 
   @Column({nullable: false , type : "float"})
   amount : number
 
   @Column({nullable: false })
-  paymentStatus : "completed" | "pending" | "failed" | "cancelled" | "refunded"
+  paymentStatus : "approved" | "pending" | "failed" | "cancelled" | "refunded"
 
   @Column({nullable: false, type : "varchar" , length : 50})
   transactionId : string
