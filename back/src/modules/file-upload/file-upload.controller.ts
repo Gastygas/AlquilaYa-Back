@@ -1,19 +1,22 @@
-import { Controller, FileTypeValidator, MaxFileSizeValidator, Param, ParseFilePipe, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Controller, FileTypeValidator, MaxFileSizeValidator, ParseFilePipe, Post, Request, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileUploadService } from './file-upload.service';
-import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { PropertyService } from '../property/property.service';
+import { ICustomRequest } from '../property/interface/customRequest';
 
 @ApiTags('file-upload')
 @Controller('files')
 export class FileUploadController {
-    constructor(private readonly fileUploadService: FileUploadService){}
+    constructor(private readonly fileUploadService: FileUploadService,
+      private readonly propertyService: PropertyService,
+    ){}
 
-    @Post('uploadImage/:id')
-    @UseInterceptors(FileInterceptor('file'))
-    @ApiOperation({ summary: 'Upload a file' })
-    @ApiConsumes('multipart/form-data')
-    @ApiBody({
-    description: 'File to upload',
+  @Post()
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'Property data and optional image to upload',
     schema: {
       type: 'object',
       properties: {
@@ -21,19 +24,16 @@ export class FileUploadController {
       },
     },
   })
-    async uploadImage(@Param('id') propertyId: string, @UploadedFile(new ParseFilePipe({
-        validators: [
-          new MaxFileSizeValidator({
-            maxSize: 200000,
-            message: 'El archivo supera el peso maximo de  200kb'
-          }),
-          new FileTypeValidator({
-            fileType: /(.jpg|.jpeg|.png|.webp)$/,
-          }),
-        ],
-      }),
-    ) file: Express.Multer.File){
-      return this.fileUploadService.uploadImage(file, propertyId);
-      
-    }
+  async uploadImageToProperty(
+    @Request() req: ICustomRequest,
+    @UploadedFile(new ParseFilePipe({
+      validators: [
+        new MaxFileSizeValidator({ maxSize: 200000 }),  
+        new FileTypeValidator({ fileType: /(.jpg|.jpeg|.png|.webp)$/ }),
+      ],
+    })) file: Express.Multer.File
+  ) {
+    const propertyId = req.body.propertyId;  
+    return this.propertyService.uploadImageToProperty(propertyId, file);
+  }
 }

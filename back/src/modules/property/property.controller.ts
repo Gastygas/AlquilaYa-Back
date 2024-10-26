@@ -8,12 +8,14 @@ import {
   Delete,
   UseGuards,
   Request,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { PropertyService } from './property.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreatePropertyDto } from './dto/create-property.dto';
 import { AuthGuard } from 'src/guards/authGuard';
-import { CustomRequest } from './interface/customRequest';
+import { ICustomRequest } from './interface/customRequest';
+import { disableDayDto } from './dto/disableday.dto';
 
 @ApiTags('property')
 @Controller('property')
@@ -25,16 +27,32 @@ export class PropertyController {
     return this.propertyService.getAllPropertiesService()
   }
 
+  @Get(":id")
+  getPropertyByIdController(
+    @Param('id',ParseUUIDPipe) id:string
+  ){
+    return this.propertyService.getPropertyById(id)
+  }
+
 
   @ApiBearerAuth()
   @Post()
   @UseGuards(AuthGuard)
   createPropertyController(
     @Body() newProperty:CreatePropertyDto,
-    @Request() req: CustomRequest,
+    @Request() req: ICustomRequest,
   ) {
-      const id = req.user.id
-      return this.propertyService.createProperty(newProperty,id);
+      const userId = req.user.id
+      return this.propertyService.createProperty(newProperty,userId);
+  }
+
+  @Patch("disable/:id")
+  // @UseGuards(AuthGuard)
+  addDisablesDayController(
+    @Param('id',ParseUUIDPipe) propertyId: string,
+    @Body() dates: disableDayDto,
+  ){
+    return this.propertyService.addDisablesDayService(propertyId,dates)
   }
 
   // //-----------------------------------------------------------------------------------------

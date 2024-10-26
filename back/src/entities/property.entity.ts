@@ -21,9 +21,10 @@ export class Property {
   @Column({
     type: 'date',
     nullable: true,
+    default:[],
     array: true,
   })
-  disableDays: Date[];
+  disableDays: string[];
 
   @Column({ type: 'varchar', nullable: false })
   propertyName: string;

@@ -9,19 +9,19 @@ export class Booking {
   @PrimaryGeneratedColumn('uuid')
   id: string = uuid();
 
-  @Column({type : "date" , nullable :   false})
-  dateStart : Date;
+  @Column({nullable:false})
+  dateStart : string;
 
-  @Column({type : "date" , nullable :   false})
-  dateEnd : Date;
+  @Column({nullable:false})
+  dateEnd : string;
 
-  @Column()
-  bookingStatus : boolean;
+  @Column({default: true})
+  bookingStatus: boolean;
 
-  @ManyToOne(() => User, property => property.bookings)
+  @ManyToOne(() => User, property => property.bookings,{nullable:false})
   user: User
 
-  @ManyToOne(() => Property, property => property.bookings)
+  @ManyToOne(() => Property, property => property.bookings,{nullable:false})
   property: Property
   
   @OneToOne(() => Payment, payment => payment.booking)
