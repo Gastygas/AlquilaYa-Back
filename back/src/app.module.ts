@@ -35,7 +35,7 @@ import { GatewayModule } from './modules/websockets/websocket.module';
     FileUploadModule,
     UsersModule,
     MercadopagoModule,
-    PaymentsModule
+    PaymentsModule,
     BookingModule,
   ],
   controllers: [],
