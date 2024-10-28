@@ -27,13 +27,13 @@ export class BookingController {
   @Post("create")
   @UseGuards(AuthGuard)
   @UseInterceptors(Dateinterceptor)
-  createBookController(
-    @Body() newBooking: CreateBookingDto,
-    @Request() req: ICustomRequest,
-  ) {
-    const userId = req.user.id    
-    return this.bookingService.createBookingService(newBooking,userId);
-  }
+  // createBookController(
+  //   @Body() newBooking: CreateBookingDto,
+  //   @Request() req: ICustomRequest,
+  // ) {
+  //   const userId = req.user.id    
+  //   return this.bookingService.createBookingService(newBooking,userId , );
+  // }
   
 
   @ApiBearerAuth()

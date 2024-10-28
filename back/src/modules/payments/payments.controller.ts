@@ -14,22 +14,37 @@ import { UpdatePaymentDto } from './dto/update-payment.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { MercadoPagoService } from '../mercadopago/mercadoPago.service';
+import { BookingService } from '../booking/booking.service';
+import { CreateBookingDto } from '../booking/dto/create-booking.dto';
 @ApiTags('payments')
 @Controller('payments')
 export class PaymentsController {
   constructor(
     private readonly paymentsService: PaymentsService,
     private readonly mercadoPagoService: MercadoPagoService,
+    private readonly bookingService: BookingService,
   ) {}
 
-
-  @Get("")
+  @Get('')
   getPayments() {
     return this.paymentsService.getAllPayments();
   }
   @Post('webhook')
   async handlePaymentUpdate(@Body() body: any, @Res() res: Response) {
-    
-    return this.paymentsService.createPayment(body.data?.id, 'a5a5943f-c830-4bed-9fad-9a760e5592c1'); //tiene que llegar el id por el front  (actualmente hardcodedo)
+    // Extrae los valores directamente
+
+    const booking = {
+      propertyId: body.bookingData.propertyId,
+      dateStart: body.bookingData.dateStart,
+      dateEnd: body.bookingData.dateEnd,
+    };
+
+    const userId = body.userId;
+
+    return await this.paymentsService.createPaymentAndBooking(
+      body.data?.id,
+      booking,
+      userId,
+    );
   }
 }

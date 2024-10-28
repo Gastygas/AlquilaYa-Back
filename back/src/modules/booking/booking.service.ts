@@ -15,8 +15,8 @@ export class BookingService {
     return this.bookingRepository.getBookingById(id)
   }
   
-  createBookingService(createBookingDto: CreateBookingDto,userId:string) {
-    return this.bookingRepository.createBooking(createBookingDto,userId)
+  createBookingService(createBookingDto: CreateBookingDto,userId:string , newPayment: any) {
+    return this.bookingRepository.createBooking(createBookingDto,userId, newPayment);
   }
 
   cancelBookService(id: string,userId:string) {

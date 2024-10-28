@@ -39,7 +39,7 @@ export class MercadoPagoService {
             failure: "https://loalhost:3000/mercadopago/failure",
           },
       auto_return: 'approved',
-      notification_url: 'https://6d10-45-189-218-80.ngrok-free.app/payments/webhook',
+      notification_url: 'https://86c1-45-189-218-80.ngrok-free.app/payments/webhook',
     };
 
     try {
