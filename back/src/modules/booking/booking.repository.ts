@@ -9,6 +9,7 @@ import { User } from "src/entities/user.entity";
 import { IPropertyWithUserId } from "../property/interface/propertyWithUserId";
 import { format, parse } from "date-fns";
 import { isDateAvailable } from "./utils/isDateAvailable";
+import { payment } from "src/config/mercadopago";
 
 @Injectable()
 export class BookingRepository{
@@ -51,7 +52,7 @@ export class BookingRepository{
     }
 
 
-    async createBooking(newBooking:CreateBookingDto,userId:string){
+    async createBooking(newBooking:CreateBookingDto,userId:string , newPayment: any) {
         const propertyFind:IPropertyWithUserId = await this.propertyRepository.getPropertyById(newBooking.propertyId)
         if(!propertyFind) throw new BadRequestException("Property id not found")
 
@@ -71,7 +72,9 @@ export class BookingRepository{
         // } 
         //si el payment status es completed seguimos asi
 
-        const createBooking = await this.bookingRepository.create({...newBooking,user:userDb,property:propertyFind})
+
+
+        const createBooking = await this.bookingRepository.create({...newBooking, payment : newPayment,user:userDb,property:propertyFind})
         const savedBooking= await this.bookingRepository.save(createBooking)
 
         // await this.propertyRepository  Necesito que llame a una funcion que agregue los dias reservados a disable days
@@ -87,7 +90,8 @@ export class BookingRepository{
             book:{
                 ...restBooking,
                 user:{id:user.id},
-                property:{id:property.id}
+                property:{id:property.id},
+                payment : {id: newPayment.id}
             }
         }
     }

@@ -5,6 +5,7 @@ import { MercadoPagoService } from '../mercadopago/mercadoPago.service';
 import { PaymentsRepository } from './payments.repository';
 import { User } from 'mercadopago';
 import { UsersRepository } from '../users/users.repository';
+import { CreateBookingDto } from '../booking/dto/create-booking.dto';
 
 @Injectable()
 export class PaymentsService {
@@ -14,29 +15,14 @@ export class PaymentsService {
     private readonly usersRepository: UsersRepository,
   ) {}
 
-async createPayment(paymentId: string, userId: string) {
-    const data = await this.mercadoPagoService.getPaymentDetails(paymentId);
+  async createPaymentAndBooking(paymentId: string , newBooking: CreateBookingDto, userId: string) {
+   return await this.paymentsRepository.createPaymentAndBooking(paymentId , newBooking, userId);
+  }
 
-    const user = await this.usersRepository.getUserById(userId);
-    
-    if (data.status === 'approved') {
-      const newPayment = await this.paymentsRepository.createPayment({
-        transactionId: data?.id ?? 'default_id',
-        method: data.payment_method?.type ?? 'default_method', // Si es undefined, usa un valor predeterminado
-        amount: data.transaction_amount ?? 0,
-        paymentStatus: data.status ?? 'default_method',
-        date: new Date(),
-
-    });
-
-    return newPayment;
-    }
-
-    
-}
-
-async getAllPayments() {
+  async getAllPayments() {
     const payments = await this.paymentsRepository.getAllPayments();
-    return payments;  
-}
+    return payments;
+  }
+
+  
 }
