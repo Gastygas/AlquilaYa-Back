@@ -13,5 +13,14 @@ export class PaymentsRepository{
         return await this.paymentEntity.save(paymentEntity); 
     }
     
+    async getAllPayments() {
+        const payments = await this.paymentEntity.find();
+        return payments;
+    }
+
+    async getPaymentByTransactionId(paymentId: string) {
+        const payment = await this.paymentEntity.findOneBy({transactionId: paymentId});
+        return payment;
+    }
   
 }

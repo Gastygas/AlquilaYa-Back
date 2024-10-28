@@ -22,9 +22,14 @@ export class PaymentsController {
     private readonly mercadoPagoService: MercadoPagoService,
   ) {}
 
+
+  @Get("")
+  getPayments() {
+    return this.paymentsService.getAllPayments();
+  }
   @Post('webhook')
   async handlePaymentUpdate(@Body() body: any, @Res() res: Response) {
     
-    return this.paymentsService.createPayment(body.data?.id, '3b768f0b-e86a-4a70-a598-341c342a30a5');
+    return this.paymentsService.createPayment(body.data?.id, 'a5a5943f-c830-4bed-9fad-9a760e5592c1'); //tiene que llegar el id por el front  (actualmente hardcodedo)
   }
 }

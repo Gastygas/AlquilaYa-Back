@@ -18,18 +18,25 @@ async createPayment(paymentId: string, userId: string) {
     const data = await this.mercadoPagoService.getPaymentDetails(paymentId);
 
     const user = await this.usersRepository.getUserById(userId);
-    console.log(data);
-    console.log(data.payment_method?.type); // Añadido el operador ?.
-
-    const newPayment = await this.paymentsRepository.createPayment({
-        transactionId: data?.id,
+    
+    if (data.status === 'approved') {
+      const newPayment = await this.paymentsRepository.createPayment({
+        transactionId: data?.id ?? 'default_id',
         method: data.payment_method?.type ?? 'default_method', // Si es undefined, usa un valor predeterminado
-        amount: data.transaction_amount,
-        paymentStatus: data.status,
-        date: data.date_created,
+        amount: data.transaction_amount ?? 0,
+        paymentStatus: data.status ?? 'default_method',
+        date: new Date(),
 
     });
 
     return newPayment;
+    }
+
+    
+}
+
+async getAllPayments() {
+    const payments = await this.paymentsRepository.getAllPayments();
+    return payments;  
 }
 }

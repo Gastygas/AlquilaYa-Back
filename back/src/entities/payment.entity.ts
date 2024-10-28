@@ -10,8 +10,8 @@ export class Payment {
   @Column({nullable: false})
   method : string
 
-  @Column({nullable: false , type: 'varchar'})
-  date : string
+  @Column({nullable: false , type: 'date'})
+  date : Date
 
   @Column({nullable: false , type : "float"})
   amount : number
