@@ -52,7 +52,7 @@ export class BookingRepository{
     }
 
 
-    async createBooking(newBooking:CreateBookingDto,userId:string , newPayment: any) {
+    async createBooking(newBooking:CreateBookingDto,userId:string) {
         const propertyFind:IPropertyWithUserId = await this.propertyRepository.getPropertyById(newBooking.propertyId)
         if(!propertyFind) throw new BadRequestException("Property id not found")
 
@@ -70,11 +70,11 @@ export class BookingRepository{
         // return { err: "el estado del pago es el siguiente"
         // payment: paymentStatus}
         // } 
-        //si el payment status es completed seguimos asi
+        //si el payment status es completed seguimos asi 
 
 
 
-        const createBooking = await this.bookingRepository.create({...newBooking, payment : newPayment,user:userDb,property:propertyFind})
+        const createBooking = await this.bookingRepository.create({...newBooking,user:userDb,property:propertyFind})
         const savedBooking= await this.bookingRepository.save(createBooking)
 
         // await this.propertyRepository  Necesito que llame a una funcion que agregue los dias reservados a disable days
@@ -91,7 +91,7 @@ export class BookingRepository{
                 ...restBooking,
                 user:{id:user.id},
                 property:{id:property.id},
-                payment : {id: newPayment.id}
+                
             }
         }
     }
@@ -113,5 +113,78 @@ export class BookingRepository{
 
         return {success:"Book has been canceled"}
     }
+    // async createPaymentAndBooking(
+    //     paymentId: string,
+    //     newBooking: CreateBookingDto,
+    //     userId: string,
+    //     manager: EntityManager,
+    //   ) {
+    //     const paymentDetails = await this.getPaymentDetails(paymentId);
+    
+    //     if (paymentDetails.status !== 'approved') {
+    //       throw new BadRequestException('Payment not approved');
+    //     }
+    
+    //     // Obtiene la propiedad y valida que exista
+    //     const property = await this.propertyRepository.getPropertyById(newBooking.propertyId);
+    //     if (!property) throw new BadRequestException("Property id not found");
+    
+    //     // Valida la disponibilidad de fechas en `disableDays`
+    //     if (!isDateAvailable(property, newBooking.dateStart) || !isDateAvailable(property, newBooking.dateEnd)) {
+    //       throw new BadRequestException("The selected dates are not available.");
+    //     }
+    
+    //     // Obtiene el usuario y valida que exista
+    //     const user = await this.userRepository.getUserById(userId);
+    //     if (!user) throw new BadRequestException("User Id not found");
+    
+    //     return await manager.transaction(async transactionalEntityManager => {
+    //       // Crear el pago y guardarlo en la base de datos
+    //       const payment = transactionalEntityManager.create(Payment, {
+    //         transactionId: paymentDetails.id,
+    //         paymentStatus: paymentDetails.status,
+    //         method: paymentDetails.payment_method.type,
+    //         amount: paymentDetails.transaction_amount,
+    //         date: new Date(),
+    //       });
+    //       const savedPayment = await transactionalEntityManager.save(payment);
+    
+    //       // Crear la reserva y guardarla en la base de datos
+    //       const booking = transactionalEntityManager.create(Booking, {
+    //         ...newBooking,
+    //         user,
+    //         property,
+    //         payment: savedPayment,
+    //       });
+    //       const savedBooking = await transactionalEntityManager.save(booking);
+    
+    //       // Agregar las fechas reservadas a `disableDays` en la propiedad
+    //       await this.propertyRepository.addDisablesDayRepository(property.id, {
+    //         dateEnd: newBooking.dateEnd,
+    //         dateStart: newBooking.dateStart,
+    //       });
+    
+    //       return {
+    //         success: 'Payment and booking have been created successfully',
+    //         booking: {
+    //           id: savedBooking.id,
+    //           userId: user.id,
+    //           propertyId: property.id,
+    //           paymentId: savedPayment.id,
+    //         },
+    //       };
+    //     });
+    //   }
+    
+    //   // Simulación de la función para obtener detalles del pago
+    //   async getPaymentDetails(paymentId: string) {
+    //     // Lógica para obtener detalles de Mercado Pago (reemplaza con tu implementación real)
+    //     return {
+    //       id: paymentId,
+    //       status: 'approved',
+    //       payment_method: { type: 'credit_card' },
+    //       transaction_amount: 3000,
+    //     };
+    //   }
 
 }

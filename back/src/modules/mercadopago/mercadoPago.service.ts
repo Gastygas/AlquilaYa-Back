@@ -25,7 +25,6 @@ export class MercadoPagoService {
 
   async createPreference(body: any) {
     
-    
     const preferenceData = {
         items: body.items.map(item  => ({
           id: item.id,
@@ -35,7 +34,7 @@ export class MercadoPagoService {
         })),
 
         back_urls: {
-            success: "https://4763-45-189-218-73.ngrok-free.app/payments/webhook",
+            success: "https://loalhost:3000/payments/webhook",
             failure: "https://loalhost:3000/mercadopago/failure",
           },
       auto_return: 'approved',
@@ -44,6 +43,7 @@ export class MercadoPagoService {
 
     try {
       const response = await preference.create({ body: preferenceData });
+      console.log('response de back',response.id);
       return { preferenceId: response.id };
     } catch (error) {
       throw new Error(error.message);

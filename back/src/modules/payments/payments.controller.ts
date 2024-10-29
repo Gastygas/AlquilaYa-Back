@@ -30,21 +30,21 @@ export class PaymentsController {
     return this.paymentsService.getAllPayments();
   }
   @Post('webhook')
-  async handlePaymentUpdate(@Body() body: any, @Res() res: Response) {
+  async handlePaymentUpdate(@Body() body: any) {
     // Extrae los valores directamente
+    
+    // const booking = {
+    //   propertyId: body.bookingData.propertyId,
+    //   dateStart: body.bookingData.dateStart,
+    //   dateEnd: body.bookingData.dateEnd,
+    // };
 
-    const booking = {
-      propertyId: body.bookingData.propertyId,
-      dateStart: body.bookingData.dateStart,
-      dateEnd: body.bookingData.dateEnd,
-    };
+    // const userId = body.userId;
 
-    const userId = body.userId;
-
-    return await this.paymentsService.createPaymentAndBooking(
-      body.data?.id,
-      booking,
-      userId,
-    );
+    // return await this.paymentsService.createPaymentAndBooking(
+    //   body.data?.id,
+    //   booking,
+    //   userId,
+    // );
   }
 }

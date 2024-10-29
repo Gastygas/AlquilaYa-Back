@@ -14,10 +14,10 @@ const config = {
   migrationsTableName: 'migrations',
   autoloadEntities: true,
   entities: ['dist/**/*.entity{.ts,.js}'],
-  logging: false,
+  logging: true,
   migrationsRun: true,
   synchronize: true,
-  //dropSchema: true,
+  // dropSchema: true,
 };
 export default registerAs('typeorm', () => config);
 export const connectDataSource = () =>

@@ -10,9 +10,7 @@ import { CreateBookingDto } from '../booking/dto/create-booking.dto';
 @Injectable()
 export class PaymentsService {
   constructor(
-    private readonly mercadoPagoService: MercadoPagoService,
     private readonly paymentsRepository: PaymentsRepository,
-    private readonly usersRepository: UsersRepository,
   ) {}
 
   async createPaymentAndBooking(paymentId: string , newBooking: CreateBookingDto, userId: string) {

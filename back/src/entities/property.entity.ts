@@ -78,7 +78,7 @@ export class Property {
   description: string;
 
   @Column({ type: 'varchar' })
-  propertyStatus: string;
+  propertyStatus: string; //mantenimiento,pending,approved,cancelled
 
   @OneToMany(() => Booking, (booking) => booking.property)
   bookings: Booking[];

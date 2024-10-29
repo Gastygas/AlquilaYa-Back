@@ -87,7 +87,7 @@ export class PropertyRepository {
     return { success: 'properties has been added' };
   }
 
-  async addDisablesDayRepository(propertyId: string,dates:disableDayDto) {
+  async addDisablesDayRepository(propertyId: string, dates: disableDayDto, manager?: unknown) {
     const property: Property = await this.propertyRepository.findOne({ where: { id: propertyId } });
     if (!property) throw new BadRequestException("Property not found");
 
