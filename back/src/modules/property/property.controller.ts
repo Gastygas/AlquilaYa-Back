@@ -16,8 +16,9 @@ import { CreatePropertyDto } from './dto/create-property.dto';
 import { AuthGuard } from 'src/guards/authGuard';
 import { ICustomRequest } from './interface/customRequest';
 import { disableDayDto } from './dto/disableday.dto';
-import { Role } from 'src/decorators/roles.decorator';
-import { Roles } from '../users/enum/user.roles.enum';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from '../users/enum/user.roles.enum';
+import { RolesGuard } from 'src/guards/roles.guard';
 
 @ApiTags('property')
 @Controller('property')
@@ -50,8 +51,8 @@ export class PropertyController {
 
   @ApiBearerAuth()
   @Patch("approve/:id")
-  @Role(Roles.Admin)
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard,RolesGuard)
   approvePropertyController(
     @Param('id', ParseUUIDPipe) id:string
   ){
@@ -60,8 +61,8 @@ export class PropertyController {
 
   @ApiBearerAuth()
   @Patch("deny/:id")
-  @Role(Roles.Admin)
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard,RolesGuard)
   denyPropertyController(
     @Param('id', ParseUUIDPipe) id:string
   ){

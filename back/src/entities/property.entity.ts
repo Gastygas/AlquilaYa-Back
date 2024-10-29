@@ -70,7 +70,7 @@ export class Property {
   description: string;
 
   @Column({ type: 'varchar', default:'pending'})
-  propertyStatus: 'pending' & 'approved' & 'cancelled' & 'maintenance';
+  propertyStatus: 'pending' | 'approved' | 'cancelled' | 'maintenance';
 
   @Column({
     type: 'date',

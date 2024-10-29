@@ -76,27 +76,26 @@ export class PropertyRepository {
   async approvePropertyRepository(id: string) {
     const property = await this.propertyRepository.findOne({where:{id},relations:{user:true}})
     if(!property) throw new BadRequestException("property not found")
-    if(property.propertyStatus === 'approved') throw new BadRequestException("Property already approved")
-    property.propertyStatus === 'approved'
+    if((property.propertyStatus as string) === 'approved') throw new BadRequestException("Property already approved")
+    property.propertyStatus = 'approved'
     await this.propertyRepository.save(property)
+    
 
 
     await this.emailService.sendEmailCreatePropertySuccessfully(property.user.email,property.user.name)
     return {success: 'Congratulations, your property was approved!'}
-    
   }
 
   async denyPropertyRepository(id: string) {
-    const property = await this.propertyRepository.findOne({where:{id}})
+    const property = await this.propertyRepository.findOne({where:{id},relations:{user:true}})
     if(!property) throw new BadRequestException("property not found")
-    if(property.propertyStatus === 'cancelled') throw new BadRequestException("Property already cancelled")
-    property.propertyStatus === 'cancelled'
+    if((property.propertyStatus as string) === 'cancelled') throw new BadRequestException("Property already cancelled")
+    property.propertyStatus = 'cancelled'
     await this.propertyRepository.save(property)
 
 
     await this.emailService.sendEmailCreatePropertyDeny(property.user.email,property.user.name)
     return {success: 'Sorry, your property was disapproved'}
-    
   }
 
   async addPropertiesRepository() {
