@@ -1,26 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
+import { MercadoPagoService } from '../mercadopago/mercadoPago.service';
+import { PaymentsRepository } from './payments.repository';
+import { User } from 'mercadopago';
+import { UsersRepository } from '../users/users.repository';
+import { CreateBookingDto } from '../booking/dto/create-booking.dto';
 
 @Injectable()
 export class PaymentsService {
-  create(createPaymentDto: CreatePaymentDto) {
-    return 'This action adds a new payment';
+  constructor(
+    private readonly mercadoPagoService: MercadoPagoService,
+    private readonly paymentsRepository: PaymentsRepository,
+    private readonly usersRepository: UsersRepository,
+  ) {}
+
+  async createPaymentAndBooking(paymentId: string , newBooking: CreateBookingDto, userId: string) {
+   return await this.paymentsRepository.createPaymentAndBooking(paymentId , newBooking, userId);
   }
 
-  findAll() {
-    return `This action returns all payments`;
+  async getAllPayments() {
+    const payments = await this.paymentsRepository.getAllPayments();
+    return payments;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} payment`;
-  }
-
-  update(id: number, updatePaymentDto: UpdatePaymentDto) {
-    return `This action updates a #${id} payment`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} payment`;
-  }
+  
 }

@@ -15,30 +15,36 @@ export class SignUpDto {
   @IsString()
   @MinLength(3)
   @MaxLength(30)
+  @ApiProperty({example: "GASTON"})
   name: string;
 
   @IsNotEmpty()
   @IsString()
   @MinLength(3)
   @MaxLength(30)
+  @ApiProperty({example:"Gonzalez"})
   surname: string;
 
   @IsNotEmpty()
   @IsString()
   @MaxLength(9)
+  @ApiProperty({example:"48999333"})
   dni: string;
 
   @IsNotEmpty()
   @IsString()
   @MinLength(9)
+  @ApiProperty({example:"+54937021892"})
   phone: string;
 
   @IsNotEmpty()
   @IsString()
+  @ApiProperty({example:"argentina"})
   country: string;
 
   @IsNotEmpty()
   @IsString()
+  @ApiProperty({example:"fake St 123"})
   address: string;
 
   @IsEmpty()
@@ -64,5 +70,8 @@ export class SignUpDto {
 
   @IsNotEmpty()
   @Validate(MatchPassword, ['password'])
+  @ApiProperty({
+    example: 'Pas$1234',
+  })
   confirmPassword: string;
 }

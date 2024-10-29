@@ -16,6 +16,8 @@ import { CreatePropertyDto } from './dto/create-property.dto';
 import { AuthGuard } from 'src/guards/authGuard';
 import { ICustomRequest } from './interface/customRequest';
 import { disableDayDto } from './dto/disableday.dto';
+import { Role } from 'src/decorators/roles.decorator';
+import { Roles } from '../users/enum/user.roles.enum';
 
 @ApiTags('property')
 @Controller('property')
@@ -46,14 +48,56 @@ export class PropertyController {
       return this.propertyService.createProperty(newProperty,userId);
   }
 
-  @Patch("disable/:id")
+  @ApiBearerAuth()
+  @Patch("approve/:id")
+  @Role(Roles.Admin)
+  @UseGuards(AuthGuard)
+  approvePropertyController(
+    @Param('id', ParseUUIDPipe) id:string
+  ){
+    return this.propertyService.approvePropertyService(id)
+  }
+
+  @ApiBearerAuth()
+  @Patch("deny/:id")
+  @Role(Roles.Admin)
+  @UseGuards(AuthGuard)
+  denyPropertyController(
+    @Param('id', ParseUUIDPipe) id:string
+  ){
+    return this.propertyService.denyPropertyService(id)
+  }
+
+
+  @Patch("reserve/:id")
   // @UseGuards(AuthGuard)
-  addDisablesDayController(
+  addReservedDaysController(
     @Param('id',ParseUUIDPipe) propertyId: string,
     @Body() dates: disableDayDto,
   ){
-    return this.propertyService.addDisablesDayService(propertyId,dates)
+    return this.propertyService.addReservedDaysService(propertyId,dates)
   }
+
+  @Patch("disable/:id")
+  // @UseGuards(AuthGuard)
+  addDisableDaysController(
+    @Param('id',ParseUUIDPipe) propertyId: string,
+    @Body() dates: disableDayDto,
+  ){
+    return this.propertyService.addDisableDaysService(propertyId,dates)
+  }
+
+
+  @Patch("cancel/disable/:id")
+  // @UseGuards(AuthGuard)
+  cancelDisableDaysController(
+    @Param('id',ParseUUIDPipe) propertyId: string,
+    @Body() dates: disableDayDto,
+  ){
+    return this.propertyService.cancelDisableDaysService(propertyId,dates)
+  }
+
+
 
   // //-----------------------------------------------------------------------------------------
   // //-----------------------------------------------------------------------------------------

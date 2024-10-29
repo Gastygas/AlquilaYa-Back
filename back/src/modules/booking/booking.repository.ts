@@ -9,6 +9,7 @@ import { User } from "src/entities/user.entity";
 import { IPropertyWithUserId } from "../property/interface/propertyWithUserId";
 import { format, parse } from "date-fns";
 import { isDateAvailable } from "./utils/isDateAvailable";
+import { payment } from "src/config/mercadopago";
 
 @Injectable()
 export class BookingRepository{
@@ -51,7 +52,7 @@ export class BookingRepository{
     }
 
 
-    async createBooking(newBooking:CreateBookingDto,userId:string){
+    async createBooking(newBooking:CreateBookingDto,userId:string) {
         const propertyFind:IPropertyWithUserId = await this.propertyRepository.getPropertyById(newBooking.propertyId)
         if(!propertyFind) throw new BadRequestException("Property id not found")
 
@@ -71,11 +72,13 @@ export class BookingRepository{
         // } 
         //si el payment status es completed seguimos asi
 
+
+
         const createBooking = await this.bookingRepository.create({...newBooking,user:userDb,property:propertyFind})
         const savedBooking= await this.bookingRepository.save(createBooking)
 
         // await this.propertyRepository  Necesito que llame a una funcion que agregue los dias reservados a disable days
-        await this.propertyRepository.addDisablesDayRepository(propertyFind.id,{dateEnd: newBooking.dateEnd,dateStart: newBooking.dateStart})
+        await this.propertyRepository.addReservedDaysRepository(propertyFind.id,{dateEnd: newBooking.dateEnd,dateStart: newBooking.dateStart})
 
         const booking:Booking = await this.bookingRepository.findOne({where:{id:savedBooking.id},relations:{user:true,property:true,payment:true}})
         if(!booking) throw new BadRequestException("Booking no se pudo completar")
@@ -87,7 +90,7 @@ export class BookingRepository{
             book:{
                 ...restBooking,
                 user:{id:user.id},
-                property:{id:property.id}
+                property:{id:property.id},
             }
         }
     }

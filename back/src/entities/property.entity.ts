@@ -18,14 +18,6 @@ export class Property {
   @Column('varchar', { array: true })
   photos: string[] | string;
 
-  @Column({
-    type: 'date',
-    nullable: true,
-    default:[],
-    array: true,
-  })
-  disableDays: string[];
-
   @Column({ type: 'varchar', nullable: false })
   propertyName: string;
 
@@ -77,8 +69,19 @@ export class Property {
   @Column({ type: 'varchar' })
   description: string;
 
-  @Column({ type: 'varchar' })
-  propertyStatus: string;
+  @Column({ type: 'varchar', default:'pending'})
+  propertyStatus: 'pending' & 'approved' & 'cancelled' & 'maintenance';
+
+  @Column({
+    type: 'date',
+    nullable: true,
+    default:[],
+    array: true,
+  })
+  disableDays: string[];
+
+  @Column({type:'date',nullable:true,default:[],array:true})
+  reservedDays: string[]
 
   @OneToMany(() => Booking, (booking) => booking.property)
   bookings: Booking[];

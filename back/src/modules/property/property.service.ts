@@ -47,6 +47,13 @@ export class PropertyService {
   //-----------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------
 
+  approvePropertyService(id: string) {
+    return this.propertyRepository.approvePropertyRepository(id)
+  }
+
+  denyPropertyService(id: string) {
+    return this.propertyRepository.denyPropertyRepository(id)
+  }
 
   addPropertiesService() {
     return this.propertyRepository.addPropertiesRepository();
@@ -54,30 +61,31 @@ export class PropertyService {
 
   async createProperty(newProperty: CreatePropertyDto, userId:string, file?: Express.Multer.File) {
     
-    const propertyExists = await this.propertyEntity.findOne({ where: { address: newProperty.address } });
-    if (propertyExists) throw new BadRequestException('Address already used');
+    return this.propertyRepository.createProperty(newProperty,userId)
+    // const propertyExists = await this.propertyEntity.findOne({ where: { address: newProperty.address } });
+    // if (propertyExists) throw new BadRequestException('Address already used');
 
-    const createdProperty = this.propertyEntity.create(newProperty);
-    await this.propertyEntity.save(createdProperty);
+    // const createdProperty = this.propertyEntity.create(newProperty);
+    // await this.propertyEntity.save(createdProperty);
 
-    const userDb: Omit<User, 'password'> = await this.userRepository.getUserById(userId);
-    if (!userDb) throw new BadRequestException('user id not found');
+    // const userDb: Omit<User, 'password'> = await this.userRepository.getUserById(userId);
+    // if (!userDb) throw new BadRequestException('user id not found');
 
-    // Creamos la propiedad con los datos proporcionados
-    const createProperty: Property = await this.propertyEntity.create({
-      user: userDb,
-      ...newProperty,
-    });
-    const savedProperty = await this.propertyEntity.save(createProperty);
-    // Si hay un archivo, lo subimos a Cloudinary
-    if (file) {
-      const imageUrl = await this.fileUploadService.uploadImage(file);
-      savedProperty.photos = [imageUrl]
-      await this.propertyEntity.save(savedProperty)
+    // // Creamos la propiedad con los datos proporcionados
+    // const createProperty: Property = await this.propertyEntity.create({
+    //   user: userDb,
+    //   ...newProperty,
+    // });
+    // const savedProperty = await this.propertyEntity.save(createProperty);
+    // // Si hay un archivo, lo subimos a Cloudinary
+    // if (file) {
+    //   const imageUrl = await this.fileUploadService.uploadImage(file);
+    //   savedProperty.photos = [imageUrl]
+    //   await this.propertyEntity.save(savedProperty)
 
-    }
+    // }
 
-    return { success: 'Property has been added', property: savedProperty };
+    // return { success: 'Property has been added', property: savedProperty };
   }
 
   async uploadImageToProperty(propertyId: string, file: Express.Multer.File) {
@@ -96,8 +104,16 @@ export class PropertyService {
     return this.propertyEntity.save(property);
   }
 
-  addDisablesDayService(propertyId: string,dates:disableDayDto) {
-    return this.propertyRepository.addDisablesDayRepository(propertyId,dates)
+  addReservedDaysService(propertyId: string,dates:disableDayDto) {
+    return this.propertyRepository.addReservedDaysRepository(propertyId,dates)
+  }
+
+  addDisableDaysService(propertyId: string,dates:disableDayDto) {
+    return this.propertyRepository.addDisableDaysRepository(propertyId,dates)
+  }
+
+  cancelDisableDaysService(propertyId: string,dates:disableDayDto){
+    return this.propertyRepository.cancelDisableDays(propertyId,dates)
   }
 
 
