@@ -80,8 +80,6 @@ export class PropertyRepository {
     property.propertyStatus = 'approved'
     await this.propertyRepository.save(property)
     
-
-
     await this.emailService.sendEmailCreatePropertySuccessfully(property.user.email,property.user.name)
     return {success: 'Congratulations, your property was approved!'}
   }
@@ -92,7 +90,6 @@ export class PropertyRepository {
     if((property.propertyStatus as string) === 'cancelled') throw new BadRequestException("Property already cancelled")
     property.propertyStatus = 'cancelled'
     await this.propertyRepository.save(property)
-
 
     await this.emailService.sendEmailCreatePropertyDeny(property.user.email,property.user.name)
     return {success: 'Sorry, your property was disapproved'}
