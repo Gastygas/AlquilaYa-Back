@@ -52,7 +52,7 @@ export class BookingRepository{
     }
 
 
-    async createBooking(newBooking:CreateBookingDto,userId:string , newPayment: any) {
+    async createBooking(newBooking:CreateBookingDto,userId:string) {
         const propertyFind:IPropertyWithUserId = await this.propertyRepository.getPropertyById(newBooking.propertyId)
         if(!propertyFind) throw new BadRequestException("Property id not found")
 
@@ -74,11 +74,11 @@ export class BookingRepository{
 
 
 
-        const createBooking = await this.bookingRepository.create({...newBooking, payment : newPayment,user:userDb,property:propertyFind})
+        const createBooking = await this.bookingRepository.create({...newBooking,user:userDb,property:propertyFind})
         const savedBooking= await this.bookingRepository.save(createBooking)
 
         // await this.propertyRepository  Necesito que llame a una funcion que agregue los dias reservados a disable days
-        await this.propertyRepository.addDisablesDayRepository(propertyFind.id,{dateEnd: newBooking.dateEnd,dateStart: newBooking.dateStart})
+        await this.propertyRepository.addReservedDaysRepository(propertyFind.id,{dateEnd: newBooking.dateEnd,dateStart: newBooking.dateStart})
 
         const booking:Booking = await this.bookingRepository.findOne({where:{id:savedBooking.id},relations:{user:true,property:true,payment:true}})
         if(!booking) throw new BadRequestException("Booking no se pudo completar")
@@ -91,7 +91,6 @@ export class BookingRepository{
                 ...restBooking,
                 user:{id:user.id},
                 property:{id:property.id},
-                payment : {id: newPayment.id}
             }
         }
     }

@@ -20,5 +20,8 @@ export const isDateAvailable = (property: IPropertyWithUserId, date: string): bo
         // Convertir la fecha de disableDays al formato "dd/MM/yyyy"
         const disableDateFormatted = format(new Date(disableDate), "dd/MM/yyyy");
         return disableDateFormatted === date;
+    }) && !property.reservedDays.some(reserved => {
+        const reservedDaysFormatted = format (new Date(reserved), 'dd/MM/yyyy');
+        return reservedDaysFormatted === date
     });
 };

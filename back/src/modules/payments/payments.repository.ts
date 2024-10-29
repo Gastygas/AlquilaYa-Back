@@ -56,8 +56,7 @@ export class PaymentsRepository {
       const book = await this.bookingService.createBookingService(
         newBooking,
         userId,
-        payment,
-      );
+        );
 
       console.log(book);
       console.log(payment);
