@@ -12,7 +12,7 @@ export class disableDayDto{
     @IsNotEmpty()
     @IsString()
     @ApiProperty({
-        example:"15/11/2024"
+        example:"11/11/2024"
     })
     dateEnd:string;
 }
