@@ -22,11 +22,13 @@ import { CreatePropertyDto } from './dto/create-property.dto';
 import { AuthGuard } from 'src/guards/authGuard';
 import { ICustomRequest } from './interface/customRequest';
 import { disableDayDto } from './dto/disableday.dto';
-import { Role } from 'src/decorators/roles.decorator';
-import { Roles } from '../users/enum/user.roles.enum';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from '../users/enum/user.roles.enum';
+import { RolesGuard } from 'src/guards/roles.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileUploadRespository } from '../file-upload/file-upload.repository';
 import { FileUploadService } from '../file-upload/file-upload.service';
+
 
 @ApiTags('property')
 @Controller('property')
@@ -97,8 +99,8 @@ createPropertyController(
 ////////////////////////////////////////
   @ApiBearerAuth()
   @Patch("approve/:id")
-  @Role(Roles.Admin)
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard,RolesGuard)
   approvePropertyController(
     @Param('id', ParseUUIDPipe) id:string
   ){
@@ -107,8 +109,8 @@ createPropertyController(
 
   @ApiBearerAuth()
   @Patch("deny/:id")
-  @Role(Roles.Admin)
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard,RolesGuard)
   denyPropertyController(
     @Param('id', ParseUUIDPipe) id:string
   ){
