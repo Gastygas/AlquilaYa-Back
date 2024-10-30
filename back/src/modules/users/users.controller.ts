@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   ParseUUIDPipe,
+  Patch,
   Post,
   Put,
   Query,
@@ -17,8 +18,8 @@ import { AuthGuard } from 'src/guards/authGuard';
 import { RolesGuard } from 'src/guards/roles.guard';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from './enum/user.roles.enum';
-import { User } from 'src/entities/user.entity';
 import { completeUserDto } from './dto/completeUser.dto';
+import { ICustomRequest } from '../property/interface/customRequest';
 
 @ApiTags('user')
 @Controller('users')
@@ -42,8 +43,18 @@ export class UsersController {
   completeUser(@Param("id",ParseUUIDPipe) id: string, @Body() user: completeUserDto) {
     return  this.usersService.completeUser(id,user)
   }
-  // @Put('/')
-  // changeUser(@Req() id: string, @Body() newUser) {}
+
+  @ApiBearerAuth()
+  @Patch('favorite/property/add/:id')
+  @UseGuards(AuthGuard)
+  addFavoritePropertyController(
+    @Param("id", ParseUUIDPipe) propertyId: string,
+    @Req() req: ICustomRequest
+  ) {
+    const userId = req.user.id
+    return this.usersService.addFavoritePropertyService(propertyId,userId)
+  }
+
 
   // @Delete('/')
   // deleteUser(@Query() id: string) {}
