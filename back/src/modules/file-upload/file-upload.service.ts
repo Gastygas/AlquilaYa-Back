@@ -1,16 +1,28 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { FileUploadRespository } from './file-upload.repository';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Property } from 'src/entities/property.entity';
 
 @Injectable()
 export class FileUploadService {
     constructor(private readonly fileUploadRepository: FileUploadRespository,
+      @InjectRepository(Property) private propertyEntity: Repository<Property>,
     ){}
 
-    async uploadImage(file: Express.Multer.File): Promise<string> {
-        const response = await this.fileUploadRepository.uploadImage(file);
-        if (!response.secure_url) {
-          throw new NotFoundException('Error uploading image to Cloudinary');
-        }
-        return response.secure_url;  
+    async uploadImageToProperty(propertyId: string, file: Express.Multer.File) {
+      const uploadResult = await this.fileUploadRepository.uploadImage(file);
+      const fileUrl = uploadResult.secure_url; 
+      console.log("imagen cargada: ", fileUrl);
+      
+      const property = await this.propertyEntity.findOne({where: {id: propertyId} });
+      if (!property) {
+        throw new NotFoundException('Property not found');
       }
+      if (!Array.isArray(property.photos)) {
+        property.photos = [];  
+      }  
+      property.photos.push(fileUrl);  
+      return this.propertyEntity.save(property);
+    }
 }

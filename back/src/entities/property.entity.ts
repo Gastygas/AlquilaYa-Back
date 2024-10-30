@@ -15,7 +15,7 @@ export class Property {
   @PrimaryGeneratedColumn('uuid')
   id: string = uuid();
 
-  @Column('varchar', { array: true })
+  @Column('varchar', { array: true, default: [] })
   photos: string[] | string;
 
   @Column({ type: 'varchar', nullable: false })
@@ -70,7 +70,7 @@ export class Property {
   description: string;
 
   @Column({ type: 'varchar', default:'pending'})
-  propertyStatus: 'pending' & 'approved' & 'cancelled' & 'maintenance';
+  propertyStatus: 'pending' | 'approved' | 'cancelled' | 'maintenance';
 
   @Column({
     type: 'date',

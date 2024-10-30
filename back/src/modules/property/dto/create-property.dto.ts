@@ -1,13 +1,9 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsString, IsInt, IsBoolean, IsArray, IsUrl, IsOptional, IsNumber, IsNotEmpty, IsEmpty } from 'class-validator';
 
 export class CreatePropertyDto {
-  @ApiProperty({
-  example:["https://www.atelierlima.com/wp-content/uploads/2023/02/ralph-ravi-kayden-mR1CIDduGLc-unsplash.jpg"]
-  })
-  @IsArray()
-  @IsNotEmpty()
-  @IsString({ each: true })
+  
+  @IsEmpty()
   photos: string[] | string;
 
   @ApiProperty({ example: ["24/10/12"]})
