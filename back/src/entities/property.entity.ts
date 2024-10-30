@@ -9,6 +9,7 @@ import { v4 as uuid } from 'uuid';
 import { Booking } from './booking.entity';
 import { SpecialPrice } from './specialPrice.entity';
 import { User } from './user.entity';
+import { Reviews } from './reviews.entity';
 
 @Entity('property')
 export class Property {
@@ -69,19 +70,19 @@ export class Property {
   @Column({ type: 'varchar' })
   description: string;
 
-  @Column({ type: 'varchar', default:'pending'})
+  @Column({ type: 'varchar', default: 'pending' })
   propertyStatus: 'pending' | 'approved' | 'cancelled' | 'maintenance';
 
   @Column({
     type: 'date',
     nullable: true,
-    default:[],
+    default: [],
     array: true,
   })
   disableDays: string[];
 
-  @Column({type:'date',nullable:true,default:[],array:true})
-  reservedDays: string[]
+  @Column({ type: 'date', nullable: true, default: [], array: true })
+  reservedDays: string[];
 
   @OneToMany(() => Booking, (booking) => booking.property)
   bookings: Booking[];
@@ -91,4 +92,7 @@ export class Property {
 
   @ManyToOne(() => User, (user) => user.properties)
   user: User;
+
+  @OneToMany(() => Reviews, (reviews) => reviews.property)
+  reviews: Reviews[];
 }
