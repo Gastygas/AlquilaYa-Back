@@ -1,18 +1,15 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsInt, IsBoolean, IsArray, IsUrl, IsOptional, IsNumber, IsNotEmpty } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsString, IsInt, IsBoolean, IsArray, IsUrl, IsOptional, IsNumber, IsNotEmpty, IsEmpty } from 'class-validator';
 
 export class CreatePropertyDto {
-  @IsArray()
-  @IsNotEmpty()
-  @ApiProperty({
-    example:["https://www.atelierlima.com/wp-content/uploads/2023/02/ralph-ravi-kayden-mR1CIDduGLc-unsplash.jpg"]
-  })
-  @IsString({ each: true })
+  
+  @IsEmpty()
   photos: string[] | string;
 
+  @ApiProperty({ example: ["24/10/12"]})
   @IsArray()
   @IsOptional()
-  disableDays?: Date[];
+  disableDays?: string[];
 
   @IsString()
   @IsNotEmpty()
@@ -133,9 +130,4 @@ export class CreatePropertyDto {
   })
   description?: string;
 
-  @IsString()
-  @ApiProperty({
-    example:"For sell"
-  })
-  propertyStatus: string;
 }

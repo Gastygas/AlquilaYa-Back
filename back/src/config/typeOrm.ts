@@ -14,7 +14,7 @@ const config = {
   migrationsTableName: 'migrations',
   autoloadEntities: true,
   entities: ['dist/**/*.entity{.ts,.js}'],
-  logging: true,
+  logging: false,
   migrationsRun: true,
   synchronize: true,
   // dropSchema: true,

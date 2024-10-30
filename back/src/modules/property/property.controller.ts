@@ -8,34 +8,145 @@ import {
   Delete,
   UseGuards,
   Request,
+  ParseUUIDPipe,
+  UseInterceptors,
+  UploadedFile,
+  ParseFilePipe,
+  MaxFileSizeValidator,
+  FileTypeValidator,
+  ValidationPipe,
 } from '@nestjs/common';
 import { PropertyService } from './property.service';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { CreatePropertyDto } from './dto/create-property.dto';
 import { AuthGuard } from 'src/guards/authGuard';
-import { CustomRequest } from './interface/customRequest';
+import { ICustomRequest } from './interface/customRequest';
+import { disableDayDto } from './dto/disableday.dto';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from '../users/enum/user.roles.enum';
+import { RolesGuard } from 'src/guards/roles.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { FileUploadRespository } from '../file-upload/file-upload.repository';
+import { FileUploadService } from '../file-upload/file-upload.service';
+
 
 @ApiTags('property')
 @Controller('property')
 export class PropertyController {
-  constructor(private readonly propertyService: PropertyService) {}
+  constructor(private readonly propertyService: PropertyService,
+    private readonly fileUploadService: FileUploadService
+  
+  ) {}
 
   @Get()
   getAllPropertiesController(){
     return this.propertyService.getAllPropertiesService()
   }
 
+  @Get(":id")
+  getPropertyByIdController(
+    @Param('id',ParseUUIDPipe) id:string
+  ){
+    return this.propertyService.getPropertyById(id)
+  }
+
+
+
+
+// @Post()
+// @UseGuards(AuthGuard)
+// @UseInterceptors(FileInterceptor('file'))
+// @ApiBearerAuth()
+// @ApiConsumes('multipart/form-data') // Usa solo el tipo
+// async createPropertyWithImage(
+//   @Request() req: ICustomRequest,
+//   @Body(new ParseCreatePropertyPipe(), new ValidationPipe({ transform: true })) newProperty: CreatePropertyDto,
+//   @UploadedFile(new ParseFilePipe({
+//     validators: [
+//       new MaxFileSizeValidator({ maxSize: 200000 }),
+//       new FileTypeValidator({ fileType: /(.jpg|.jpeg|.png|.webp)$/ }),
+//     ],
+//   })) file?: Express.Multer.File
+// ) {
+//   const userId = req.user.id;
+  
+//   console.log('newProperty: ',newProperty);
+  
+//   // Crear propiedad
+//   const property = await this.propertyService.createProperty(newProperty, userId);
+  
+//   const { id } = property.property.property
+//   // Subir archivo si existe
+//   if (file) {
+//     await this.fileUploadService.uploadImageToProperty(id, file);
+//   }
+
+//   return property;
+// }
+
+////////////////////////////////////////
+@ApiBearerAuth()
+@Post()
+@UseGuards(AuthGuard)
+createPropertyController(
+  @Body() newProperty:CreatePropertyDto,
+  @Request() req: ICustomRequest,
+) {
+    const userId = req.user.id
+    return this.propertyService.createProperty(newProperty,userId);
+}
+
+////////////////////////////////////////
+  @ApiBearerAuth()
+  @Patch("approve/:id")
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard,RolesGuard)
+  approvePropertyController(
+    @Param('id', ParseUUIDPipe) id:string
+  ){
+    return this.propertyService.approvePropertyService(id)
+  }
 
   @ApiBearerAuth()
-  @Post()
-  @UseGuards(AuthGuard)
-  createPropertyController(
-    @Body() newProperty:CreatePropertyDto,
-    @Request() req: CustomRequest,
-  ) {
-      const id = req.user.id
-      return this.propertyService.createProperty(newProperty,id);
+  @Patch("deny/:id")
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard,RolesGuard)
+  denyPropertyController(
+    @Param('id', ParseUUIDPipe) id:string
+  ){
+    return this.propertyService.denyPropertyService(id)
   }
+
+
+  @Patch("reserve/:id")
+  // @UseGuards(AuthGuard)
+  addReservedDaysController(
+    @Param('id',ParseUUIDPipe) propertyId: string,
+    @Body() dates: disableDayDto,
+  ){
+    return this.propertyService.addReservedDaysService(propertyId,dates)
+  }
+
+  @Patch("disable/:id")
+  // @UseGuards(AuthGuard)
+  addDisableDaysController(
+    @Param('id',ParseUUIDPipe) propertyId: string,
+    @Body() dates: disableDayDto,
+  ){
+    return this.propertyService.addDisableDaysService(propertyId,dates)
+  }
+
+
+  @Patch("cancel/disable/:id")
+  // @UseGuards(AuthGuard)
+  cancelDisableDaysController(
+    @Param('id',ParseUUIDPipe) propertyId: string,
+    @Body() dates: disableDayDto,
+  ){
+    return this.propertyService.cancelDisableDaysService(propertyId,dates)
+  }
+
+
 
   // //-----------------------------------------------------------------------------------------
   // //-----------------------------------------------------------------------------------------

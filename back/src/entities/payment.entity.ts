@@ -17,7 +17,7 @@ export class Payment {
   amount : number
 
   @Column({nullable: false })
-  paymentStatus : "completed" | "pending" | "failed" | "cancelled" | "refunded"
+  paymentStatus : "approved" | "pending" | "failed" | "cancelled" | "refunded"
 
   @Column({nullable: false, type : "varchar" , length : 50})
   transactionId : string

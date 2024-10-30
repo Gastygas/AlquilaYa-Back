@@ -15,15 +15,8 @@ export class Property {
   @PrimaryGeneratedColumn('uuid')
   id: string = uuid();
 
-  @Column('varchar', { array: true })
+  @Column('varchar', { array: true, default: [] })
   photos: string[] | string;
-
-  @Column({
-    type: 'date',
-    nullable: true,
-    array: true,
-  })
-  disableDays: Date[];
 
   @Column({ type: 'varchar', nullable: false })
   propertyName: string;
@@ -76,8 +69,19 @@ export class Property {
   @Column({ type: 'varchar' })
   description: string;
 
-  @Column({ type: 'varchar' })
-  propertyStatus: string;
+  @Column({ type: 'varchar', default:'pending'})
+  propertyStatus: 'pending' | 'approved' | 'cancelled' | 'maintenance';
+
+  @Column({
+    type: 'date',
+    nullable: true,
+    default:[],
+    array: true,
+  })
+  disableDays: string[];
+
+  @Column({type:'date',nullable:true,default:[],array:true})
+  reservedDays: string[]
 
   @OneToMany(() => Booking, (booking) => booking.property)
   bookings: Booking[];

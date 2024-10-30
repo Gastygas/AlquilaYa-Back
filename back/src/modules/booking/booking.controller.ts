@@ -1,36 +1,58 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Request, UseGuards, ParseUUIDPipe, UseInterceptors } from '@nestjs/common';
 import { BookingService } from './booking.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ICustomRequest } from '../property/interface/customRequest';
+import { AuthGuard } from 'src/guards/authGuard';
+import { Dateinterceptor } from './interceptors/date.interceptor';
 
 @ApiTags('booking')
 @Controller('booking')
 export class BookingController {
   constructor(private readonly bookingService: BookingService) {}
 
-  @Post()
-  create(@Body() createBookingDto: CreateBookingDto) {
-    return this.bookingService.create(createBookingDto);
-  }
-
+  
   @Get()
-  findAll() {
-    return this.bookingService.findAll();
+  getBookingsController() {
+    return this.bookingService.getBookingsService();
   }
-
+  
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.bookingService.findOne(+id);
+  getBookgById(@Param('id',ParseUUIDPipe) id: string) {
+    return this.bookingService.getBookingById(id);
   }
+  
+  @ApiBearerAuth()
+  @Post("create")
+  @UseGuards(AuthGuard)
+  @UseInterceptors(Dateinterceptor)
+  createBookController(
+    @Body() newBooking: CreateBookingDto,
+    @Request() req: ICustomRequest,
+  ) {
+    const userId = req.user.id    
+    return this.bookingService.createBookingService(newBooking,userId);
+  }
+  
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBookingDto: UpdateBookingDto) {
-    return this.bookingService.update(+id, updateBookingDto);
+  @ApiBearerAuth()
+  @Patch('cancel/:id')
+  @UseGuards(AuthGuard)
+  cancelBookController(
+    @Param("id",ParseUUIDPipe) id: string,
+    @Request() req: ICustomRequest
+  ){
+    const userId = req.user.id
+    return this.bookingService.cancelBookService(id,userId)
   }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateBookingDto: UpdateBookingDto) {
+  //   return this.bookingService.update(+id, updateBookingDto);
+  // }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.bookingService.remove(+id);
-  }
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.bookingService.remove(+id);
+  // }
 }

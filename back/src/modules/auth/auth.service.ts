@@ -13,12 +13,14 @@ import { default as dataUsers } from '../../utils/dataUsers.json';
 import { User } from 'src/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersRepository: UsersRepository,
     private readonly jwtService: JwtService,
+    private readonly emailService: EmailService,
     @InjectRepository(User)
     private readonly userEntity: Repository<User>,
   ) {}
@@ -34,21 +36,20 @@ export class AuthService {
     if (!hashedPassword)
       throw new BadRequestException('Password could not be created');
 
-    const newUserBD: Partial<User> = await this.usersRepository.createUser({
+    const newUserDb: Partial<User> = await this.usersRepository.createUser({
       ...newUser,
       password: hashedPassword,
     });
-    return { succes: 'User registered!' };
+    await this.emailService.sendEmailRegisterSuccessfully(newUserDb.email,newUserDb.name)
+    return { succes: 'User registered!, Please check your email',
+             user: newUserDb
+     };
   }
 
   //-----------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------
 
   async SignIn(userCredentials: SignInDto): Promise<Object> {
-    // const userEmail = await this.usersRepository.getUserByEmail(
-    //   userCredentials.email,
-    // );
-    // if (!userEmail) throw new BadRequestException('Email or Password Incorrect');
 
     const userDb = await this.userEntity.findOne({
       where: { email: userCredentials.email },
