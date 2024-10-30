@@ -88,21 +88,21 @@ export class PropertyService {
     // return { success: 'Property has been added', property: savedProperty };
   }
 
-  async uploadImageToProperty(propertyId: string, file: Express.Multer.File) {
-    const uploadResult = await this.fileUploadRepository.uploadImage(file);
-    const fileUrl = uploadResult.secure_url; 
-    console.log("imagen cargada: ", fileUrl);
+  // async uploadImageToProperty(propertyId: string, file: Express.Multer.File) {
+  //   const uploadResult = await this.fileUploadRepository.uploadImage(file);
+  //   const fileUrl = uploadResult.secure_url; 
+  //   console.log("imagen cargada: ", fileUrl);
     
-    const property = await this.propertyEntity.findOne({where: {id: propertyId} });
-    if (!property) {
-      throw new NotFoundException('Property not found');
-    }
-    if (!Array.isArray(property.photos)) {
-      property.photos = [];  
-    }  
-    property.photos.push(fileUrl);  
-    return this.propertyEntity.save(property);
-  }
+  //   const property = await this.propertyEntity.findOne({where: {id: propertyId} });
+  //   if (!property) {
+  //     throw new NotFoundException('Property not found');
+  //   }
+  //   if (!Array.isArray(property.photos)) {
+  //     property.photos = [];  
+  //   }  
+  //   property.photos.push(fileUrl);  
+  //   return this.propertyEntity.save(property);
+  // }
 
   addReservedDaysService(propertyId: string,dates:disableDayDto) {
     return this.propertyRepository.addReservedDaysRepository(propertyId,dates)

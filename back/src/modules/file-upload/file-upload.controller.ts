@@ -1,4 +1,4 @@
-import { Controller, FileTypeValidator, MaxFileSizeValidator, ParseFilePipe, Post, Request, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Controller, FileTypeValidator, MaxFileSizeValidator, Param, ParseFilePipe, ParseUUIDPipe, Post, Request, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileUploadService } from './file-upload.service';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
@@ -8,11 +8,12 @@ import { ICustomRequest } from '../property/interface/customRequest';
 @ApiTags('file-upload')
 @Controller('files')
 export class FileUploadController {
-    constructor(private readonly fileUploadService: FileUploadService,
+  constructor(
+      private readonly fileUploadService: FileUploadService,
       private readonly propertyService: PropertyService,
     ){}
 
-  @Post()
+  @Post(":id")
   @UseInterceptors(FileInterceptor('file'))
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -25,7 +26,7 @@ export class FileUploadController {
     },
   })
   async uploadImageToProperty(
-    @Request() req: ICustomRequest,
+    @Param('id', ParseUUIDPipe) id: string,
     @UploadedFile(new ParseFilePipe({
       validators: [
         new MaxFileSizeValidator({ maxSize: 200000 }),  
@@ -33,7 +34,7 @@ export class FileUploadController {
       ],
     })) file: Express.Multer.File
   ) {
-    const propertyId = req.body.propertyId;  
-    return this.propertyService.uploadImageToProperty(propertyId, file);
+    ;  
+    return this.fileUploadService.uploadImageToProperty(id, file);
   }
 }

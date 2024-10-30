@@ -15,7 +15,7 @@ export class Property {
   @PrimaryGeneratedColumn('uuid')
   id: string = uuid();
 
-  @Column('varchar', { array: true })
+  @Column('varchar', { array: true, default: [] })
   photos: string[] | string;
 
   @Column({ type: 'varchar', nullable: false })
