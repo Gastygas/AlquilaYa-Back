@@ -40,7 +40,7 @@ export class AuthService {
       ...newUser,
       password: hashedPassword,
     });
-    await this.emailService.sendEmailRegisterSuccessfully(newUserDb.email,newUserDb.name)
+    // await this.emailService.sendEmailRegisterSuccessfully(newUserDb.email,newUserDb.name)
     return { succes: 'User registered!, Please check your email',
              user: newUserDb
      };
