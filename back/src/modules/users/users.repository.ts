@@ -2,16 +2,20 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
-import * as dataUsers from '../../utils/dataUsers.json';
 import { EmailService } from '../email/email.service';
 import { default as bcrypt } from 'bcrypt';
 import { completeUserDto } from './dto/completeUser.dto';
+import { PropertyRepository } from '../property/property.repository';
+import { Property } from 'src/entities/property.entity';
 @Injectable()
 export class UsersRepository {
   constructor(
-    private readonly emailService: EmailService,
     @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    private readonly usersRepository: Repository<User>,
+    @InjectRepository(Property)
+    private readonly propertyRepository: Repository<Property>,
+    // private readonly propertyRepository: PropertyRepository,
+    
   ) {}
 
   //-----------------------------------------------------------------------------------------
@@ -21,10 +25,6 @@ export class UsersRepository {
     const newUser = await this.usersRepository.save(user);
     const dbUser = await this.usersRepository.findOneBy({ id: newUser.id });
     if (!dbUser) throw new BadRequestException('User could not be created');
-    await this.emailService.sendEmailRegisterSuccessfully(
-      dbUser.email,
-      dbUser.name,
-    );
     return dbUser;
   }
 
@@ -59,6 +59,7 @@ export class UsersRepository {
       relations: {
         properties: true,
         bookings: true,
+        reviews:true
       },
     });
     return users.map(({ password, ...userSinPassword }) => userSinPassword);
@@ -72,6 +73,8 @@ export class UsersRepository {
       where: { id },
       relations: {
         properties: true,
+        reviews:true,
+        bookings:true,
       },
     });
     if (!user) throw new BadRequestException('user not found');
@@ -98,11 +101,23 @@ export class UsersRepository {
     return 'user updated sucessfully';
   }
 
-  //-----------------------------------------------------------------------------------------
-  //-----------------------------------------------------------------------------------------
-  // addUsersRepository() {
-  //   const users;
-  //   dataUsers.forEach((user) => )
+ 
+  async addFavoritePropertyRepository (propertyId:string,userId:string) {
+    const property = await this.propertyRepository.findOne({where:{id:propertyId},relations:{user:true,bookings:true}})
+    if(!property) throw new BadRequestException("Property not found")
 
-  // }
+    const user = await this.getUserById(userId)
+
+    const isUserProperty = user.properties.some(prop => prop.id === propertyId);
+    if(isUserProperty) throw new BadRequestException("This is your property, you can not do this with yours")
+      
+    const isAlreadyFavorite = user.favoriteProperties.some(prop => prop === propertyId)
+    if(isAlreadyFavorite) throw new BadRequestException("This property is in your favorites")
+
+    user.favoriteProperties = [...user.favoriteProperties,propertyId]
+    await this.usersRepository.save(user)
+    
+    return {success:"You has added a new property in your Favorite Properties!"}
+    
+  }
 }

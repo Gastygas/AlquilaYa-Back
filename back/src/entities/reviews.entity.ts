@@ -17,6 +17,11 @@ export class Reviews {
   @Column({ nullable: false, default: 1 })
   stars: number;
 
+  @Column({ nullable: false, default: 1 })
+  stars: number;
+
+  @Column({ default: true })
+  status: boolean;
   @ManyToOne(() => User, (user) => user.reviews)
   user: User;
 

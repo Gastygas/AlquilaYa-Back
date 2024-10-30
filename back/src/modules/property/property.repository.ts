@@ -214,8 +214,6 @@ export class PropertyRepository {
     return {success:"The days are disable now"}
 
   }
-
-
   
   async cancelBookDays(propertyId:string,dates:disableDayDto){
     
@@ -274,5 +272,6 @@ export class PropertyRepository {
 
     return { success: "The disabled days are free now" };
   }
+  
 }
 
