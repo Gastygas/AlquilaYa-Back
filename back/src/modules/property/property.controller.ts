@@ -33,9 +33,7 @@ import { FileUploadService } from '../file-upload/file-upload.service';
 @ApiTags('property')
 @Controller('property')
 export class PropertyController {
-  constructor(private readonly propertyService: PropertyService,
-    private readonly fileUploadService: FileUploadService
-  
+  constructor(private readonly propertyService: PropertyService,  
   ) {}
 
   @Get()
