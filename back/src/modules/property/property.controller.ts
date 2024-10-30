@@ -51,50 +51,17 @@ export class PropertyController {
   }
 
 
-
-
-// @Post()
-// @UseGuards(AuthGuard)
-// @UseInterceptors(FileInterceptor('file'))
-// @ApiBearerAuth()
-// @ApiConsumes('multipart/form-data') // Usa solo el tipo
-// async createPropertyWithImage(
-//   @Request() req: ICustomRequest,
-//   @Body(new ParseCreatePropertyPipe(), new ValidationPipe({ transform: true })) newProperty: CreatePropertyDto,
-//   @UploadedFile(new ParseFilePipe({
-//     validators: [
-//       new MaxFileSizeValidator({ maxSize: 200000 }),
-//       new FileTypeValidator({ fileType: /(.jpg|.jpeg|.png|.webp)$/ }),
-//     ],
-//   })) file?: Express.Multer.File
-// ) {
-//   const userId = req.user.id;
-  
-//   console.log('newProperty: ',newProperty);
-  
-//   // Crear propiedad
-//   const property = await this.propertyService.createProperty(newProperty, userId);
-  
-//   const { id } = property.property.property
-//   // Subir archivo si existe
-//   if (file) {
-//     await this.fileUploadService.uploadImageToProperty(id, file);
-//   }
-
-//   return property;
-// }
-
 ////////////////////////////////////////
-@ApiBearerAuth()
-@Post()
-@UseGuards(AuthGuard)
-createPropertyController(
-  @Body() newProperty:CreatePropertyDto,
-  @Request() req: ICustomRequest,
-) {
+  @ApiBearerAuth()
+  @Post("/create")
+  @UseGuards(AuthGuard)
+  createPropertyController(
+    @Body() newProperty:CreatePropertyDto,
+    @Request() req: ICustomRequest,
+  ) {
     const userId = req.user.id
     return this.propertyService.createProperty(newProperty,userId);
-}
+  }
 
 ////////////////////////////////////////
   @ApiBearerAuth()
@@ -156,26 +123,4 @@ createPropertyController(
     return this.propertyService.addPropertiesService();
   }
 
-  // //-----------------------------------------------------------------------------------------
-  // //-----------------------------------------------------------------------------------------
-
-  // @Get()
-  // findAll() {
-  //   return this.propertyService.findAll();
-  // }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.propertyService.findOne(+id);
-  // }
-
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updatePropertyDto) {
-  //   return this.propertyService.update(+id, updatePropertyDto);
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.propertyService.remove(+id);
-  // }
 }

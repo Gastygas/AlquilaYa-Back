@@ -10,7 +10,6 @@ import { ICustomRequest } from '../property/interface/customRequest';
 export class FileUploadController {
   constructor(
       private readonly fileUploadService: FileUploadService,
-      private readonly propertyService: PropertyService,
     ){}
 
   @Post(":id")
