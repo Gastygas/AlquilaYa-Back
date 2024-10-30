@@ -5,16 +5,10 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
   UseGuards,
   Request,
   ParseUUIDPipe,
   UseInterceptors,
-  UploadedFile,
-  ParseFilePipe,
-  MaxFileSizeValidator,
-  FileTypeValidator,
-  ValidationPipe,
 } from '@nestjs/common';
 import { PropertyService } from './property.service';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
@@ -25,10 +19,6 @@ import { disableDayDto } from './dto/disableday.dto';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from '../users/enum/user.roles.enum';
 import { RolesGuard } from 'src/guards/roles.guard';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { FileUploadRespository } from '../file-upload/file-upload.repository';
-import { FileUploadService } from '../file-upload/file-upload.service';
-
 
 @ApiTags('property')
 @Controller('property')
