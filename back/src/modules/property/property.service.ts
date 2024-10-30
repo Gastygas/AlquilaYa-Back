@@ -1,13 +1,9 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PropertyRepository } from './property.repository';
 import { CreatePropertyDto } from './dto/create-property.dto';
-import { FileUploadRespository } from '../file-upload/file-upload.repository';
 import { Repository } from 'typeorm';
 import { Property } from 'src/entities/property.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UsersRepository } from '../users/users.repository';
-import { User } from 'src/entities/user.entity';
-import { FileUploadService } from '../file-upload/file-upload.service';
 import { disableDayDto } from './dto/disableday.dto';
 
 @Injectable()
@@ -27,19 +23,6 @@ export class PropertyService {
   getPropertyById(id:string){
     return this.propertyRepository.getPropertyById(id)
   }
-
-  //-----------------------------------------------------------------------------------------
-  //-----------------------------------------------------------------------------------------
-
-  // async uploadImage(file: Express.Multer.File, propertyId: string): Promise<string> {
-  //   // Llamamos al repositorio para subir la imagen a Cloudinary
-  //   const response = await this.fileUploadRepository.uploadImage(file);
-  //   if (!response.secure_url) {
-  //     throw new NotFoundException('Error uploading image to Cloudinary');
-  //   }
-    
-  //   return response.secure_url; // Retornamos la URL segura de la imagen
-  // }
 
   //-----------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------

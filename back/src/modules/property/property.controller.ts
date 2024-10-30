@@ -8,7 +8,6 @@ import {
   UseGuards,
   Request,
   ParseUUIDPipe,
-  UseInterceptors,
 } from '@nestjs/common';
 import { PropertyService } from './property.service';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
