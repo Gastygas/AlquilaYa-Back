@@ -20,6 +20,7 @@ import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from './enum/user.roles.enum';
 import { completeUserDto } from './dto/completeUser.dto';
 import { ICustomRequest } from '../property/interface/customRequest';
+import { UpdateUserDto } from './dto/updateUser.dto';
 
 @ApiTags('user')
 @Controller('users')
@@ -39,18 +40,29 @@ export class UsersController {
     return this.usersService.getUserById(id)
   }
 
+  @ApiBearerAuth()
+  @Put('edit')
+  @UseGuards(AuthGuard)
+  updateUserController(
+    @Body() updatedUser:UpdateUserDto,
+    @Req() req:ICustomRequest
+  ){
+    const userId = req.user.id
+    return this.usersService.updateUserService(updatedUser,userId)
+  }
+
   @Put(':id')
   completeUser(@Param("id",ParseUUIDPipe) id: string, @Body() user: completeUserDto) {
     return  this.usersService.completeUser(id,user)
   }
-
+  
   @ApiBearerAuth()
   @Patch('favorite/property/add/:id')
   @UseGuards(AuthGuard)
   addFavoritePropertyController(
     @Param("id", ParseUUIDPipe) propertyId: string,
     @Req() req: ICustomRequest
-  ) {
+  ){
     const userId = req.user.id
     return this.usersService.addFavoritePropertyService(propertyId,userId)
   }
