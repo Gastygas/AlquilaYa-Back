@@ -57,7 +57,7 @@ export class UsersController {
   }
   
   @ApiBearerAuth()
-  @Patch('favorite/property/add/:id')
+  @Patch('favourite/property/add/:id')
   @UseGuards(AuthGuard)
   addFavoritePropertyController(
     @Param("id", ParseUUIDPipe) propertyId: string,
