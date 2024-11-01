@@ -40,6 +40,11 @@ export class UsersController {
     return this.usersService.getUserById(id)
   }
 
+  @Get('email/:email')
+  getUserByEmail(@Param("email") email: string) {
+    return this.usersService.getUserByEmailService(email)
+  }
+
   @ApiBearerAuth()
   @Put('edit')
   @UseGuards(AuthGuard)

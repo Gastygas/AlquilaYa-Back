@@ -16,6 +16,9 @@ export class UsersService {
    getUserById(id:string) {
     return this.usersRepository.getUserById(id);
   }
+  getUserByEmailService(email: string) {
+    return this.usersRepository.getUserByEmail(email)
+  }
 
    completeUser(id:string , user: completeUserDto) {
     return this.usersRepository.completeUser(id , user);

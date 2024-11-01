@@ -47,7 +47,7 @@ export class AuthController {
     return await this.authService.forgotPassword(email)
   }
 
-  @Post("change/password/")
+  @Post("change/password")
   async changePassword(
     @Body() credentials: changePasswordDto
   ){
