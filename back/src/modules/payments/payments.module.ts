@@ -7,7 +7,6 @@ import { PaymentsRepository } from './payments.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Payment } from 'src/entities/payment.entity';
 import { UsersRepository } from '../users/users.repository';
-
 import { EmailService } from '../email/email.service';
 import { User } from 'src/entities/user.entity';
 import { BookingService } from '../booking/booking.service';
@@ -18,10 +17,12 @@ import { PropertyService } from '../property/property.service';
 import { Property } from 'src/entities/property.entity';
 import { FileUploadRespository } from '../file-upload/file-upload.repository';
 import { FileUploadService } from '../file-upload/file-upload.service';
+import { EmailRepository } from '../email/email.repository';
+import { Email } from 'src/entities/email.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Payment , User , Booking , Property])],
+  imports: [TypeOrmModule.forFeature([Payment , User , Booking , Property,Email])],
   controllers: [PaymentsController],
-  providers: [PaymentsService , MercadoPagoService , PaymentsRepository , UsersRepository , EmailService , BookingService , BookingRepository , PropertyRepository , PropertyService , FileUploadRespository , FileUploadService],
+  providers: [PaymentsService , MercadoPagoService , PaymentsRepository , UsersRepository , EmailService , BookingService , BookingRepository , PropertyRepository , PropertyService , FileUploadRespository , FileUploadService,EmailRepository],
 })
 export class PaymentsModule {}
