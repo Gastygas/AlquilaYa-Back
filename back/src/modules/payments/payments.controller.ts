@@ -33,18 +33,18 @@ export class PaymentsController {
   async handlePaymentUpdate(@Body() body: any, @Res() res: Response) {
     // Extrae los valores directamente
 
-    const booking = {
-      propertyId: body.bookingData.propertyId,
-      dateStart: body.bookingData.dateStart,
-      dateEnd: body.bookingData.dateEnd,
-    };
+    // const booking = {
+    //   propertyId: body.bookingData.propertyId,
+    //   dateStart: body.bookingData.dateStart,
+    //   dateEnd: body.bookingData.dateEnd,
+    // };
 
-    const userId = body.userId;
+    // const userId = body.userId;
 
-    return await this.paymentsService.createPaymentAndBooking(
-      body.data?.id,
-      booking,
-      userId,
-    );
+    // return await this.paymentsService.createPaymentAndBooking(
+    //   body.data?.id,
+    //   booking,
+    //   userId,
+    // );
   }
 }
