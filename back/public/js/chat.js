@@ -6,7 +6,6 @@ if (!username) {
     throw new Error('Username is required');
 }
 
-//Referencias HTML
 const lblStatusOnline = document.querySelector('#status-online');
 const lblStatusOffline = document.querySelector('#status-offline');
 
@@ -43,8 +42,7 @@ const renderMessage = (payload) => {
     divElement.innerHTML = message;
     chatElement.appendChild(divElement);
 
-    chatElement.scrollTop = chatElement.scrollHeight;
-    
+    chatElement.scrollTop = chatElement.scrollHeight;   
 }
 
 form.addEventListener('submit', (event) => {
@@ -75,7 +73,6 @@ socket.on('welcome-message', (data) => {
     console.log(data);
 });
  
-
 socket.on('on-clients-changed', (users) => {
     console.log('Usuarios conectados', users);
     

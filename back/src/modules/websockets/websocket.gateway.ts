@@ -27,12 +27,6 @@ export class WebsocketGateway implements OnModuleInit{
           // Agregar cliente al listado
           this.socketService.onClientConnected({id: socket.id, name: name});
           this.server.emit('on-clients-changed', this.socketService.getClients());
-
-          
-          //Mensaje de Bienvenida
-          // socket.emit('welcome-message', 'Hola ' + name + ' Bienvenido al Servidor');
-
-          //Listado de clientes conectados
           
           socket.broadcast.emit('user-connected', { name });
           socket.on('disconnect', () => {
@@ -63,6 +57,4 @@ export class WebsocketGateway implements OnModuleInit{
           }
         )
       }
-
-
 }

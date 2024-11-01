@@ -25,6 +25,4 @@ export class WebsocketService {
     console.log('Clientes actuales:', this.clients);
     return Object.values( this.clients ); 
   }
-
-
 }
