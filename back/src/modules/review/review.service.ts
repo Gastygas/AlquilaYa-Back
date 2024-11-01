@@ -16,6 +16,11 @@ export class ReviewService {
     @InjectRepository(Property)
     private readonly propertyRepository: Repository<Property>,
   ) {}
+
+  //-----------------------------------------------------------------------------------------
+  //----------- Crear una nueva reseña (POST /reviews/create)
+  //-----------------------------------------------------------------------------------------
+
   async createReviewService(
     review: Partial<Reviews>,
     userId: string,
@@ -31,32 +36,55 @@ export class ReviewService {
     if (!review.property) throw new NotFoundException(`Property id not found`);
 
     const newReview = await this.reviewsRepository.save(review);
+    return { reviewId: newReview.id };
+
+    /*
+    //Código para devolver los id de user y property también
+
     const newReviewDb = await this.reviewsRepository.findOne({
       where: { id: newReview.id },
       relations: { user: true, property: true },
     });
-
+    
     const { user, property, ...restNewReviewDb } = newReviewDb;
     return {
       ...restNewReviewDb,
       user: { id: user.id },
       property: { id: property.id },
-    };
+      };
+      */
   }
 
-  //   // findAll() {
-  //   //   return `This action returns all review`;
-  //   // }
+  //-----------------------------------------------------------------------------------------
+  //------Obtener reseñas de un usuario específico (GET /reviews)----------------------------
+  //-----------------------------------------------------------------------------------------
 
-  //   // findOne(id: number) {
-  //   //   return `This action returns a #${id} review`;
-  //   // }
+  async findAllReviewsService(userId: string) {
+    try {
+      const reviews = await this.reviewsRepository.find({
+        where: { user: { id: userId } },
+        relations: { property: true },
+      });
 
-  //   // update(id: number, updateReviewDto: UpdateReviewDto) {
-  //   //   return `This action updates a #${id} review`;
-  //   // }
+      const reviewsWithPropertyId = reviews.map(
+        ({ property, ...restReview }) => {
+          return {
+            ...restReview,
+            property: { id: property.id },
+          };
+        },
+      );
+      return reviewsWithPropertyId;
+    } catch (error) {
+      throw new NotFoundException('Reviews not found or error with propertyId');
+    }
+  }
 
-  //   // remove(id: number) {
-  //   //   return `This action removes a #${id} review`;
-  //   // }
+  //-----------------------------------------------------------------------------------------
+  //----------- Actualizar una reseña (PUT /reviews/:reviewId)
+  //-----------------------------------------------------------------------------------------
+
+  updateReviewService(arg0: number, updateReviewDto: UpdateReviewDto) {
+    throw new Error('Method not implemented.');
+  }
 }

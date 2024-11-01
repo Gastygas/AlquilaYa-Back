@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   Request,
+  Put,
 } from '@nestjs/common';
 import { ReviewService } from './review.service';
 import { CreateReviewDto } from './dto/create-review.dto';
@@ -20,21 +21,6 @@ import { ICustomRequest } from '../property/interface/customRequest';
 @Controller('reviews')
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
-
-  //-----------------------------------------------------------------------------------------
-  //------Obtener reseñas de una propiedad específica (GET /properties/:propertyId/reviews)
-  //------Obtener reseñas de un usuario específico (GET /users/:userId/reviews)
-  //-----------------------------------------------------------------------------------------
-
-  // @Get()
-  // findAll() {
-  //   return this.reviewService.findAll();
-  // }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.reviewService.findOne(+id);
-  // }
 
   //-----------------------------------------------------------------------------------------
   //----------- Crear una nueva reseña (POST /reviews/create)
@@ -56,13 +42,30 @@ export class ReviewController {
   }
 
   //-----------------------------------------------------------------------------------------
+  //------Obtener reseñas de un usuario específico (GET /reviews)
+  //-----------------------------------------------(GET /users/:userId/reviews)?
+  //-----------------------------------------------------------------------------------------
+
+  @Get()
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  findAllReviewsController(@Request() req) {
+    return this.reviewService.findAllReviewsService(req.user.id);
+  }
+
+  //-----------------------------------------------------------------------------------------
   //----------- Actualizar una reseña (PUT /reviews/:reviewId)
   //-----------------------------------------------------------------------------------------
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateReviewDto: UpdateReviewDto) {
-  //   return this.reviewService.update(+id, updateReviewDto);
-  // }
+  @ApiBearerAuth()
+  @Put(':id')
+  @UseGuards(AuthGuard)
+  updateReviewController(
+    @Param('id') id: string,
+    @Body() updateReviewDto: UpdateReviewDto,
+  ) {
+    return this.reviewService.updateReviewService(+id, updateReviewDto);
+  }
 
   //-----------------------------------------------------------------------------------------
   //----------- Eliminar una reseña (DELETE /reviews/:reviewId)
@@ -71,5 +74,11 @@ export class ReviewController {
   // @Delete(':id')
   // remove(@Param('id') id: string) {
   //   return this.reviewService.remove(+id);
+  // }
+
+  //------Obtener reseñas de una propiedad específica (GET /properties/:propertyId/reviews)
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.reviewService.findOne(+id);
   // }
 }
