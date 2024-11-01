@@ -16,6 +16,9 @@ import { UpdateReviewDto } from './dto/update-review.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/authGuard';
 import { ICustomRequest } from '../property/interface/customRequest';
+import { RolesGuard } from 'src/guards/roles.guard';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from '../users/enum/user.roles.enum';
 
 @ApiTags('reviews')
 @Controller('reviews')
@@ -68,13 +71,16 @@ export class ReviewController {
   }
 
   //-----------------------------------------------------------------------------------------
-  //----------- Eliminar una reseña (DELETE /reviews/:reviewId)
+  //----------- Inhabilitar una reseña (PATCH /reviews/:reviewId)
   //-----------------------------------------------------------------------------------------
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.reviewService.remove(+id);
-  // }
+  @ApiBearerAuth()
+  @Patch(':id')
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
+  changeStatusController(@Param('id') id: string) {
+    return this.reviewService.changeStatusService(id);
+  }
 
   //------Obtener reseñas de una propiedad específica (GET /properties/:propertyId/reviews)
   // @Get(':id')

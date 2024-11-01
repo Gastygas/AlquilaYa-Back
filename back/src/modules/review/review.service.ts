@@ -104,4 +104,26 @@ export class ReviewService {
       throw new BadRequestException('Cannot UpdateReview');
     }
   }
+
+  //-----------------------------------------------------------------------------------------
+  //----------- Inhabilitar una reseña (PATCH /reviews/:reviewId)
+  //-----------------------------------------------------------------------------------------
+
+  async changeStatusService(id: string) {
+    try {
+      const reviewFound = await this.reviewsRepository.findOneBy({ id });
+      if (!reviewFound) throw new NotFoundException('Review not found');
+
+      reviewFound.status = false;
+      const updatedReview = await this.reviewsRepository.save(reviewFound);
+      if (!updatedReview) throw new BadRequestException('Review not updated');
+
+      return {
+        success: 'Review has been disabled',
+        reviewUpdatedId: reviewFound.id,
+      };
+    } catch (error) {
+      throw new BadRequestException(`Cannot change review's status`);
+    }
+  }
 }
