@@ -13,5 +13,4 @@ email: string;
 @Column({ nullable: false})
 createdAt: string;
 
-
 }

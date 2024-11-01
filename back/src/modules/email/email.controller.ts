@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, Get, Param, ParseUUIDPipe, Post } from "@nestjs/common";
 import { EmailService } from "./email.service";
 import { strategies } from "passport";
 import { EmailDto } from "./dto/email.dto";
@@ -8,6 +8,18 @@ import { ApiTags } from "@nestjs/swagger";
 @Controller('email')
 export class EmailController{
     constructor(private readonly emailService: EmailService){}
+
+    @Get()
+    async getAllEmailsController(){
+        return this.emailService.getAllEmailsService()
+    }
+
+    @Get(":id")
+    async getEmailByIdController(
+        @Param("id",ParseUUIDPipe) id:string
+    ){
+        return this.emailService.getEmailById(id)
+    }
 
     @Post("signup")
     async sendEmailRegisterSuccessfullyController(
