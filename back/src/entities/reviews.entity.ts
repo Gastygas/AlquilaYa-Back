@@ -8,10 +8,13 @@ export class Reviews {
   @PrimaryGeneratedColumn('uuid')
   id: string = uuid;
 
-  @Column({ nullable: false })
+  @Column({
+    default: new Date(),
+    type: 'date',
+  })
   date: Date;
 
-  @Column({ nullable: true, default: 'none' })
+  @Column({ nullable: false, default: 'Without description' })
   description: string;
 
   @Column({ nullable: false, default: 1 })
