@@ -64,7 +64,7 @@ export class ReviewController {
     @Param('id') id: string,
     @Body() updateReviewDto: UpdateReviewDto,
   ) {
-    return this.reviewService.updateReviewService(+id, updateReviewDto);
+    return this.reviewService.updateReviewService(id, updateReviewDto);
   }
 
   //-----------------------------------------------------------------------------------------

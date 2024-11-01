@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -84,7 +88,20 @@ export class ReviewService {
   //----------- Actualizar una reseña (PUT /reviews/:reviewId)
   //-----------------------------------------------------------------------------------------
 
-  updateReviewService(arg0: number, updateReviewDto: UpdateReviewDto) {
-    throw new Error('Method not implemented.');
+  async updateReviewService(id: string, updateReviewDto: UpdateReviewDto) {
+    try {
+      const reviewFound = await this.reviewsRepository.findOneBy({ id });
+      if (!reviewFound) throw new NotFoundException('Review not found');
+
+      const updatedReview = await this.reviewsRepository.update(
+        id,
+        updateReviewDto,
+      );
+      if (updatedReview.affected === 0)
+        throw new BadRequestException('Review not updated');
+      return { reviewId: id };
+    } catch (error) {
+      throw new BadRequestException('Cannot UpdateReview');
+    }
   }
 }
