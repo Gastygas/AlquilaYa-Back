@@ -44,4 +44,11 @@ export class EmailController{
         const {email,name} = data
         return this.emailService.sendEmailBookComment(email,name)
     }
+    @Post("forgotpassword")
+    async sendEmailForgotPassword(
+        @Body() data: EmailDto
+    ){
+        const {email} = data
+        return this.emailService.sendEmailForgotPassword(email)
+    }
 }
