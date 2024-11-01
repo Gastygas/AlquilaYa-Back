@@ -90,7 +90,7 @@ export class AuthService {
   async forgotPassword(email:string) {
     const user = await this.usersRepository.getUserByEmail(email)
     if(!user) throw new BadRequestException("email does not exits")
-    // await this.emailService.sendEmailForgotPassword(email)
+    await this.emailService.sendEmailForgotPassword(email)
     return {success:"Please verify if this user is yours in your email"}
   }
 
