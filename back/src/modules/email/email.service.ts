@@ -1,9 +1,13 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
 import sgMail from '@sendgrid/mail'
+import { Email } from "src/entities/email.entity";
+import { Repository } from "typeorm";
+import { EmailRepository } from "./email.repository";
 
 @Injectable()
 export class EmailService{
-    constructor(){}
+    constructor(private readonly emailRepository:EmailRepository){}
 
     async sendEmailRegisterSuccessfully(email:string,name:string){
         sgMail.setApiKey(process.env.SENDGRID_API_KEY)
@@ -93,14 +97,15 @@ export class EmailService{
         )
     }   
     
-    sendEmailForgotPassword(email: string) {
+    async sendEmailForgotPassword(email: string) {
+        const emailDb:Email = await this.emailRepository.createEmailRepository(email)
         sgMail.setApiKey(process.env.SENDGRID_API_KEY)
         sgMail.send({
             to: `${email}`,
             from: process.env.FROM_EMAIL,
             subject:`Recupera tu contraseña`,
             text:`Hola buenas, nos pediste recuperar tu contraseña`,
-            html: `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Restablecimiento de Contraseña</title><style>body{margin:0;padding:0;display:flex;justify-content:center;align-items:center;min-height:100vh;background-color:#ffffff;font-family:"Figtree",sans-serif;}.container{max-width:600px;width:100%;background-color:#190045;padding:20px;border-radius:20px;text-align:center;box-shadow:0px 4px 8px rgba(0,0,0,0.2);}h2{color:#9AEDFF;font-size:24px;font-weight:900;margin-bottom:10px;}p{font-size:16px;font-weight:400;line-height:1.6;color:#ededed;margin:0;margin-bottom:15px;}a{color:#9AEDFF;text-decoration:none;font-weight:bold;}a.button{display:inline-block;margin-top:20px;padding:12px 24px;background-color:#2CFFDE;color:#000000;text-decoration:none;border-radius:8px;font-weight:900;}img{width:150px;margin:0 auto 20px;border-radius:50%;}.footer{margin-top:30px;font-size:14px;color:#ededed;}</style></head><body><div class="container"><img src="https://res.cloudinary.com/dbmfju6mu/image/upload/v1729830525/alquilaYa_logo_csaxln.jpg" alt="Logo"/><h2>¡Restable tu Contraseña!</h2><p>Hola, hemos recibido una solicitud para restablecer tu contraseña.</p><p>Si no has solicitado esto, puedes ignorar este mensaje.</p><a href="${process.env.URL_FRONT}/changepassword?email=${email}" class="button">Restablecer Contraseña</a><div class="footer"><p>Si tienes alguna duda, por favor contáctanos.</p></div></div></body></html>`
+            html: `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Restablecimiento de Contraseña</title><style>body{margin:0;padding:0;display:flex;justify-content:center;align-items:center;min-height:100vh;background-color:#ffffff;font-family:"Figtree",sans-serif;}.container{max-width:600px;width:100%;background-color:#190045;padding:20px;border-radius:20px;text-align:center;box-shadow:0px 4px 8px rgba(0,0,0,0.2);}h2{color:#9AEDFF;font-size:24px;font-weight:900;margin-bottom:10px;}p{font-size:16px;font-weight:400;line-height:1.6;color:#ededed;margin:0;margin-bottom:15px;}a{color:#9AEDFF;text-decoration:none;font-weight:bold;}a.button{display:inline-block;margin-top:20px;padding:12px 24px;background-color:#2CFFDE;color:#000000;text-decoration:none;border-radius:8px;font-weight:900;}img{width:150px;margin:0 auto 20px;border-radius:50%;}.footer{margin-top:30px;font-size:14px;color:#ededed;}</style></head><body><div class="container"><img src="https://res.cloudinary.com/dbmfju6mu/image/upload/v1729830525/alquilaYa_logo_csaxln.jpg" alt="Logo"/><h2>¡Restable tu Contraseña!</h2><p>Hola, hemos recibido una solicitud para restablecer tu contraseña.</p><p>Si no has solicitado esto, puedes ignorar este mensaje.</p><a href="${process.env.URL_FRONT}/changepassword?idEmail=${emailDb.id}&email=${email}" class="button">Restablecer Contraseña</a><div class="footer"><p>Si tienes alguna duda, por favor contáctanos.</p></div></div></body></html>`
         })
         .then(() => { 
             console.log({success:'Email has been sent'});

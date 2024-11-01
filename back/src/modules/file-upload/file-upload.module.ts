@@ -10,11 +10,13 @@ import { PropertyRepository } from '../property/property.repository';
 import { UsersRepository } from '../users/users.repository';
 import { User } from 'src/entities/user.entity';
 import { EmailService } from '../email/email.service';
+import { EmailRepository } from '../email/email.repository';
+import { Email } from 'src/entities/email.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Property, User])],
+  imports: [TypeOrmModule.forFeature([Property, User,Email])],
   controllers: [FileUploadController],
-  providers: [FileUploadService, CloudinaryConfig, FileUploadRespository, PropertyService, PropertyRepository, UsersRepository, EmailService],
+  providers: [FileUploadService, CloudinaryConfig, FileUploadRespository, PropertyService, PropertyRepository, UsersRepository, EmailService,EmailRepository],
   exports: [FileUploadService],
 })
 export class FileUploadModule {}

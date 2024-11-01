@@ -89,12 +89,14 @@ export class AuthService {
 
   async forgotPassword(email:string) {
     const user = await this.usersRepository.getUserByEmail(email)
+    if(!user) throw new BadRequestException("email does not exits")
     // await this.emailService.sendEmailForgotPassword(email)
     return {success:"Please verify if this user is yours in your email"}
   }
 
   async changeUserPassword(credentials: changePasswordDto) {
     const user = await this.usersRepository.getUserByEmail(credentials.email)    
+    if(!user) throw new BadRequestException("email does not exits")
     const newPassword = await bcrypt.hash(credentials.password,10)
     if(!newPassword) throw new BadRequestException("Error in create password")
     user.password = newPassword

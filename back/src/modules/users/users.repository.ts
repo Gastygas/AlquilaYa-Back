@@ -41,7 +41,6 @@ export class UsersRepository {
   //-----------------------------------------------------------------------------------------
   async getUserByEmail(email: string) {
       const user = await this.usersRepository.findOne({ where: { email },relations:{properties:true,bookings:true,reviews:true} });
-      if(!user) throw new BadRequestException("invalid credentials")
       return user;
   }
 
