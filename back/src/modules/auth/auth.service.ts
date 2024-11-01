@@ -14,6 +14,7 @@ import { User } from 'src/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { EmailService } from '../email/email.service';
+import { changePasswordDto } from './dto/changePassword.dto';
 
 @Injectable()
 export class AuthService {
@@ -79,9 +80,32 @@ export class AuthService {
     };
   }
 
-  //-----------------------------------------------------------------------------------------
-  //-----------------------------------------------------------------------------------------
+  
+  addUsersService() {
+    //console.log('dataUsers: ', dataUsers);
+    dataUsers.forEach((user) => this.SignUp(user));
+    return 'Usuarios agregados';
+  }
 
+  async forgotPassword(email:string) {
+    const user = await this.usersRepository.getUserByEmail(email)
+    // await this.emailService.sendEmailForgotPassword(email)
+    return {success:"Please verify if this user is yours in your email"}
+  }
+
+  async changeUserPassword(credentials: changePasswordDto) {
+    const user = await this.usersRepository.getUserByEmail(credentials.email)    
+    const newPassword = await bcrypt.hash(credentials.password,10)
+    if(!newPassword) throw new BadRequestException("Error in create password")
+    user.password = newPassword
+    await this.userEntity.save(user)
+    return {success:"your have changed your password successfully"}
+  }
+
+
+  //-----------------------------------------------------------------------------------------
+  //------------------Auth0------------------------------------------------------------------
+  
   async googleLogin(data: any): Promise<{ createdUser: User; isNew: boolean }> {
     return runWithTryCatchBadRequest(async () => {
       const user: User = await this.usersRepository.getUserByEmail(data.email);
@@ -109,11 +133,6 @@ export class AuthService {
     });
   }
 
-  addUsersService() {
-    //console.log('dataUsers: ', dataUsers);
-    dataUsers.forEach((user) => this.SignUp(user));
-    return 'Usuarios agregados';
-  }
 
   async createJwtToken(user: any): Promise<string> {
     const payload: any = {

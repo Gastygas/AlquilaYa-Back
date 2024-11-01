@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpStatus,
+  Param,
   Post,
   Req,
   Res,
@@ -17,6 +18,7 @@ import { UserLowerCaseInterceptor } from 'src/interceptors/data-user-lower-case'
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 import { UsersRepository } from '../users/users.repository';
+import { changePasswordDto } from './dto/changePassword.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -36,6 +38,20 @@ export class AuthController {
   @UseInterceptors(UserLowerCaseInterceptor)
   async signIn(@Body() credentialsUser: SignInDto) {
     return await this.authService.SignIn(credentialsUser);
+  }
+
+  @Get("forgot/password/:email")
+  async forgotPassword(
+    @Param("email") email:string
+  ){
+    return await this.authService.forgotPassword(email)
+  }
+
+  @Post("change/password/")
+  async changePassword(
+    @Body() credentials: changePasswordDto
+  ){
+    return await this.authService.changeUserPassword(credentials)
   }
 
   //-----------------------------------------------------------------------------------------

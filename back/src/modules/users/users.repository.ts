@@ -2,7 +2,6 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
-import { EmailService } from '../email/email.service';
 import { default as bcrypt } from 'bcrypt';
 import { completeUserDto } from './dto/completeUser.dto';
 import { PropertyRepository } from '../property/property.repository';
@@ -41,13 +40,9 @@ export class UsersRepository {
   //-----------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------
   async getUserByEmail(email: string) {
-    try {
-      console.log('mail: ', email);
-      const user = await this.usersRepository.findOne({ where: { email } });
+      const user = await this.usersRepository.findOne({ where: { email },relations:{properties:true,bookings:true,reviews:true} });
+      if(!user) throw new BadRequestException("invalid credentials")
       return user;
-    } catch (err) {
-      throw new Error('En getUserByEmail: ' + err.message);
-    }
   }
 
   //-----------------------------------------------------------------------------------------
@@ -127,4 +122,5 @@ export class UsersRepository {
     const newUser = await this.usersRepository.update(userId,updatedUser)
     return {success:"you have changed your data"}
   }
+
 }
