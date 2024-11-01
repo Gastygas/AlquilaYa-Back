@@ -32,8 +32,8 @@ export class EmailController{
     async sendEmailCreatePropertySuccessfullyController(
         @Body() data: EmailDto
     ){
-        const {email,name} = data
-        return this.emailService.sendEmailCreatePropertySuccessfully(email,name)
+        const {email,name,propertyId} = data
+        return this.emailService.sendEmailCreatePropertySuccessfully(email,name,propertyId)
     }
     @Post("propertydeny")
     async sendEmailCreatePropertyDenyController(

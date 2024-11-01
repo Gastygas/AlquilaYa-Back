@@ -6,4 +6,6 @@ export class EmailDto {
 
     @IsNotEmpty()
     name:string;
+
+    propertyId?:string
 }
