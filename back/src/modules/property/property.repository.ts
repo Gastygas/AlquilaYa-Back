@@ -19,80 +19,104 @@ export class PropertyRepository {
     private readonly userRepository: UsersRepository,
     private readonly emailService: EmailService,
   ) {}
-  
-  async getAllPropertiesRepository(page = 1, limit = 50):Promise<IPropertyWithUserId[]>{
+
+  async getAllPropertiesRepository(
+    page = 1,
+    limit = 50,
+  ): Promise<IPropertyWithUserId[]> {
     const properties = await this.propertyRepository.find({
       skip: (page - 1) * limit,
       take: limit,
       relations: {
         specialprice: true,
-        user: true
+        user: true,
       },
     });
-    
-    const propertiesWithUserId = properties.map(property => {
+
+    const propertiesWithUserId = properties.map((property) => {
       const { user, ...restProperty } = property;
       return {
         ...restProperty,
-        user: { id: user.id }, 
+        user: { id: user.id },
       };
     });
-    
-    return propertiesWithUserId
+
+    return propertiesWithUserId;
   }
-  
-  async getPropertyById(id:string):Promise<IPropertyWithUserId>{
-    const property = await this.propertyRepository.findOne({where:{id},relations:{user:true}}) 
-    if(!property) throw new BadRequestException("Property Id not found")
-      const {user,...restProperty} = property
-    return{
+
+  async getPropertyById(id: string): Promise<IPropertyWithUserId> {
+    const property = await this.propertyRepository.findOne({
+      where: { id },
+      relations: { user: true },
+    });
+    if (!property) throw new BadRequestException('Property Id not found');
+    const { user, ...restProperty } = property;
+    return {
       ...restProperty,
-      user:{id: user.id}
-    }
+      user: { id: user.id },
+    };
   }
-  
-  async createProperty(newProperty: CreatePropertyDto, id: string){
+
+  async createProperty(newProperty: CreatePropertyDto, id: string) {
     const propertyExits: Property = await this.propertyRepository.findOne({
       where: { address: newProperty.address },
     });
     if (propertyExits) throw new BadRequestException('Address already used');
-    
-    const userDb: Omit<User, 'password'> = await this.userRepository.getUserById(id);
+
+    const userDb: Omit<User, 'password'> =
+      await this.userRepository.getUserById(id);
     if (!userDb) throw new BadRequestException('user id not found');
-    
+
     const createProperty: Property = await this.propertyRepository.create({
       user: userDb,
       ...newProperty,
     });
     const savedProperty = await this.propertyRepository.save(createProperty);
-    
+
     const property: Property = await this.propertyRepository.findOne({
       where: { id: savedProperty.id },
     });
-    
-    return { success: 'Your property is Pending, we will notice you soon', property:{property,userId: userDb.id} };
+
+    return {
+      success: 'Your property is Pending, we will notice you soon',
+      property: { property, userId: userDb.id },
+    };
   }
-  
+
   async approvePropertyRepository(id: string) {
-    const property = await this.propertyRepository.findOne({where:{id},relations:{user:true}})
-    if(!property) throw new BadRequestException("property not found")
-    if((property.propertyStatus as string) === 'approved') throw new BadRequestException("Property already approved")
-    property.propertyStatus = 'approved'
-    await this.propertyRepository.save(property)
-    
-    await this.emailService.sendEmailCreatePropertySuccessfully(property.user.email,property.user.name)
-    return {success: 'Congratulations, your property was approved!'}
+    const property = await this.propertyRepository.findOne({
+      where: { id },
+      relations: { user: true },
+    });
+    if (!property) throw new BadRequestException('property not found');
+    if ((property.propertyStatus as string) === 'approved')
+      throw new BadRequestException('Property already approved');
+    property.propertyStatus = 'approved';
+    await this.propertyRepository.save(property);
+
+    await this.emailService.sendEmailCreatePropertySuccessfully(
+      property.user.email,
+      property.user.name,
+    );
+    return { success: 'Congratulations, your property was approved!' };
   }
 
   async denyPropertyRepository(id: string) {
-    const property = await this.propertyRepository.findOne({where:{id},relations:{user:true}})
-    if(!property) throw new BadRequestException("property not found")
-    if((property.propertyStatus as string) === 'cancelled') throw new BadRequestException("Property already cancelled")
-    property.propertyStatus = 'cancelled'
-    await this.propertyRepository.save(property)
+    const property = await this.propertyRepository.findOne({
+      where: { id },
+      relations: { user: true },
+    });
+    if (!property) throw new BadRequestException('property not found');
+    if ((property.propertyStatus as string) === 'cancelled')
+      throw new BadRequestException('Property already cancelled');
+    property.propertyStatus = 'cancelled';
+    await this.propertyRepository.save(property);
 
-    await this.emailService.sendEmailCreatePropertyDeny(property.user.email,property.user.name)
-    return {success: 'Sorry, your property was disapproved'}
+    await this.emailService.sendEmailCreatePropertyDeny(
+      property.user.email,
+      property.user.name,
+    );
+    return { success: 'Sorry, your property was disapproved' };
   }
 
   async addPropertiesRepository() {
@@ -108,170 +132,219 @@ export class PropertyRepository {
     return { success: 'properties has been added' };
   }
 
-  async addReservedDaysRepository(propertyId: string,dates:disableDayDto) {
-    const property: Property = await this.propertyRepository.findOne({ where: { id: propertyId } });
-    if (!property) throw new BadRequestException("Property not found");
+  async addReservedDaysRepository(propertyId: string, dates: disableDayDto) {
+    const property: Property = await this.propertyRepository.findOne({
+      where: { id: propertyId },
+    });
+    if (!property) throw new BadRequestException('Property not found');
 
     const { dateStart, dateEnd } = dates;
-    const startDate = parse(dateStart, "dd/MM/yyyy", new Date());
-    const endDate = parse(dateEnd, "dd/MM/yyyy", new Date());
+    const startDate = parse(dateStart, 'dd/MM/yyyy', new Date());
+    const endDate = parse(dateEnd, 'dd/MM/yyyy', new Date());
 
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Asegurarse de eliminar la hora para comparar solo la fecha
 
     // Validar si dateStart es una fecha anterior a hoy
     if (isBefore(startDate, today) || isBefore(endDate, startDate)) {
-        throw new BadRequestException("Invalid dates");
+      throw new BadRequestException('Invalid dates');
     }
 
     let current = startDate;
     const reserveDaysArray: string[] = [];
 
     // Convertir fechas en disableDays a formato "dd/MM/yyyy"
-    const formattedReserveDays = property.reservedDays.map(date => {
-        const parsedDate = new Date(date);
-        return format(parsedDate, "dd/MM/yyyy");
-    });
-    const formattedDisableDays = property.disableDays.map(date => {
+    const formattedReserveDays = property.reservedDays.map((date) => {
       const parsedDate = new Date(date);
-      return format(parsedDate, "dd/MM/yyyy");
-  });
+      return format(parsedDate, 'dd/MM/yyyy');
+    });
+    const formattedDisableDays = property.disableDays.map((date) => {
+      const parsedDate = new Date(date);
+      return format(parsedDate, 'dd/MM/yyyy');
+    });
 
     // Generar fechas en el rango y verificar si ya están reservadas
-    while (isBefore(current, endDate) || current.getTime() === endDate.getTime()) {
-        const formattedDate = format(current, "dd/MM/yyyy");
-        if (formattedReserveDays.includes(formattedDate)) throw new BadRequestException("Dates are reserved, please take other ones");
-        if (formattedDisableDays.includes(formattedDate)) throw new BadRequestException("Dates are Disabled, please take other ones");
+    while (
+      isBefore(current, endDate) ||
+      current.getTime() === endDate.getTime()
+    ) {
+      const formattedDate = format(current, 'dd/MM/yyyy');
+      if (formattedReserveDays.includes(formattedDate))
+        throw new BadRequestException(
+          'Dates are reserved, please take other ones',
+        );
+      if (formattedDisableDays.includes(formattedDate))
+        throw new BadRequestException(
+          'Dates are Disabled, please take other ones',
+        );
 
-        reserveDaysArray.push(formattedDate);
-        current = addDays(current, 1);
+      reserveDaysArray.push(formattedDate);
+      current = addDays(current, 1);
     }
     // Actualizar disableDays con las nuevas fechas en formato ISO
-    const newReserveDays = reserveDaysArray.map(date => {
-        const [day, month, year] = date.split('/');
-        return new Date(parseInt(year), parseInt(month) - 1, parseInt(day)).toISOString();
+    const newReserveDays = reserveDaysArray.map((date) => {
+      const [day, month, year] = date.split('/');
+      return new Date(
+        parseInt(year),
+        parseInt(month) - 1,
+        parseInt(day),
+      ).toISOString();
     });
-
 
     // Actualizar reservedDays
     property.reservedDays = [...property.reservedDays, ...newReserveDays];
     await this.propertyRepository.save(property);
 
-    return {success:"The days are reserved now"}
-
+    return { success: 'The days are reserved now' };
   }
 
-  async addDisableDaysRepository(propertyId: string,dates:disableDayDto) {
-    const property: Property = await this.propertyRepository.findOne({ where: { id: propertyId } });
-    if (!property) throw new BadRequestException("Property not found");
+  async addDisableDaysRepository(propertyId: string, dates: disableDayDto) {
+    const property: Property = await this.propertyRepository.findOne({
+      where: { id: propertyId },
+    });
+    if (!property) throw new BadRequestException('Property not found');
 
     const { dateStart, dateEnd } = dates;
-    const startDate = parse(dateStart, "dd/MM/yyyy", new Date());
-    const endDate = parse(dateEnd, "dd/MM/yyyy", new Date());
+    const startDate = parse(dateStart, 'dd/MM/yyyy', new Date());
+    const endDate = parse(dateEnd, 'dd/MM/yyyy', new Date());
 
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Asegurarse de eliminar la hora para comparar solo la fecha
 
     // Validar si dateStart es una fecha anterior a hoy
     if (isBefore(startDate, today) || isBefore(endDate, startDate)) {
-        throw new BadRequestException("Invalid dates");
+      throw new BadRequestException('Invalid dates');
     }
 
     let current = startDate;
     const disableDaysArray: string[] = [];
 
     // Convertir fechas en disableDays a formato "dd/MM/yyyy"
-    const formattedDisableDays = property.disableDays.map(date => {
-        const parsedDate = new Date(date);
-        return format(parsedDate, "dd/MM/yyyy");
+    const formattedDisableDays = property.disableDays.map((date) => {
+      const parsedDate = new Date(date);
+      return format(parsedDate, 'dd/MM/yyyy');
     });
-    const formattedReservedDays = property.reservedDays.map(date => {
-        const parsedDate = new Date(date);
-        return format(parsedDate, "dd/MM/yyyy");
+    const formattedReservedDays = property.reservedDays.map((date) => {
+      const parsedDate = new Date(date);
+      return format(parsedDate, 'dd/MM/yyyy');
     });
-
 
     // Generar fechas en el rango y verificar si ya están reservadas
-    while (isBefore(current, endDate) || current.getTime() === endDate.getTime()) {
-        const formattedDate = format(current, "dd/MM/yyyy");
-        if (formattedDisableDays.includes(formattedDate)) throw new BadRequestException("Dates are Disabled, please take other ones");
-        if (formattedReservedDays.includes(formattedDate)) throw new BadRequestException("Dates are Reserved, please take other ones");
-        
-        disableDaysArray.push(formattedDate);
-        current = addDays(current, 1);
+    while (
+      isBefore(current, endDate) ||
+      current.getTime() === endDate.getTime()
+    ) {
+      const formattedDate = format(current, 'dd/MM/yyyy');
+      if (formattedDisableDays.includes(formattedDate))
+        throw new BadRequestException(
+          'Dates are Disabled, please take other ones',
+        );
+      if (formattedReservedDays.includes(formattedDate))
+        throw new BadRequestException(
+          'Dates are Reserved, please take other ones',
+        );
+
+      disableDaysArray.push(formattedDate);
+      current = addDays(current, 1);
     }
     // Actualizar disableDays con las nuevas fechas en formato ISO
-    const newDisableDays = disableDaysArray.map(date => {
-        const [day, month, year] = date.split('/');
-        return new Date(parseInt(year), parseInt(month) - 1, parseInt(day)).toISOString();
+    const newDisableDays = disableDaysArray.map((date) => {
+      const [day, month, year] = date.split('/');
+      return new Date(
+        parseInt(year),
+        parseInt(month) - 1,
+        parseInt(day),
+      ).toISOString();
     });
-
 
     // Actualizar disableDays
     property.disableDays = [...property.disableDays, ...newDisableDays];
     await this.propertyRepository.save(property);
 
-    return {success:"The days are disable now"}
-
+    return { success: 'The days are disable now' };
   }
-  
-  async cancelBookDays(propertyId:string,dates:disableDayDto){
-    
-    const property = await this.propertyRepository.findOne({where:{id:propertyId},relations:{user:true,bookings:true,}})
-    if(!property) throw new BadRequestException("Property Id not found")
+
+  async cancelBookDays(propertyId: string, dates: disableDayDto) {
+    const property = await this.propertyRepository.findOne({
+      where: { id: propertyId },
+      relations: { user: true, bookings: true },
+    });
+    if (!property) throw new BadRequestException('Property Id not found');
 
     const { dateStart, dateEnd } = dates;
-    const startDate = parse(dateStart, "dd/MM/yyyy", new Date());
-    const endDate = parse(dateEnd, "dd/MM/yyyy", new Date());
+    const startDate = parse(dateStart, 'dd/MM/yyyy', new Date());
+    const endDate = parse(dateEnd, 'dd/MM/yyyy', new Date());
 
-    let current = startDate
-    let cancelDaysArr:string[] = []
+    let current = startDate;
+    let cancelDaysArr: string[] = [];
 
-    while (isBefore(current, endDate) || current.getTime() === endDate.getTime()) {
-      const formattedDate = format(current, "dd/MM/yyyy");
+    while (
+      isBefore(current, endDate) ||
+      current.getTime() === endDate.getTime()
+    ) {
+      const formattedDate = format(current, 'dd/MM/yyyy');
       cancelDaysArr.push(formattedDate);
       current = addDays(current, 1);
     }
 
     // Convertir las fechas en disableDays al formato "dd/MM/yyyy" antes de comparar
-    property.reservedDays = property.reservedDays.filter(reserveDate => {
-      const formattedDisableDate = format(new Date(reserveDate), "dd/MM/yyyy");
+    property.reservedDays = property.reservedDays.filter((reserveDate) => {
+      const formattedDisableDate = format(new Date(reserveDate), 'dd/MM/yyyy');
       return !cancelDaysArr.includes(formattedDisableDate);
-  })
+    });
 
     await this.propertyRepository.save(property);
 
-    return { success: "The reserved days are free now" };
+    return { success: 'The reserved days are free now' };
   }
 
-  async cancelDisableDays(propertyId:string,dates:disableDayDto){
-    
-    const property = await this.propertyRepository.findOne({where:{id:propertyId},relations:{user:true,bookings:true,}})
-    if(!property) throw new BadRequestException("Property Id not found")
+  async cancelDisableDays(propertyId: string, dates: disableDayDto) {
+    const property = await this.propertyRepository.findOne({
+      where: { id: propertyId },
+      relations: { user: true, bookings: true },
+    });
+    if (!property) throw new BadRequestException('Property Id not found');
 
     const { dateStart, dateEnd } = dates;
-    const startDate = parse(dateStart, "dd/MM/yyyy", new Date());
-    const endDate = parse(dateEnd, "dd/MM/yyyy", new Date());
+    const startDate = parse(dateStart, 'dd/MM/yyyy', new Date());
+    const endDate = parse(dateEnd, 'dd/MM/yyyy', new Date());
 
-    let current = startDate
-    let cancelDaysArr:string[] = []
+    let current = startDate;
+    let cancelDaysArr: string[] = [];
 
-    while (isBefore(current, endDate) || current.getTime() === endDate.getTime()) {
-      const formattedDate = format(current, "dd/MM/yyyy");
+    while (
+      isBefore(current, endDate) ||
+      current.getTime() === endDate.getTime()
+    ) {
+      const formattedDate = format(current, 'dd/MM/yyyy');
       cancelDaysArr.push(formattedDate);
       current = addDays(current, 1);
     }
 
     // Convertir las fechas en disableDays al formato "dd/MM/yyyy" antes de comparar
-    property.disableDays = property.disableDays.filter(disableDate => {
-      const formattedDisableDate = format(new Date(disableDate), "dd/MM/yyyy");
+    property.disableDays = property.disableDays.filter((disableDate) => {
+      const formattedDisableDate = format(new Date(disableDate), 'dd/MM/yyyy');
       return !cancelDaysArr.includes(formattedDisableDate);
-  })
+    });
 
     await this.propertyRepository.save(property);
 
-    return { success: "The disabled days are free now" };
+    return { success: 'The disabled days are free now' };
   }
-  
+
+  //-----------------------------------------------------------------------------------------
+  //------Obtener reseñas de una propiedad específica (GET /property/reviews/:id)
+  //-----------------------------------------------------------------------------------------
+
+  async getReviewsOfPropertyByIdRepository(id: string) {
+    const property = await this.propertyRepository.findOne({
+      where: { id },
+      relations: { reviews: true },
+    });
+    if (!property) throw new BadRequestException('Property Id not found');
+
+    const { reviews, ...restProperty } = property;
+    const reviewsActive = reviews.filter((review) => review.status);
+    return reviewsActive;
+  }
 }
-

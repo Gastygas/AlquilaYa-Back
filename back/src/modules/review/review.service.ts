@@ -22,7 +22,7 @@ export class ReviewService {
   ) {}
 
   //-----------------------------------------------------------------------------------------
-  //----------- Crear una nueva reseña (POST /reviews/create)
+  //----------- Crear una nueva reseña (POST /reviews/create)--------------------------------
   //-----------------------------------------------------------------------------------------
 
   async createReviewService(
@@ -85,7 +85,7 @@ export class ReviewService {
   }
 
   //-----------------------------------------------------------------------------------------
-  //----------- Actualizar una reseña (PUT /reviews/:reviewId)
+  //----------- Actualizar una reseña (PUT /reviews/:reviewId)-------------------------------
   //-----------------------------------------------------------------------------------------
 
   async updateReviewService(id: string, updateReviewDto: UpdateReviewDto) {

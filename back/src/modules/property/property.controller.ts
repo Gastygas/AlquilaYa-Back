@@ -22,85 +22,73 @@ import { RolesGuard } from 'src/guards/roles.guard';
 @ApiTags('property')
 @Controller('property')
 export class PropertyController {
-  constructor(private readonly propertyService: PropertyService,  
-  ) {}
+  constructor(private readonly propertyService: PropertyService) {}
 
   @Get()
-  getAllPropertiesController(){
-    return this.propertyService.getAllPropertiesService()
+  getAllPropertiesController() {
+    return this.propertyService.getAllPropertiesService();
   }
 
-  @Get(":id")
-  getPropertyByIdController(
-    @Param('id',ParseUUIDPipe) id:string
-  ){
-    return this.propertyService.getPropertyById(id)
+  @Get(':id')
+  getPropertyByIdController(@Param('id', ParseUUIDPipe) id: string) {
+    return this.propertyService.getPropertyById(id);
   }
 
-
-////////////////////////////////////////
+  ////////////////////////////////////////
   @ApiBearerAuth()
-  @Post("/create")
+  @Post('/create')
   @UseGuards(AuthGuard)
   createPropertyController(
-    @Body() newProperty:CreatePropertyDto,
+    @Body() newProperty: CreatePropertyDto,
     @Request() req: ICustomRequest,
   ) {
-    const userId = req.user.id
-    return this.propertyService.createProperty(newProperty,userId);
+    const userId = req.user.id;
+    return this.propertyService.createProperty(newProperty, userId);
   }
 
-////////////////////////////////////////
+  ////////////////////////////////////////
   @ApiBearerAuth()
-  @Patch("approve/:id")
+  @Patch('approve/:id')
   @Roles(Role.Admin)
-  @UseGuards(AuthGuard,RolesGuard)
-  approvePropertyController(
-    @Param('id', ParseUUIDPipe) id:string
-  ){
-    return this.propertyService.approvePropertyService(id)
+  @UseGuards(AuthGuard, RolesGuard)
+  approvePropertyController(@Param('id', ParseUUIDPipe) id: string) {
+    return this.propertyService.approvePropertyService(id);
   }
 
   @ApiBearerAuth()
-  @Patch("deny/:id")
+  @Patch('deny/:id')
   @Roles(Role.Admin)
-  @UseGuards(AuthGuard,RolesGuard)
-  denyPropertyController(
-    @Param('id', ParseUUIDPipe) id:string
-  ){
-    return this.propertyService.denyPropertyService(id)
+  @UseGuards(AuthGuard, RolesGuard)
+  denyPropertyController(@Param('id', ParseUUIDPipe) id: string) {
+    return this.propertyService.denyPropertyService(id);
   }
 
-
-  @Patch("reserve/:id")
+  @Patch('reserve/:id')
   // @UseGuards(AuthGuard)
   addReservedDaysController(
-    @Param('id',ParseUUIDPipe) propertyId: string,
+    @Param('id', ParseUUIDPipe) propertyId: string,
     @Body() dates: disableDayDto,
-  ){
-    return this.propertyService.addReservedDaysService(propertyId,dates)
+  ) {
+    return this.propertyService.addReservedDaysService(propertyId, dates);
   }
 
-  @Patch("disable/:id")
+  @Patch('disable/:id')
   // @UseGuards(AuthGuard)
   addDisableDaysController(
-    @Param('id',ParseUUIDPipe) propertyId: string,
+    @Param('id', ParseUUIDPipe) propertyId: string,
     @Body() dates: disableDayDto,
-  ){
-    return this.propertyService.addDisableDaysService(propertyId,dates)
+  ) {
+    return this.propertyService.addDisableDaysService(propertyId, dates);
   }
 
-
-  @Patch("cancel/disable/:id")
+  @Patch('cancel/disable/:id')
   // @UseGuards(AuthGuard)
   cancelDisableDaysController(
-    @Param('id',ParseUUIDPipe) propertyId: string,
+    @Param('id', ParseUUIDPipe) propertyId: string,
     @Body() dates: disableDayDto,
-  ){
-    return this.propertyService.cancelDisableDaysService(propertyId,dates)
+  ) {
+    return this.propertyService.cancelDisableDaysService(propertyId, dates);
   }
-
-
 
   // //-----------------------------------------------------------------------------------------
   // //-----------------------------------------------------------------------------------------
@@ -110,4 +98,12 @@ export class PropertyController {
     return this.propertyService.addPropertiesService();
   }
 
+  //-----------------------------------------------------------------------------------------
+  //------Obtener reseñas de una propiedad específica (GET /property/reviews/:id)
+  //-----------------------------------------------------------------------------------------
+
+  @Get('reviews/:id')
+  getReviewsOfPropertyByIdController(@Param('id', ParseUUIDPipe) id: string) {
+    return this.propertyService.getReviewsOfPropertyByIdService(id);
+  }
 }

@@ -9,6 +9,7 @@ import {
   UseGuards,
   Request,
   Put,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { ReviewService } from './review.service';
 import { CreateReviewDto } from './dto/create-review.dto';
@@ -45,7 +46,7 @@ export class ReviewController {
   }
 
   //-----------------------------------------------------------------------------------------
-  //------Obtener reseñas de un usuario específico (GET /reviews)
+  //------Obtener reseñas de un usuario específico (GET /reviews)----------------------------
   //-----------------------------------------------(GET /users/:userId/reviews)?
   //-----------------------------------------------------------------------------------------
 
@@ -57,34 +58,28 @@ export class ReviewController {
   }
 
   //-----------------------------------------------------------------------------------------
-  //----------- Actualizar una reseña (PUT /reviews/:reviewId)
+  //----------- Actualizar una reseña (PUT /reviews/:reviewId)-------------------------------
   //-----------------------------------------------------------------------------------------
 
   @ApiBearerAuth()
   @Put(':id')
   @UseGuards(AuthGuard)
   updateReviewController(
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() updateReviewDto: UpdateReviewDto,
   ) {
     return this.reviewService.updateReviewService(id, updateReviewDto);
   }
 
   //-----------------------------------------------------------------------------------------
-  //----------- Inhabilitar una reseña (PATCH /reviews/:reviewId)
+  //----------- Inhabilitar una reseña (PATCH /reviews/:reviewId)----------------------------
   //-----------------------------------------------------------------------------------------
 
   @ApiBearerAuth()
   @Patch(':id')
   @Roles(Role.Admin)
   @UseGuards(AuthGuard, RolesGuard)
-  changeStatusController(@Param('id') id: string) {
+  changeStatusController(@Param('id', ParseUUIDPipe) id: string) {
     return this.reviewService.changeStatusService(id);
   }
-
-  //------Obtener reseñas de una propiedad específica (GET /properties/:propertyId/reviews)
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.reviewService.findOne(+id);
-  // }
 }
