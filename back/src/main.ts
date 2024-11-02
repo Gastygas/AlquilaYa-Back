@@ -32,29 +32,31 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api', app, document);
 
-  const corsOptions = {
-    origin: 'http://localhost:3000',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true,
-  }
+  // const corsOptions = {
+  //   origin: 'http://localhost:3000',
+  //   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  //   credentials: true,
+  // }
   
+  // app.enableCors({
+  //   origin: '*', // Permite cualquier origen
+  //   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Métodos permitidos
+  //   credentials: true, // Permite envío de cookies si es necesario
+  // });
+
+  
+  // async function bootstrap() {
+  //     const app = await NestFactory.create(AppModule);
+  //     app.useGlobalPipes(new ValidationPipe());
+  //     app.enableCors(); // Permite CORS si es necesario
+  //     await app.listen(3002);
+  // }
+  // bootstrap();
+
   app.enableCors({
-    origin: '*', // Permite cualquier origen
+    origin: 'https://alquilaya.vercel.app',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Métodos permitidos
-    credentials: true, // Permite envío de cookies si es necesario
-  });
-
-  
-  async function bootstrap() {
-      const app = await NestFactory.create(AppModule);
-      app.useGlobalPipes(new ValidationPipe());
-      app.enableCors(); // Permite CORS si es necesario
-      await app.listen(3002);
-  }
-  bootstrap();
-
-  app.enableCors({
-    origin: '*', // Permite todas las solicitudes de origen
+    credentials: true,  // Permite todas las solicitudes de origen
 });
 
   await app.listen(3001);
