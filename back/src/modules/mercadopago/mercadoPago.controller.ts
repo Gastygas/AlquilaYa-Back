@@ -1,20 +1,37 @@
 import { Body, Controller, Get, Post, Res } from '@nestjs/common';
 import { MercadoPagoService } from './mercadoPago.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Booking } from 'src/entities/booking.entity';
+import { BookingRepository } from '../booking/booking.repository';
 
 
 @Controller('mercadopago')
 export class MercadoPagoController {
-  constructor(private readonly mercadoPagoService: MercadoPagoService) {}
+  constructor(private readonly mercadoPagoService: MercadoPagoService,
+    private readonly bookingRepository: BookingRepository
+  ) {}
 
   @Post("")
   createOrder(@Body() body: any): Promise<any> {
-    return this.mercadoPagoService.createPreference(body);
+   
+    
+    const booking = {
+      propertyId: body.booking.propertyId,
+      dateStart: body.booking.dateStart,
+      dateEnd: body.booking.dateEnd
+    }
+
+    this.bookingRepository.createBooking(booking,body.userId);
+    
+    console.log("success");
+    
+     return this.mercadoPagoService.createPreference(body);
   }
 
   @Get('success')
   success(@Res() res) {
     console.log('success');
-    res.redirect('https://localhost:3000'); // crear vista de pago exitoso
+  
   }
 
   @Get('failure')

@@ -2,11 +2,11 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
-import { EmailService } from '../email/email.service';
 import { default as bcrypt } from 'bcrypt';
 import { completeUserDto } from './dto/completeUser.dto';
 import { PropertyRepository } from '../property/property.repository';
 import { Property } from 'src/entities/property.entity';
+import { UpdateUserDto } from './dto/updateUser.dto';
 @Injectable()
 export class UsersRepository {
   constructor(
@@ -40,13 +40,8 @@ export class UsersRepository {
   //-----------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------
   async getUserByEmail(email: string) {
-    try {
-      console.log('mail: ', email);
-      const user = await this.usersRepository.findOne({ where: { email } });
+      const user = await this.usersRepository.findOne({ where: { email },relations:{properties:true,bookings:true,reviews:true} });
       return user;
-    } catch (err) {
-      throw new Error('En getUserByEmail: ' + err.message);
-    }
   }
 
   //-----------------------------------------------------------------------------------------
@@ -120,4 +115,11 @@ export class UsersRepository {
     return {success:"You has added a new property in your Favorite Properties!"}
     
   }
+
+  async updateUserRepository(updatedUser:UpdateUserDto,userId:string){
+    const user = await this.getUserById(userId)
+    const newUser = await this.usersRepository.update(userId,updatedUser)
+    return {success:"you have changed your data"}
+  }
+
 }

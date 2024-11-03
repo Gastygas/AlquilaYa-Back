@@ -94,10 +94,7 @@ export class PropertyRepository {
     property.propertyStatus = 'approved';
     await this.propertyRepository.save(property);
 
-    await this.emailService.sendEmailCreatePropertySuccessfully(
-      property.user.email,
-      property.user.name,
-    );
+    // await this.emailService.sendEmailCreatePropertySuccessfully(property.user.email,property.user.name,property.id)
     return { success: 'Congratulations, your property was approved!' };
   }
 
@@ -112,10 +109,7 @@ export class PropertyRepository {
     property.propertyStatus = 'cancelled';
     await this.propertyRepository.save(property);
 
-    await this.emailService.sendEmailCreatePropertyDeny(
-      property.user.email,
-      property.user.name,
-    );
+    // await this.emailService.sendEmailCreatePropertyDeny(property.user.email,property.user.name)
     return { success: 'Sorry, your property was disapproved' };
   }
 

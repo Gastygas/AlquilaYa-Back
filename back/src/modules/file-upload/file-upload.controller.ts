@@ -1,9 +1,7 @@
-import { Controller, FileTypeValidator, MaxFileSizeValidator, Param, ParseFilePipe, ParseUUIDPipe, Post, Request, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Controller, FileTypeValidator, MaxFileSizeValidator, Param, ParseFilePipe, ParseUUIDPipe, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileUploadService } from './file-upload.service';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
-import { PropertyService } from '../property/property.service';
-import { ICustomRequest } from '../property/interface/customRequest';
 
 @ApiTags('file-upload')
 @Controller('files')
