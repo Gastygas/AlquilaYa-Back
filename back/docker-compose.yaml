@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+   nestapp:     
+     image: hugoesteban1/alquilaya-back:latest
+     ports:
+       - "3002:3001"
+     env_file:
+       - .env
+     depends_on:
+       - postgresdb
+
+   postgresdb:
+     image: postgres
+     volumes:
+       - pgdata:/var/lib/postgresql/data
+     env_file:
+       - .env
+
+volumes:
+  pgdata:

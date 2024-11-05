@@ -8,51 +8,57 @@ import { disableDayDto } from './dto/disableday.dto';
 
 @Injectable()
 export class PropertyService {
-  constructor(@InjectRepository(Property) private propertyEntity: Repository<Property>,
-    private readonly propertyRepository: PropertyRepository,  
+  constructor(
+    @InjectRepository(Property) private propertyEntity: Repository<Property>,
+    private readonly propertyRepository: PropertyRepository,
     // private readonly fileUploadRepository: FileUploadRespository,
-  ){}
+  ) {}
 
-
-  getAllPropertiesService(){
-    return this.propertyRepository.getAllPropertiesRepository()
+  getAllPropertiesService() {
+    return this.propertyRepository.getAllPropertiesRepository();
   }
   //-----------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------
- 
-  getPropertyById(id:string){
-    return this.propertyRepository.getPropertyById(id)
+
+  getPropertyById(id: string) {
+    return this.propertyRepository.getPropertyById(id);
   }
 
   //-----------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------
 
   approvePropertyService(id: string) {
-    return this.propertyRepository.approvePropertyRepository(id)
+    return this.propertyRepository.approvePropertyRepository(id);
   }
 
   denyPropertyService(id: string) {
-    return this.propertyRepository.denyPropertyRepository(id)
+    return this.propertyRepository.denyPropertyRepository(id);
   }
 
   addPropertiesService() {
     return this.propertyRepository.addPropertiesRepository();
   }
 
-  async createProperty(newProperty: CreatePropertyDto, userId:string) {
-    return this.propertyRepository.createProperty(newProperty,userId)
+  async createProperty(newProperty: CreatePropertyDto, userId: string) {
+    return this.propertyRepository.createProperty(newProperty, userId);
   }
 
-  addReservedDaysService(propertyId: string,dates:disableDayDto) {
-    return this.propertyRepository.addReservedDaysRepository(propertyId,dates)
+  addReservedDaysService(propertyId: string, dates: disableDayDto) {
+    return this.propertyRepository.addReservedDaysRepository(propertyId, dates);
   }
 
-  addDisableDaysService(propertyId: string,dates:disableDayDto) {
-    return this.propertyRepository.addDisableDaysRepository(propertyId,dates)
+  addDisableDaysService(propertyId: string, dates: disableDayDto) {
+    return this.propertyRepository.addDisableDaysRepository(propertyId, dates);
   }
 
-  cancelDisableDaysService(propertyId: string,dates:disableDayDto){
-    return this.propertyRepository.cancelDisableDays(propertyId,dates)
+  cancelDisableDaysService(propertyId: string, dates: disableDayDto) {
+    return this.propertyRepository.cancelDisableDays(propertyId, dates);
   }
 
+  //-----------------------------------------------------------------------------------------
+  //------Obtener reseñas de una propiedad específica (GET /property/reviews/:id)
+  //-----------------------------------------------------------------------------------------
+  getReviewsOfPropertyByIdService(id: string) {
+    return this.propertyRepository.getReviewsOfPropertyByIdRepository(id);
+  }
 }
