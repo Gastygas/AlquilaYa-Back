@@ -37,7 +37,7 @@ export class PaymentsRepository {
     console.log("paymentId: " , paymentId);
     
     if (data.status == 'approved') {
-      console.log('1');
+      
 
       const { id, payment_method, transaction_amount, status } = data;
       const payment = this.paymentRepository.create({
@@ -48,7 +48,7 @@ export class PaymentsRepository {
         date: new Date(),
       });
 
-      console.log('2');
+      
 
       await this.paymentRepository.save(payment);
 
