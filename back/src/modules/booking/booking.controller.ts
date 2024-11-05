@@ -35,7 +35,7 @@ export class BookingController {
     
     console.log("estamos en booking create");
     
-    return this.bookingService.createBookingService(newBooking,userId);
+    // return this.bookingService.createBookingService(newBooking,userId , payment);
   }
   
 
