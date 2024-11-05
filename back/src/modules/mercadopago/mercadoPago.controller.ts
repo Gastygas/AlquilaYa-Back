@@ -20,24 +20,24 @@ export class MercadoPagoController {
 
   @Get('success')
   async success(@Res() res) {
-    
-
     const { paymentId, bookingData } =
       await this.mercadoPagoService.destructure(res.req.url);
 
-      const booking = {
-        propertyId: bookingData.booking.propertyId,
-        dateStart: bookingData.booking.dateStart,
-        dateEnd: bookingData.booking.dateEnd,
-      }
+    const booking = {
+      propertyId: bookingData.booking.propertyId,
+      dateStart: bookingData.booking.dateStart,
+      dateEnd: bookingData.booking.dateEnd,
+    };
 
-      console.log("booking en el controller: ", booking);
-      
+    console.log('booking en el controller: ', booking);
+
     await this.paymentsRepository.createPaymentAndBooking(
       paymentId,
       booking,
       bookingData.userId,
     );
+
+    res.redirect('https://localhost:3000/success');
   }
 
   @Get('failure')

@@ -46,39 +46,28 @@ export class MercadoPagoService {
   }
 
   async destructure(url) {
-    // Obtener la parte de parámetros de la URL
     const queryParams = url.split('?')[1].split('&');
 
-    // Variables para almacenar los valores
     let paymentId = '';
     let externalReference = '';
 
-    // Iterar sobre cada parámetro
     queryParams.forEach((param) => {
       const [key, value] = param.split('=');
 
-      // Verificar y asignar los valores deseados
       if (key === 'payment_id') {
         paymentId = value;
       } else if (key === 'external_reference') {
-        // Decodificar el valor para obtener el JSON original
         const decodedValue = decodeURIComponent(value);
         externalReference = decodedValue;
       }
     });
 
-    // Convertir externalReference a objeto JSON
     let bookingData;
     try {
       bookingData = JSON.parse(externalReference);
     } catch (error) {
       console.error('Error parsing external reference:', error);
     }
-
-    
-    // console.log('Payment ID:', paymentId);
-    // console.log('External Reference:', externalReference);
-    // console.log('External Reference Object:', bookingData.booking.propertyId);
 
     return { paymentId, bookingData };
   }
