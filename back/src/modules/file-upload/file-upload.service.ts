@@ -22,7 +22,10 @@ export class FileUploadService {
         property.photos = [];  
       }  
       property.photos.push(fileUrl);  
-      return this.propertyEntity.save(property);
+      await this.propertyEntity.save(property);
+      return {success:"image uploaded successfully!",
+        property: property
+      }
     }
 
     async uploadBilltoPropertyService(propertyId: string, file: Express.Multer.File) {
@@ -34,6 +37,9 @@ export class FileUploadService {
       }
       
       property.bill = fileUrl  
-      return this.propertyEntity.save(property);
+      await this.propertyEntity.save(property);
+      return {success:"bill uploaded successfully!",
+        property: property
+      }
     }
 }
