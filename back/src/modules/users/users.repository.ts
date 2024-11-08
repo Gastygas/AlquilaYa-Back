@@ -15,7 +15,6 @@ export class UsersRepository {
     @InjectRepository(Property)
     private readonly propertyRepository: Repository<Property>,
     // private readonly propertyRepository: PropertyRepository,
-    
   ) {}
 
   //-----------------------------------------------------------------------------------------
@@ -40,8 +39,11 @@ export class UsersRepository {
   //-----------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------
   async getUserByEmail(email: string) {
-      const user = await this.usersRepository.findOne({ where: { email },relations:{properties:true,bookings:true,reviews:true} });
-      return user;
+    const user = await this.usersRepository.findOne({
+      where: { email },
+      relations: { properties: true, bookings: true, reviews: true },
+    });
+    return user;
   }
 
   //-----------------------------------------------------------------------------------------
@@ -54,7 +56,7 @@ export class UsersRepository {
       relations: {
         properties: true,
         bookings: true,
-        reviews:true
+        reviews: true,
       },
     });
     return users.map(({ password, ...userSinPassword }) => userSinPassword);
@@ -68,8 +70,11 @@ export class UsersRepository {
       where: { id },
       relations: {
         properties: true,
-        reviews:true,
-        bookings:true,
+        reviews: true,
+        bookings: {
+          property: true, 
+          payment: true, 
+        },
       },
     });
     if (!user) throw new BadRequestException('user not found');
@@ -96,30 +101,40 @@ export class UsersRepository {
     return 'user updated sucessfully';
   }
 
- 
-  async addFavoritePropertyRepository (propertyId:string,userId:string) {
-    const property = await this.propertyRepository.findOne({where:{id:propertyId},relations:{user:true,bookings:true}})
-    if(!property) throw new BadRequestException("Property not found")
+  async addFavoritePropertyRepository(propertyId: string, userId: string) {
+    const property = await this.propertyRepository.findOne({
+      where: { id: propertyId },
+      relations: { user: true, bookings: true },
+    });
+    if (!property) throw new BadRequestException('Property not found');
 
-    const user = await this.getUserById(userId)
+    const user = await this.getUserById(userId);
 
-    const isUserProperty = user.properties.some(prop => prop.id === propertyId);
-    if(isUserProperty) throw new BadRequestException("This is your property, you can not do this with yours")
-      
-    const isAlreadyFavorite = user.favoriteProperties.some(prop => prop === propertyId)
-    if(isAlreadyFavorite) throw new BadRequestException("This property is in your favorites")
+    const isUserProperty = user.properties.some(
+      (prop) => prop.id === propertyId,
+    );
+    if (isUserProperty)
+      throw new BadRequestException(
+        'This is your property, you can not do this with yours',
+      );
 
-    user.favoriteProperties = [...user.favoriteProperties,propertyId]
-    await this.usersRepository.save(user)
-    
-    return {success:"You has added a new property in your Favorite Properties!"}
-    
+    const isAlreadyFavorite = user.favoriteProperties.some(
+      (prop) => prop === propertyId,
+    );
+    if (isAlreadyFavorite)
+      throw new BadRequestException('This property is in your favorites');
+
+    user.favoriteProperties = [...user.favoriteProperties, propertyId];
+    await this.usersRepository.save(user);
+
+    return {
+      success: 'You has added a new property in your Favorite Properties!',
+    };
   }
 
-  async updateUserRepository(updatedUser:UpdateUserDto,userId:string){
-    const user = await this.getUserById(userId)
-    const newUser = await this.usersRepository.update(userId,updatedUser)
-    return {success:"you have changed your data"}
+  async updateUserRepository(updatedUser: UpdateUserDto, userId: string) {
+    const user = await this.getUserById(userId);
+    const newUser = await this.usersRepository.update(userId, updatedUser);
+    return { success: 'you have changed your data' };
   }
-
 }

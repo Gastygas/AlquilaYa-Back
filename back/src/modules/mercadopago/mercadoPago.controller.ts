@@ -37,7 +37,7 @@ export class MercadoPagoController {
       bookingData.userId,
     );
 
-    res.redirect('https://localhost:3000/success');
+    res.redirect('http://localhost:3000/success');
   }
 
   @Get('failure')
