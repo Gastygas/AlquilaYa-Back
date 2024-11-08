@@ -50,8 +50,8 @@ export class UsersController {
   //-----------------------------------------------------------------------------------------
   @Get('auth0/protected')
   getAuth0Protected(@Req() req: Request) {
-    console.log(req.oidc.accessToken); //No es JWT, pero es token único generado por OpenId
-    console.log(req.oidc.user);
+    console.log('TOKEN: ', req.oidc.accessToken); //No es JWT, pero es token único generado por OpenId
+    console.log('USER: ', req.oidc.user);
     return JSON.stringify(req.oidc);
   }
 
