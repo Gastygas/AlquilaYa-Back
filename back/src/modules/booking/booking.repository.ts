@@ -95,13 +95,7 @@ export class BookingRepository {
     const { user, property, ...restBooking } = booking;
 
     return {
-      success: 'Property has been booked successfully',
-      book: {
-        ...restBooking,
-        user: { id: user.id },
-        property: { id: property.id },
-        payment
-      },
+      booking
     };
   }
 

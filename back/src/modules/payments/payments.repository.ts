@@ -63,7 +63,7 @@ export class PaymentsRepository {
       console.log(book);
       console.log(payment);
 
-      return { success: 'Payment and booking has been created' };
+      return  book ;
     }
 
   
