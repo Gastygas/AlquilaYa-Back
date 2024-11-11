@@ -9,12 +9,14 @@ import { User } from 'src/entities/user.entity';
 import { EmailService } from '../email/email.service';
 import { FileUploadRespository } from '../file-upload/file-upload.repository';
 import { FileUploadService } from '../file-upload/file-upload.service';
+import { EmailRepository } from '../email/email.repository';
+import { Email } from 'src/entities/email.entity';
 
 
 @Module({
-  imports:[TypeOrmModule.forFeature([Property,User])],
+  imports:[TypeOrmModule.forFeature([Property,User,Email])],
   controllers: [PropertyController],
-  providers: [PropertyService,PropertyRepository,UsersRepository,EmailService, FileUploadRespository, FileUploadService],
+  providers: [PropertyService,PropertyRepository,UsersRepository,EmailService, FileUploadRespository, FileUploadService,EmailRepository],
 
 })
 export class PropertyModule {}

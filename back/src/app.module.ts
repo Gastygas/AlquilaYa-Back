@@ -13,10 +13,16 @@ import { MercadopagoModule } from './modules/mercadopago/mercadoPago.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { BookingModule } from './modules/booking/booking.module';
 import { GatewayModule } from './modules/websockets/websocket.module';
+import { ReviewModule } from './modules/review/review.module';
+import { join } from 'path';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 @Module({
   imports: [
     GatewayModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+    }),
     ConfigModule.forRoot({ isGlobal: true, load: [typeormConfig] }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
@@ -26,7 +32,7 @@ import { GatewayModule } from './modules/websockets/websocket.module';
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '30m' },
+      signOptions: { expiresIn: '1h' },
     }),
     EmailModule,
     AuthModule,
@@ -37,6 +43,7 @@ import { GatewayModule } from './modules/websockets/websocket.module';
     MercadopagoModule,
     PaymentsModule,
     BookingModule,
+    ReviewModule,
   ],
   controllers: [],
   providers: [],

@@ -31,8 +31,11 @@ export class BookingController {
     @Body() newBooking: CreateBookingDto,
     @Request() req: ICustomRequest,
   ) {
-    const userId = req.user.id    
-    return this.bookingService.createBookingService(newBooking,userId);
+    const userId = req.user.id 
+    
+    console.log("estamos en booking create");
+    
+    // return this.bookingService.createBookingService(newBooking,userId , payment);
   }
   
 

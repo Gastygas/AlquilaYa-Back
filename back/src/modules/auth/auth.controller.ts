@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpStatus,
+  Param,
   Post,
   Req,
   Res,
@@ -17,6 +18,7 @@ import { UserLowerCaseInterceptor } from 'src/interceptors/data-user-lower-case'
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 import { UsersRepository } from '../users/users.repository';
+import { changePasswordDto } from './dto/changePassword.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -38,6 +40,16 @@ export class AuthController {
     return await this.authService.SignIn(credentialsUser);
   }
 
+  @Get('forgot/password/:email')
+  async forgotPassword(@Param('email') email: string) {
+    return await this.authService.forgotPassword(email);
+  }
+
+  @Post('change/password')
+  async changePassword(@Body() credentials: changePasswordDto) {
+    return await this.authService.changeUserPassword(credentials);
+  }
+
   //-----------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------
 
@@ -57,10 +69,20 @@ export class AuthController {
     const user = await this.userRepository.getUserByEmail(createdUser.email);
     const jwt = await this.authService.createJwtToken(user);
     console.log(user);
-    
-    res.status(HttpStatus.OK).redirect(`https://localhost:3001/auth/google?token=${jwt}`);
+
+    //res.status(HttpStatus.OK).redirect(`http://localhost:3000/`);
+    res
+      .cookie('auth_token', jwt, {
+        httpOnly: true, // Evita el acceso desde JavaScript
+        secure: process.env.NODE_ENV === 'production', // Solo permite HTTPS en producción
+        sameSite: 'strict', // Mejora la protección CSRF
+      })
+      .redirect(`http://localhost:3000/`);
+
+    /*.status(HttpStatus.OK)
+      .redirect(`http://localhost:3001/auth/google?token=${jwt}`);*/
   }
-  
+
   //-----------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------
 }

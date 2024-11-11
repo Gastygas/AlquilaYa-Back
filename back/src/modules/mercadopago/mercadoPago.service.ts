@@ -1,45 +1,26 @@
-import { Injectable  } from '@nestjs/common';
-import { title } from 'process';
+import { Injectable } from '@nestjs/common';
 import { preference } from 'src/config/mercadopago';
-import { Property } from 'src/entities/property.entity';
 import { config as dotenvConfig } from 'dotenv';
+import { CreateBookingDto } from '../booking/dto/create-booking.dto';
+
 dotenvConfig({ path: '.env' });
+
 @Injectable()
 export class MercadoPagoService {
-  
-
-    
-
-  async getPaymentDetails(paymentId: string) {
-    const response = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${process.env.MERCADOPAGO_ACCESS_TOKEN}`,
-      },
-    });
-
-    return response.json();
-  }
-
-  
-
   async createPreference(body: any) {
-    
-    
     const preferenceData = {
-        items: body.items.map(item  => ({
-          id: item.id,
-          title: item.title,
-          quantity: item.quantity,
-          unit_price: item.unit_price,
-        })),
-
-        back_urls: {
-            success: "https://4763-45-189-218-73.ngrok-free.app/payments/webhook",
-            failure: "https://loalhost:3000/mercadopago/failure",
-          },
+      items: body.items.map((item) => ({
+        id: item.id,
+        title: item.title,
+        quantity: item.quantity,
+        unit_price: item.unit_price,
+      })),
+      back_urls: {
+        success: 'http://localhost:3001/mercadopago/success',
+        failure: 'http://localhost:3001/mercadopago/failure',
+      },
       auto_return: 'approved',
-      notification_url: 'https://86c1-45-189-218-80.ngrok-free.app/payments/webhook',
+      external_reference: body.newBooking,
     };
 
     try {
@@ -50,4 +31,44 @@ export class MercadoPagoService {
     }
   }
 
+  async getPaymentDetails(paymentId: string) {
+    const response = await fetch(
+      `https://api.mercadopago.com/v1/payments/${paymentId}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${process.env.MERCADOPAGO_ACCESS_TOKEN}`,
+        },
+      },
+    );
+
+    return response.json();
+  }
+
+  async destructure(url) {
+    const queryParams = url.split('?')[1].split('&');
+
+    let paymentId = '';
+    let externalReference = '';
+
+    queryParams.forEach((param) => {
+      const [key, value] = param.split('=');
+
+      if (key === 'payment_id') {
+        paymentId = value;
+      } else if (key === 'external_reference') {
+        const decodedValue = decodeURIComponent(value);
+        externalReference = decodedValue;
+      }
+    });
+
+    let bookingData;
+    try {
+      bookingData = JSON.parse(externalReference);
+    } catch (error) {
+      console.error('Error parsing external reference:', error);
+    }
+
+    return { paymentId, bookingData };
+  }
 }

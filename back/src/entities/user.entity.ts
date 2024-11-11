@@ -1,6 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { v4 as uuid } from 'uuid';
-import { Notification } from './notification.entity';
 import { Reviews } from './reviews.entity';
 import { Booking } from './booking.entity';
 import { Property } from './property.entity';
@@ -19,7 +18,7 @@ export class User {
   @Column({ unique: true, nullable: false, type: 'varchar', length: 50 })
   email: string;
 
-  @Column({ nullable: false, type: 'varchar', select:false })
+  @Column({ nullable: false, type: 'varchar', select: false })
   password: string;
 
   @Column({ nullable: false, type: 'varchar' })
@@ -37,11 +36,8 @@ export class User {
   @Column({ nullable: false, type: 'varchar', length: 30 })
   phone: string;
 
-  @Column('varchar', { array: true, nullable: true })
-  favorite_properties: string[];
-
-  @OneToMany(() => Notification, (notification) => notification.user)
-  notifications: Notification[];
+  @Column('varchar', { array: true, default:[] })
+  favoriteProperties: string[];
 
   @OneToMany(() => Reviews, (reviews) => reviews.user)
   reviews: Reviews[];
