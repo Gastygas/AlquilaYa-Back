@@ -58,25 +58,31 @@ export class PropertyRepository {
   }
 
   async createProperty(newProperty: CreatePropertyDto, id: string) {
-    const propertyExits: Property = await this.propertyRepository.findOne({
-      where: { address: newProperty.address },
-    });
-    if (propertyExits) throw new BadRequestException('Address already used');
+    if(newProperty.type === "departamento" || newProperty.type === "hotel"){
+      const propertyExits: Property = await this.propertyRepository.findOne({
+        where: { address: newProperty.address, floor: newProperty.floor, room: newProperty.room },
+      });
+      if(propertyExits) throw new BadRequestException("Address already used")
+    } else if(newProperty.type !== "departamento" && newProperty.type !== "hotel"){
+      const propertyExits: Property = await this.propertyRepository.findOne({
+        where: { address: newProperty.address },
+      });
+      if(propertyExits) throw new BadRequestException("Address already used")
+    }
 
-    const userDb: Omit<User, 'password'> =
-      await this.userRepository.getUserById(id);
+    const userDb: Omit<User, 'password'> = await this.userRepository.getUserById(id);
     if (!userDb) throw new BadRequestException('user id not found');
-
+  
     const createProperty: Property = await this.propertyRepository.create({
       user: userDb,
       ...newProperty,
     });
     const savedProperty = await this.propertyRepository.save(createProperty);
-
+  
     const property: Property = await this.propertyRepository.findOne({
       where: { id: savedProperty.id },
     });
-
+  
     return {
       success: 'Your property is Pending, we will notice you soon',
       property: { property, userId: userDb.id },

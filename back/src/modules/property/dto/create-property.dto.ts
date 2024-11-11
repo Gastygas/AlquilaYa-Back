@@ -45,11 +45,19 @@ export class CreatePropertyDto {
   })
   type:string;
 
-  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
   @ApiProperty({
-    example:'https://www.google.com.ar/maps/place/Club+La+Quebrada/@-34.6525393,-58.7488098,2540m/data=!3m1!1e3!4m6!3m5!1s0x95bc9596ac618033:0x789c737f3b1680fb!8m2!3d-34.6528512!4d-58.7499816!16s%2Fg%2F11j8rdfz8c?entry=ttu&g_ep=EgoyMDI0MTAxNi4wIKXMDSoASAFQAw%3D%3D'
+    example:'-34.6037'
   })
-  addressUrl?:string;
+  lat: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({
+    example:'-58.3816'
+  })
+  lng: string;
 
   @IsString()
   @IsNotEmpty()
