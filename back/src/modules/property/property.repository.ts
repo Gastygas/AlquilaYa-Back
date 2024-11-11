@@ -61,7 +61,10 @@ export class PropertyRepository {
     const propertyExits: Property = await this.propertyRepository.findOne({
       where: { address: newProperty.address },
     });
-    if (propertyExits) throw new BadRequestException('Address already used');
+    if (propertyExits.type === "departamento" || propertyExits.type === "hotel"){ 
+      if(propertyExits.floor)
+      
+    }
 
     const userDb: Omit<User, 'password'> =
       await this.userRepository.getUserById(id);
