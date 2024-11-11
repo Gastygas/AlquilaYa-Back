@@ -7,7 +7,7 @@ import { config as auth0Config } from './config/auth0.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.use(auth(auth0Config));
+  // app.use(auth(auth0Config));
 
   //Manejo de errores
   app.useGlobalPipes(
