@@ -9,28 +9,41 @@ export class CreatePropertyDto {
   @ApiProperty({ example: ["24/10/12"]})
   @IsArray()
   @IsOptional()
-  disableDays?: string[];
+  disableDays?:string[];
 
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
     example:'Best Mansion ever'
   })
-  propertyName: string;
+  propertyName:string;
 
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
     example:'043 Fake st'
   })
-  address: string;
+  address:string;
+
+  @IsOptional()
+  @ApiProperty({
+    example:'3'
+  })
+  floor:string;
+
+  
+  @IsOptional()
+  @ApiProperty({
+    example:'b'
+  })
+  room:string;
 
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
     example:'house'
   })
-  type: string;
+  type:string;
 
   @IsString()
   @IsNotEmpty()
@@ -49,93 +62,100 @@ export class CreatePropertyDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
-    example:'Brasil'
+    example:'argentina'
   })
+  country:string;
 
-  country: string;
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({
+    example:'buenos aires'
+  })
+  province:string;
+
   @IsString()
   @IsOptional()
   @ApiProperty({
     example:'https://prismic-io.s3.amazonaws.com/palmettoblog/172693e9-a059-46db-a600-0bc9b0a43bda_base-charge.png'
   })
-  bill: string;
+  bill:string;
 
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
-    example:'Brasilia'
+    example:'mar del plata'
   })
-  city: string;
+  city:string;
 
   @IsInt()
   @IsNotEmpty()
   @ApiProperty({
     example:10000
   })
-  price: number;
+  price:number;
 
   @IsInt()
   @IsNotEmpty()
   @ApiProperty({
     example:15
   })
-  capacity: number;
+  capacity:number;
 
   @IsInt()
   @IsNotEmpty()
   @ApiProperty({
     example:8
   })
-  bedrooms: number;
+  bedrooms:number;
 
   @IsInt()
   @IsNotEmpty()
   @ApiProperty({
     example:1
   })
-  bathrooms: number;
+  bathrooms:number;
 
   @IsBoolean()
   @IsOptional()
   @ApiProperty({
     example: false
   })
-  wifi: boolean;
+  wifi:boolean;
 
   @IsBoolean()
   @IsOptional()
   @ApiProperty({
     example:true
   })
-  petFriendly: boolean;
+  petFriendly:boolean;
 
   @IsBoolean()
   @IsOptional()
   @ApiProperty({
     example:true
   })
-  airConditioning: boolean;
+  airConditioning:boolean;
 
   @IsBoolean()
   @IsOptional()
   @ApiProperty({
     example:true
   })
-  heating: boolean;
+  heating:boolean;
 
   @IsBoolean()
   @IsOptional()
   @ApiProperty({
     example:true
   })
-  pool: boolean;
+  pool:boolean;
 
   @IsBoolean()
   @IsOptional()
   @ApiProperty({
     example:true
   })
-  parking: boolean;
+  parking:boolean;
 
   @IsString()
   @IsNotEmpty()
@@ -148,41 +168,41 @@ export class CreatePropertyDto {
   @ApiProperty({
     example:true
   })
-  streaming?:boolean;
+  streaming:boolean;
 
   @IsOptional()
   @ApiProperty({
     example:false
   })
-  yard?:boolean;
+  yard:boolean;
 
   @IsOptional()
   @ApiProperty({
     example:true
   })
-  grill?:boolean;
+  grill:boolean;
 
   @IsOptional()
   @ApiProperty({
     example:true
   })
-  gym?:boolean;
+  gym:boolean;
 
   @IsOptional()
   @ApiProperty({
     example:true
   })
-  appliance?:boolean
+  appliance:boolean
 
   @IsOptional()
   @ApiProperty({
     example:false
   })
-  cleaningService?: boolean
+  cleaningService: boolean
 
   @IsOptional()
   @ApiProperty({
     example:false
   })
-  catering?:boolean
+  catering:boolean
 }

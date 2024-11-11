@@ -25,6 +25,12 @@ export class Property {
   @Column({ type: 'varchar', nullable: false })
   address: string;
 
+  @Column({ type: 'varchar', default: "" })
+  floor: string;
+
+  @Column({ type: 'varchar', default: "" })
+  room: string;
+
   @Column({ type: 'varchar', nullable: false })
   lat: string;
 
@@ -39,6 +45,9 @@ export class Property {
 
   @Column({ type: 'varchar', nullable: false })
   country: string;
+
+  @Column({ type: 'varchar', nullable: false })
+  province: string;
 
   @Column({ type: 'varchar', nullable: false })
   city: string;
