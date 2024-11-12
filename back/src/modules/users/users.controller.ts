@@ -74,6 +74,14 @@ export class UsersController {
     return this.usersService.completeUser(id, user);
   }
 
+  @Put('disable/:id')
+  @UseGuards(AuthGuard)
+  disableUser(
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    return this.usersService.disableUserService(id);
+  }
+
   @ApiBearerAuth()
   @Patch('favourite/property/add/:id')
   @UseGuards(AuthGuard)
