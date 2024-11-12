@@ -31,10 +31,13 @@ export class Property {
   @Column({ type: 'varchar', default: "" })
   room: string;
 
-  @Column({ type: 'varchar', default:"in process" })
-  addressUrl: string;
+  @Column({ type: 'varchar', nullable: false })
+  lat: string;
 
-  @Column({type:'varchar',nullable:false})
+  @Column({ type: 'varchar', nullable: false })
+  lng: string;
+
+  @Column({type:'varchar', nullable:false})
   type:string;
 
   @Column({ type: 'varchar', default:"in process" })

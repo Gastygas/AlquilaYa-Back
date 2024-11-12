@@ -72,8 +72,8 @@ export class UsersRepository {
         properties: true,
         reviews: true,
         bookings: {
-          property: true, 
-          payment: true, 
+          property: true,
+          payment: true,
         },
       },
     });
@@ -132,9 +132,24 @@ export class UsersRepository {
     };
   }
 
+  async disableUserRepository(id: string) {
+    const user = await this.getUserById(id);
+    user.status = false;
+    await this.usersRepository.save(user);
+    return { success: 'user has been disabled' };
+  }
+
   async updateUserRepository(updatedUser: UpdateUserDto, userId: string) {
     const user = await this.getUserById(userId);
     const newUser = await this.usersRepository.update(userId, updatedUser);
-    return { success: 'you have changed your data' };
+    return {
+      success: 'you have changed your data',
+      user: {
+        id: user.id,
+        email: user.email,
+        isAdmin: user.isAdmin,
+      },
+      login: true,
+    };
   }
 }
