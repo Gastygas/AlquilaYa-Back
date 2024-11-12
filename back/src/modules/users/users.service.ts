@@ -27,6 +27,9 @@ export class UsersService {
    addFavoritePropertyService(propertyId:string,userId:string) {
     return this.usersRepository.addFavoritePropertyRepository(propertyId,userId)
   }
+   disableUserService(id: string) {
+    return this.usersRepository.disableUserRepository(id)
+  }
 
   async updateUserService(updatedUser:UpdateUserDto,userId:string){
     return this.usersRepository.updateUserRepository(updatedUser,userId)
