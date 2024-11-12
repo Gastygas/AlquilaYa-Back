@@ -27,6 +27,9 @@ export class User {
   @Column({ default: false, nullable: true })
   isAdmin: boolean;
 
+  @Column({ default: true, nullable: true })
+  status: boolean;
+
   @Column({ nullable: false, type: 'varchar', length: 30 })
   country: string;
 
