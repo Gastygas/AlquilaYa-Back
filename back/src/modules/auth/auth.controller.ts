@@ -79,8 +79,8 @@ export class AuthController {
     const { createdUser } = await this.authService.googleLogin(req.user);
     const user = await this.userRepository.getUserByEmail(createdUser.email);
     const jwt = await this.authService.createJwtToken(user);
-    let redirectUrl: string =
-      process.env.URL_FRONT + '/completa-tu-informacion';
+    const URL_FRONT = 'https://alquilaya.vercel.app/';
+    let redirectUrl: string = URL_FRONT + '/completa-tu-informacion';
     if (
       user.name &&
       user.surname &&
@@ -89,7 +89,7 @@ export class AuthController {
       user.dni &&
       user.phone
     )
-      redirectUrl = process.env.URL_FRONT;
+      redirectUrl = URL_FRONT;
 
     // console.log(user);
     //res.status(HttpStatus.OK).redirect(`http://localhost:3000/`);
