@@ -15,6 +15,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { EmailService } from '../email/email.service';
 import { changePasswordDto } from './dto/changePassword.dto';
+import { Role } from '../users/enum/user.roles.enum';
+import { count } from 'console';
 
 @Injectable()
 export class AuthService {
@@ -42,16 +44,16 @@ export class AuthService {
       password: hashedPassword,
     });
     // await this.emailService.sendEmailRegisterSuccessfully(newUserDb.email,newUserDb.name)
-    return { succes: 'User registered!, Please check your email',
-             user: newUserDb
-     };
+    return {
+      succes: 'User registered!, Please check your email',
+      user: newUserDb,
+    };
   }
 
   //-----------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------
 
   async SignIn(userCredentials: SignInDto): Promise<Object> {
-
     const userDb = await this.userEntity.findOne({
       where: { email: userCredentials.email },
       select: ['id', 'email', 'password', 'isAdmin'],
@@ -80,44 +82,42 @@ export class AuthService {
     };
   }
 
-  
   addUsersService() {
     //console.log('dataUsers: ', dataUsers);
     dataUsers.forEach((user) => this.SignUp(user));
     return 'Usuarios agregados';
   }
 
-  async forgotPassword(email:string) {
-    const user = await this.usersRepository.getUserByEmail(email)
-    if(!user) throw new BadRequestException("email does not exits")
-    await this.emailService.sendEmailForgotPassword(email)
-    return {success:"Please verify if this user is yours in your email"}
+  async forgotPassword(email: string) {
+    const user = await this.usersRepository.getUserByEmail(email);
+    if (!user) throw new BadRequestException('email does not exits');
+    await this.emailService.sendEmailForgotPassword(email);
+    return { success: 'Please verify if this user is yours in your email' };
   }
 
   async changeUserPassword(credentials: changePasswordDto) {
-    const user = await this.usersRepository.getUserByEmail(credentials.email)    
-    if(!user) throw new BadRequestException("email does not exits")
-    const newPassword = await bcrypt.hash(credentials.password,10)
-    if(!newPassword) throw new BadRequestException("Error in create password")
-    user.password = newPassword
-    await this.userEntity.save(user)
-    return {success:"your have changed your password successfully"}
+    const user = await this.usersRepository.getUserByEmail(credentials.email);
+    if (!user) throw new BadRequestException('email does not exits');
+    const newPassword = await bcrypt.hash(credentials.password, 10);
+    if (!newPassword) throw new BadRequestException('Error in create password');
+    user.password = newPassword;
+    await this.userEntity.save(user);
+    return { success: 'your have changed your password successfully' };
   }
-
 
   //-----------------------------------------------------------------------------------------
   //------------------Auth0------------------------------------------------------------------
-  
+
   async googleLogin(data: any): Promise<{ createdUser: User; isNew: boolean }> {
     return runWithTryCatchBadRequest(async () => {
       const user: User = await this.usersRepository.getUserByEmail(data.email);
       if (!user) {
-        const name = data.firstName + ' ' + data.LastName;
+        const name = data.firstName;
         const email = data.email;
         const newUser = {
           name: name || '',
           email: email,
-          surname : '',
+          surname: data.LastName,
           password: '',
           address: '',
           phone: '',
@@ -125,7 +125,6 @@ export class AuthService {
           image: data.picture,
           dni: '',
           country: '',
-
         };
         const createdUser: User = await this.usersRepository.create(newUser);
         return { createdUser, isNew: true };
@@ -135,17 +134,21 @@ export class AuthService {
     });
   }
 
-
-  async createJwtToken(user: any): Promise<string> {
+  async createJwtToken(user: User): Promise<string> {
     const payload: any = {
       id: user.id,
+      name: user.name,
+      surname: user.surname,
+      address: user.address,
+      country: user.country,
+      dni: user.dni,
+      phone: user.phone,
       email: user.email,
-      role: user.role,
+      isAdmin: user.isAdmin,
     };
     return this.jwtService.sign(payload, { secret: process.env.JWT_SECRET });
   }
 }
-
 
 //-----------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------
@@ -161,4 +164,3 @@ async function runWithTryCatchBadRequest<T>(fn: () => Promise<T>): Promise<T> {
     }
   }
 }
-
