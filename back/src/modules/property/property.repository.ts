@@ -37,7 +37,9 @@ export class PropertyRepository {
       const { user, ...restProperty } = property;
       return {
         ...restProperty,
-        user: { id: user.id },
+        user: { id: user.id,
+          status: user.status
+         },
       };
     });
 
@@ -53,7 +55,9 @@ export class PropertyRepository {
     const { user, ...restProperty } = property;
     return {
       ...restProperty,
-      user: { id: user.id },
+      user: { id: user.id,
+        status: user.status
+       },
     };
   }
 
