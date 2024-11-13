@@ -28,6 +28,6 @@ export class CreateReviewDto {
 
   @IsNotEmpty()
   @IsUUID()
-  @ApiProperty({ example: 'eaa0db31-08f5-45f0-aa49-6badcbef7468' })
+  @ApiProperty({ example: '1c7a816e-e205-45d8-89fb-a0f82ef875c7' })
   propertyId: string;
 }

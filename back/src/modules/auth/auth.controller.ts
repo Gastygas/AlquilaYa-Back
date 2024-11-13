@@ -20,6 +20,9 @@ import { Response } from 'express';
 import { UsersRepository } from '../users/users.repository';
 import { changePasswordDto } from './dto/changePassword.dto';
 
+import { config as dotenvConfig } from 'dotenv';
+dotenvConfig({ path: '.env' });
+
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
@@ -40,18 +43,14 @@ export class AuthController {
     return await this.authService.SignIn(credentialsUser);
   }
 
-  @Get("forgot/password/:email")
-  async forgotPassword(
-    @Param("email") email:string
-  ){
-    return await this.authService.forgotPassword(email)
+  @Get('forgot/password/:email')
+  async forgotPassword(@Param('email') email: string) {
+    return await this.authService.forgotPassword(email);
   }
 
-  @Post("change/password")
-  async changePassword(
-    @Body() credentials: changePasswordDto
-  ){
-    return await this.authService.changeUserPassword(credentials)
+  @Post('change/password')
+  async changePassword(@Body() credentials: changePasswordDto) {
+    return await this.authService.changeUserPassword(credentials);
   }
 
   //-----------------------------------------------------------------------------------------
@@ -62,9 +61,17 @@ export class AuthController {
     return this.authService.addUsersService();
   }
 
+  //-----------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------
+
   @Get('googleLogin')
   @UseGuards(AuthGuard('google'))
   async googleAuth(@Req() req: Request, @Res() res: Response): Promise<void> {}
+
+  //-----------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------
 
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
@@ -72,11 +79,32 @@ export class AuthController {
     const { createdUser } = await this.authService.googleLogin(req.user);
     const user = await this.userRepository.getUserByEmail(createdUser.email);
     const jwt = await this.authService.createJwtToken(user);
-    console.log(user);
-    
-    res.status(HttpStatus.OK).redirect(`https://localhost:3001/auth/google?token=${jwt}`);
+    const URL_FRONT = 'https://alquilaya.vercel.app';
+    let redirectUrl: string = URL_FRONT + '/completa-tu-informacion';
+    if (
+      user.name &&
+      user.surname &&
+      user.address &&
+      user.country &&
+      user.dni &&
+      user.phone
+    )
+      redirectUrl = URL_FRONT;
+
+    // console.log(user);
+    //res.status(HttpStatus.OK).redirect(`http://localhost:3000/`);
+    res
+      .cookie('auth_token', jwt, {
+        httpOnly: false, // Evita el acceso desde JavaScript
+        secure: false, //process.env.NODE_ENV === 'production', // Solo permite HTTPS en producción
+        sameSite: 'lax', // 'none', 'strict', // Mejora la protección CSRF
+      })
+      .redirect(redirectUrl);
+
+    /*.status(HttpStatus.OK)
+      .redirect(`http://localhost:3001/auth/google?token=${jwt}`);*/
   }
-  
+
   //-----------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------
 }

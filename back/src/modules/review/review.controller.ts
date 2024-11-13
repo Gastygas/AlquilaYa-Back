@@ -6,56 +6,80 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
+  Request,
+  Put,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { ReviewService } from './review.service';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'src/guards/authGuard';
+import { ICustomRequest } from '../property/interface/customRequest';
+import { RolesGuard } from 'src/guards/roles.guard';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from '../users/enum/user.roles.enum';
 
-@ApiTags('review')
-@Controller('review')
+@ApiTags('reviews')
+@Controller('reviews')
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
 
   //-----------------------------------------------------------------------------------------
-  //------Obtener reseñas de una propiedad específica (GET /properties/:propertyId/reviews)
-  //------Obtener reseñas de un usuario específico (GET /users/:userId/reviews)
+  //----------- Crear una nueva reseña (POST /reviews/create)
+  //-----------------------------------------------------------------------------------------
+
+  @ApiBearerAuth()
+  @Post('create')
+  @UseGuards(AuthGuard)
+  createReviewController(
+    @Body() createReviewDto: CreateReviewDto,
+    @Request() req: ICustomRequest,
+  ) {
+    const userId = req.user.id;
+    return this.reviewService.createReviewService(
+      createReviewDto,
+      userId,
+      createReviewDto.propertyId,
+    );
+  }
+
+  //-----------------------------------------------------------------------------------------
+  //------Obtener reseñas de un usuario específico (GET /reviews)----------------------------
+  //-----------------------------------------------(GET /users/:userId/reviews)?
   //-----------------------------------------------------------------------------------------
 
   @Get()
-  findAll() {
-    return this.reviewService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.reviewService.findOne(+id);
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  findAllReviewsController(@Request() req) {
+    return this.reviewService.findAllReviewsService(req.user.id);
   }
 
   //-----------------------------------------------------------------------------------------
-  //----------- Crear una nueva reseña (POST /reviews)
+  //----------- Actualizar una reseña (PUT /reviews/:reviewId)-------------------------------
   //-----------------------------------------------------------------------------------------
 
-  @Post()
-  create(@Body() createReviewDto: CreateReviewDto) {
-    return this.reviewService.create(createReviewDto);
+  @ApiBearerAuth()
+  @Put(':id')
+  @UseGuards(AuthGuard)
+  updateReviewController(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updateReviewDto: UpdateReviewDto,
+  ) {
+    return this.reviewService.updateReviewService(id, updateReviewDto);
   }
 
   //-----------------------------------------------------------------------------------------
-  //----------- Actualizar una reseña (PUT /reviews/:reviewId)
+  //----------- Inhabilitar una reseña (PATCH /reviews/:reviewId)----------------------------
   //-----------------------------------------------------------------------------------------
 
+  @ApiBearerAuth()
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateReviewDto: UpdateReviewDto) {
-    return this.reviewService.update(+id, updateReviewDto);
-  }
-
-  //-----------------------------------------------------------------------------------------
-  //----------- Eliminar una reseña (DELETE /reviews/:reviewId)
-  //-----------------------------------------------------------------------------------------
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.reviewService.remove(+id);
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
+  changeStatusController(@Param('id', ParseUUIDPipe) id: string) {
+    return this.reviewService.changeStatusService(id);
   }
 }

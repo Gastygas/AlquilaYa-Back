@@ -33,7 +33,7 @@ import { ChatModule } from './modules/chatbot/chatbot.module';
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '30m' },
+      signOptions: { expiresIn: '1h' },
     }),
     EmailModule,
     AuthModule,

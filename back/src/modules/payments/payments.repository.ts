@@ -34,9 +34,10 @@ export class PaymentsRepository {
     userId: string,
   ) {
     const data = await this.mercadoPagoService.getPaymentDetails(paymentId);
-
-    if (data.status == 'approved' && newBooking.propertyId && userId) {
-      console.log('1');
+    console.log("paymentId: " , paymentId);
+    
+    if (data.status == 'approved') {
+      
 
       const { id, payment_method, transaction_amount, status } = data;
       const payment = this.paymentRepository.create({
@@ -47,7 +48,7 @@ export class PaymentsRepository {
         date: new Date(),
       });
 
-      console.log('2');
+      
 
       await this.paymentRepository.save(payment);
 
@@ -56,18 +57,15 @@ export class PaymentsRepository {
       const book = await this.bookingService.createBookingService(
         newBooking,
         userId,
+        payment 
         );
 
       console.log(book);
       console.log(payment);
 
-      return { success: 'Payment and booking has been created' };
+      return  book ;
     }
 
-    else {
-      console.log('Payment not approved');
-        
-      throw new BadRequestException('Payment not approved');
-    }
+  
   }
 }

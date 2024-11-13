@@ -13,11 +13,13 @@ import { Property } from 'src/entities/property.entity';
 import { EmailService } from '../email/email.service';
 import { EmailRepository } from '../email/email.repository';
 import { Email } from 'src/entities/email.entity';
+import { Payment } from 'src/entities/payment.entity';
+import { PaymentsRepository } from '../payments/payments.repository';
 
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Booking , User , Property , Email])],
+  imports: [TypeOrmModule.forFeature([Booking , User , Property , Email , Payment]),],
   controllers: [MercadoPagoController],
-  providers: [MercadoPagoService , BookingRepository , BookingService , PropertyRepository , UsersRepository , PropertyService , EmailService , EmailRepository ],
+  providers: [MercadoPagoService , PaymentsRepository , BookingRepository , BookingService , PropertyRepository , UsersRepository , PropertyService , EmailService , EmailRepository ],
 })
 export class MercadopagoModule {}

@@ -25,14 +25,29 @@ export class Property {
   @Column({ type: 'varchar', nullable: false })
   address: string;
 
-  @Column({ type: 'varchar', nullable: false })
-  addressUrl: string;
+  @Column({ type: 'varchar', default: "" })
+  floor: string;
+
+  @Column({ type: 'varchar', default: "" })
+  room: string;
 
   @Column({ type: 'varchar', nullable: false })
+  lat: string;
+
+  @Column({ type: 'varchar', nullable: false })
+  lng: string;
+
+  @Column({type:'varchar', nullable:false})
+  type:string;
+
+  @Column({ type: 'varchar', default:"in process" })
   bill: string;
 
   @Column({ type: 'varchar', nullable: false })
   country: string;
+
+  @Column({ type: 'varchar', nullable: false })
+  province: string;
 
   @Column({ type: 'varchar', nullable: false })
   city: string;
@@ -49,23 +64,44 @@ export class Property {
   @Column({ type: 'int', nullable: false })
   bathrooms: number;
 
-  @Column({ type: 'boolean', nullable: false })
+  @Column({ type: 'boolean', default:false })
   wifi: boolean;
 
-  @Column({ type: 'boolean', nullable: false })
+  @Column({ type: 'boolean',default:false })
   petFriendly: boolean;
 
-  @Column({ type: 'boolean', nullable: false })
+  @Column({ type: 'boolean', default:false })
   airConditioning: boolean;
 
-  @Column({ type: 'boolean', nullable: false })
+  @Column({ type: 'boolean', default:false, })
   heating: boolean;
 
-  @Column({ type: 'boolean', nullable: false })
+  @Column({ type: 'boolean', default:false, })
   pool: boolean;
 
-  @Column({ type: 'boolean', nullable: false })
+  @Column({ type: 'boolean', default:false,})
   parking: boolean;
+
+  @Column({ type: 'boolean', default:false,})
+  streaming: boolean;
+
+  @Column({ type: 'boolean', default:false,})
+  yard: boolean;
+
+  @Column({ type: 'boolean', default:false,})
+  grill: boolean;
+
+  @Column({ type: 'boolean', default:false,})
+  gym: boolean;
+
+  @Column({ type: 'boolean', default:false,})
+  appliance: boolean;
+
+  @Column({ type: 'boolean', default:false,})
+  cleaningService: boolean;
+
+  @Column({ type: 'boolean', default:false, })
+  catering: boolean;
 
   @Column({ type: 'varchar' })
   description: string;
