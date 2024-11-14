@@ -16,8 +16,8 @@ export class MercadoPagoService {
         unit_price: item.unit_price,
       })),
       back_urls: {
-        success: 'http://localhost:3001/mercadopago/success',
-        failure: 'http://localhost:3001/mercadopago/failure',
+        success: 'https://alquilaya.vercel.app/mercadopago/success',
+        failure: 'https://alquilaya.vercel.app/mercadopago/failure',
       },
       auto_return: 'approved',
       external_reference: body.newBooking,
