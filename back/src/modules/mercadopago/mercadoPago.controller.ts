@@ -37,12 +37,12 @@ export class MercadoPagoController {
       bookingData.userId,
     );
 
-    res.redirect('http://localhost:3000/success');
+    res.redirect('https://alquilaya.vercel.app/success');
   }
 
   @Get('failure')
   failure(@Res() res) {
     console.log('failure');
-    res.redirect('https://localhost:3000/login'); // crear vista de pago fallido
+    res.redirect('https://alquilaya.vercel.app/failure'); // crear vista de pago fallido
   }
 }
