@@ -15,13 +15,13 @@ import {
 import { UsersService } from './users.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/guards/authGuard';
-import { RolesGuard } from 'src/guards/roles.guard';
 import { Roles } from 'src/decorators/roles.decorator';
-import { Role } from './enum/user.roles.enum';
 import { completeUserDto } from './dto/completeUser.dto';
 import { ICustomRequest } from '../property/interface/customRequest';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import { Request } from 'express';
+import { Role } from './enum/user.roles.enum';
+import { RolesGuard } from 'src/guards/roles.guard';
 
 @ApiTags('user')
 @Controller('users')
@@ -72,6 +72,16 @@ export class UsersController {
     @Body() user: completeUserDto,
   ) {
     return this.usersService.completeUser(id, user);
+  }
+
+  @ApiBearerAuth()
+  @Patch('disable/:id')
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard,RolesGuard)
+  disableUser(
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    return this.usersService.disableUserService(id);
   }
 
   @ApiBearerAuth()

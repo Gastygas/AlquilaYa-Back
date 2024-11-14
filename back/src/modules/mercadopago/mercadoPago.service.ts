@@ -16,8 +16,8 @@ export class MercadoPagoService {
         unit_price: item.unit_price,
       })),
       back_urls: {
-        success: 'http://localhost:3001/mercadopago/success',
-        failure: 'http://localhost:3001/mercadopago/failure',
+        success: `${process.env.BACK_URL}/mercadopago/success`,
+        failure:  `${process.env.BACK_URL}/mercadopago/failure`,
       },
       auto_return: 'approved',
       external_reference: body.newBooking,

@@ -2,12 +2,9 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { auth } from 'express-openid-connect';
-import { config as auth0Config } from './config/auth0.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.use(auth(auth0Config));
 
   //Manejo de errores
   app.useGlobalPipes(
@@ -44,7 +41,7 @@ async function bootstrap() {
   };
 
   app.enableCors({
-    origin: '*', // Permite cualquier origen
+    origin: 'https://alquilaya.vercel.app/', //'http://localhost:3000', // Permite cualquier origen
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Métodos permitidos
     credentials: true, // Permite envío de cookies si es necesario
   });

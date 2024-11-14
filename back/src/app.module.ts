@@ -16,6 +16,7 @@ import { GatewayModule } from './modules/websockets/websocket.module';
 import { ReviewModule } from './modules/review/review.module';
 import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { ChatModule } from './modules/chatbot/chatbot.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
     PaymentsModule,
     BookingModule,
     ReviewModule,
+    ChatModule,
   ],
   controllers: [],
   providers: [],
