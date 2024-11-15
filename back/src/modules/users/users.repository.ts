@@ -132,6 +132,38 @@ export class UsersRepository {
     };
   }
 
+  async removeFavoritePropertyRepository(propertyId: string, userId: string) {
+
+    const property = await this.propertyRepository.findOne({
+      where: { id: propertyId },
+      relations: { user: true, bookings: true },
+    });
+    if (!property) throw new BadRequestException('Property not found');
+
+    const user = await this.getUserById(userId);
+
+    const isAlreadyFavorite = user.favoriteProperties.some(
+      (prop) => prop === propertyId,
+    );
+    if (!isAlreadyFavorite) {
+      throw new BadRequestException(
+        'This property is not in your favorites',
+      );
+    }
+  
+    // Remueve la propiedad de los favoritos del usuario
+    user.favoriteProperties = user.favoriteProperties.filter(
+      (prop) => prop !== propertyId,
+    );
+  
+    await this.usersRepository.save(user);
+  
+    return {
+      success: 'You have removed the property from your Favorite Properties!',
+    };
+
+  }
+
   async disableUserRepository(id: string) {
     const user = await this.getUserById(id);
     user.status = false;

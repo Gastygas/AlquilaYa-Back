@@ -27,6 +27,10 @@ export class UsersService {
    addFavoritePropertyService(propertyId:string,userId:string) {
     return this.usersRepository.addFavoritePropertyRepository(propertyId,userId)
   }
+
+   removeFavoritePropertyService(propertyId:string,userId:string) {
+    return this.usersRepository.removeFavoritePropertyRepository(propertyId,userId)
+  }
    disableUserService(id: string) {
     return this.usersRepository.disableUserRepository(id)
   }
