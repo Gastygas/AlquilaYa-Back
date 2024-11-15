@@ -49,10 +49,11 @@ export class UsersRepository {
   //-----------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------
 
-  async getAllUsers(page: number = 1, limit: number = 5) {
+  // async getAllUsers(page: number = 1, limit: number = 5) {
+  async getAllUsers() {
     const users = await this.usersRepository.find({
-      skip: (page - 1) * limit,
-      take: limit,
+      // skip: (page - 1) * limit,
+      // take: limit,
       relations: {
         properties: true,
         bookings: true,
