@@ -44,7 +44,7 @@ async function bootstrap() {
   };
 
   app.enableCors({
-    origin: 'https://alquilaya.vercel.app/', //'http://localhost:3000', // Permite cualquier origen
+    origin: ['https://alquilaya.vercel.app/', 'http://localhost:3000'], //'http://localhost:3000', // Permite cualquier origen
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Métodos permitidos
     credentials: true, // Permite envío de cookies si es necesario
   });
