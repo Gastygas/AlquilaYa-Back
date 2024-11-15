@@ -68,7 +68,7 @@ export class EmailService{
         )
     }   
 
-    async sendEmailBookSuccesfully(email:string,bookingId,paymentId,propertyId){
+    async sendEmailBookSuccesfully(email:string,bookingId?:string,paymentId?:string,propertyId?:string){
         sgMail.setApiKey(process.env.SENDGRID_API_KEY)
         sgMail.send({
             to: `${email}`,
