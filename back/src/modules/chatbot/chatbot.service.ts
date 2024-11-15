@@ -9,7 +9,7 @@ export class ChatbotService {
       case 'Todos':
         return { text: ['Los precios dependen de la ubicación y el tipo de propiedad.'], options: ['Volver al Menú'] };
       case 'Ver forma de pago':
-        return { text: ['Mercado Pago'], options: [,'Volver al Menú'] };
+        return { text: ['Mercado Pago', 'Tarjeta de crédito','PagoFacil', 'RapiPago'], options: [,'Volver al Menú'] };
       case 'Las propiedades pueden tener o no los siguientes items':
         return { text: ['Baño', 'Dormitorio', 'WiFi', 'Mascotas', 'Aire Acondicionado', 'Calefactor', 'Piscina', ' Estacionamiento', 'Gimnasio', 'Catering'], options: [ 'Volver al Menú'] };
       case 'Intrucciones para cancelar una reserva':
