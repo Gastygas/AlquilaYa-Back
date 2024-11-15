@@ -10,6 +10,7 @@ import { IPropertyWithUserId } from '../property/interface/propertyWithUserId';
 import { format, parse, parseISO } from 'date-fns';
 import { isDateAvailable } from './utils/isDateAvailable';
 import { payment } from 'src/config/mercadopago';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class BookingRepository {
@@ -18,6 +19,7 @@ export class BookingRepository {
     private readonly bookingRepository: Repository<Booking>,
     private readonly propertyRepository: PropertyRepository,
     private readonly userRepository: UsersRepository,
+    private readonly emailService: EmailService,
   ) {}
 
   async getBookings(page = 1, limit = 5) {
@@ -97,6 +99,7 @@ export class BookingRepository {
 
     const { user, property, ...restBooking } = booking;
 
+    await this.emailService.sendEmailBookSuccesfully(booking.user.email,booking.id,booking.payment.id,booking.property.id)
     return {
       booking
     };
