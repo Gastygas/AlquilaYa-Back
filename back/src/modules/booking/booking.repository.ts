@@ -19,7 +19,7 @@ export class BookingRepository {
     private readonly bookingRepository: Repository<Booking>,
     private readonly propertyRepository: PropertyRepository,
     private readonly userRepository: UsersRepository,
-    private readonly emailService: EmailService,
+    
   ) {}
 
   async getBookings(page = 1, limit = 5) {
@@ -99,7 +99,7 @@ export class BookingRepository {
 
     const { user, property, ...restBooking } = booking;
 
-    await this.emailService.sendEmailBookSuccesfully(booking.user.email,booking.id,booking.payment.id,booking.property.id)
+    
     return {
       booking
     };
