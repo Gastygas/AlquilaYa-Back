@@ -7,7 +7,7 @@ import { PropertyRepository } from '../property/property.repository';
 import { UsersRepository } from '../users/users.repository';
 import { User } from 'src/entities/user.entity';
 import { IPropertyWithUserId } from '../property/interface/propertyWithUserId';
-import { format, parse } from 'date-fns';
+import { format, parse, parseISO } from 'date-fns';
 import { isDateAvailable } from './utils/isDateAvailable';
 import { payment } from 'src/config/mercadopago';
 
@@ -80,10 +80,13 @@ export class BookingRepository {
     });
     const savedBooking = await this.bookingRepository.save(createBooking);
 
+    const formattedDateStart = format(parseISO(newBooking.dateStart), 'dd/MM/yyyy');
+    const formattedDateEnd = format(parseISO(newBooking.dateEnd), 'dd/MM/yyyy');
+
     // await this.propertyRepository  Necesito que llame a una funcion que agregue los dias reservados a disable days
     await this.propertyRepository.addReservedDaysRepository(propertyFind.id, {
-      dateEnd: newBooking.dateEnd,
-      dateStart: newBooking.dateStart,
+      dateEnd: formattedDateEnd,
+      dateStart: formattedDateStart,
     });
 
     const booking: Booking = await this.bookingRepository.findOne({
