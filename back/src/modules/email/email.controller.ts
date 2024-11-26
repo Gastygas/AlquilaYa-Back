@@ -42,13 +42,13 @@ export class EmailController{
         const {email,name} = data
         return this.emailService.sendEmailCreatePropertyDeny(email,name)
     }
-    @Post("book")
-    async sendEmailBookSuccessfullyController(
-        @Body() data: EmailDto
-    ){
-        const {email,name} = data
-        return this.emailService.sendEmailBookSuccesfully(email,name)
-    }
+    // @Post("book")
+    // async sendEmailBookSuccessfullyController(
+    //     @Body() data: EmailDto
+    // ){
+    //     const {email,name} = data
+    //     return this.emailService.sendEmailBookSuccesfully(email,name)
+    // }
     @Post("comment")
     async sendEmailBookComment(
         @Body() data: EmailDto

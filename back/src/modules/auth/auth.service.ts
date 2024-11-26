@@ -43,7 +43,7 @@ export class AuthService {
       ...newUser,
       password: hashedPassword,
     });
-    // await this.emailService.sendEmailRegisterSuccessfully(newUserDb.email,newUserDb.name)
+    await this.emailService.sendEmailRegisterSuccessfully(newUserDb.email,newUserDb.name)
     return {
       succes: 'User registered!, Please check your email',
       user: newUserDb,
@@ -127,6 +127,7 @@ export class AuthService {
           country: '',
         };
         const createdUser: User = await this.usersRepository.create(newUser);
+        await this.emailService.sendEmailRegisterSuccessfully(newUser.email,newUser.name)
         return { createdUser, isNew: true };
       } else {
         return { createdUser: user, isNew: false };

@@ -49,10 +49,11 @@ export class UsersRepository {
   //-----------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------
 
-  async getAllUsers(page: number = 1, limit: number = 5) {
+  // async getAllUsers(page: number = 1, limit: number = 5) {
+  async getAllUsers() {
     const users = await this.usersRepository.find({
-      skip: (page - 1) * limit,
-      take: limit,
+      // skip: (page - 1) * limit,
+      // take: limit,
       relations: {
         properties: true,
         bookings: true,
@@ -130,6 +131,38 @@ export class UsersRepository {
     return {
       success: 'You has added a new property in your Favorite Properties!',
     };
+  }
+
+  async removeFavoritePropertyRepository(propertyId: string, userId: string) {
+
+    const property = await this.propertyRepository.findOne({
+      where: { id: propertyId },
+      relations: { user: true, bookings: true },
+    });
+    if (!property) throw new BadRequestException('Property not found');
+
+    const user = await this.getUserById(userId);
+
+    const isAlreadyFavorite = user.favoriteProperties.some(
+      (prop) => prop === propertyId,
+    );
+    if (!isAlreadyFavorite) {
+      throw new BadRequestException(
+        'This property is not in your favorites',
+      );
+    }
+  
+    // Remueve la propiedad de los favoritos del usuario
+    user.favoriteProperties = user.favoriteProperties.filter(
+      (prop) => prop !== propertyId,
+    );
+  
+    await this.usersRepository.save(user);
+  
+    return {
+      success: 'You have removed the property from your Favorite Properties!',
+    };
+
   }
 
   async disableUserRepository(id: string) {

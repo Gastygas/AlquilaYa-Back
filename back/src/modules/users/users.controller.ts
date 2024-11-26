@@ -95,6 +95,15 @@ export class UsersController {
     return this.usersService.addFavoritePropertyService(propertyId, userId);
   }
 
-  // @Delete('/')
-  // deleteUser(@Query() id: string) {}
+  @ApiBearerAuth()
+  @Patch('favourite/property/remove/:id')
+  @UseGuards(AuthGuard)
+  removeFavoritePropertyController(
+    @Param('id', ParseUUIDPipe) propertyId: string,
+    @Req() req: ICustomRequest,
+  ) {
+    const userId = req.user.id;
+    return this.usersService.removeFavoritePropertyService(propertyId, userId);
+  }
+
 }
